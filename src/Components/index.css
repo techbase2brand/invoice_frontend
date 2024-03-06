@@ -1,0 +1,143 @@
+.title-table {
+    background: linear-gradient(to bottom right, #5195A8 0%, #70EAFF 100%);
+    border-radius: 5px 5px 0 0;
+    padding: 20px;
+    color: #f6f6f6;
+    margin-bottom: 1rem;
+}
+
+.logo {
+    text-align: center;
+}
+
+.form-num {
+    margin-left: 26rem;
+}
+
+.invoice {
+    width: 62%;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff7f7;
+}
+
+.invoice-body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    margin-bottom: 20px;
+}
+
+.invoice-body .invoice-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+}
+
+.invoice-body .invoice-details label {
+    font-weight: bold;
+}
+
+.invoice-body .invoice-details span {
+    font-weight: normal;
+}
+
+.invoice-body .invoice-details .total-value {
+    grid-column: span 2;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+input {
+    border: none;
+    height: 22px;
+}
+
+
+.table-in {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.table-in th,
+td {
+    padding: 12px;
+    text-align: left !important;
+}
+
+.table-in thead tr {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.table-in td:nth-child(4) {
+    border-bottom: 2px solid black;
+}
+
+.form-head {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.bill-head {
+    border-bottom: 1px solid black;
+    width: 48%;
+    text-align: center;
+}
+
+.tax-in {
+    text-align: center;
+}
+
+.main-footer {
+    padding: 24px 0 24px;
+    background: #f5aa64;
+}
+
+.footer {
+    display: flex;
+    background: #6866ed;
+    color: white;
+    font-size: 14px;
+    width: auto;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.middle {
+    padding: 17px;
+}
+
+.address {
+    padding: 7px;
+}
+
+.icon-text {
+    display: flex;
+    gap: 7px;
+}
+
+.icon-text-2 {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+p {
+    margin-bottom: 0rem !important;
+}
+
+.icon-text span {
+    border: 2px solid white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.icon-text-2 span {
+    border: 2px solid white;
+    padding: 10px;
+    border-radius: 10px;
+}
