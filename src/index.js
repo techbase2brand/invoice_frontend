@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { ToastContainer } from 'react-toastify';
 import './App.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <>
-  <ToastContainer />
+    <ToastContainer />
     <App />
   </>
 );

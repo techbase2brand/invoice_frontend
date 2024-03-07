@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './index.css';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ const SignUp = () => {
     password: '',
     confirmPassword: '',
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,7 +25,7 @@ const SignUp = () => {
       const response = await axios.post('http://localhost:3000/api/template', formData);
 
       if (response.status === 201) {
-        console.log('User created successfully!', response.data);
+        navigate("/")
       } else if (response.status === 400) {
         console.log('Email ID already exists');
       } else {

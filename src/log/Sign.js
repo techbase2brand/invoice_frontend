@@ -1,20 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import "./index.css"
-import { MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon, MDBInput, MDBCheckbox } from 'mdb-react-ui-kit';
-import { Link } from 'react-router-dom';
+import { MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 function Sign() {
-    console.log("hlo");
-    // useEffect(() => {
-    //     axios.get('http://localhost:3000/products/get/admin')
-    //         .then(response => {
-    //             console.log("hhh",response.data.message);
-    //         })
-    //         .catch(error => {
-    //             console.error(error);
-    //         });
-    // }, []);
-    
+    const [login, setLogin] = useState({
+        email: '',
+        password: '',
+    })
+    const navigate = useNavigate();
+    const handleChange = (e) => {
+        e.preventDefault();
+        setLogin({ ...login, [e.target.name]: e.target.value })
+    }
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/login', {
+                email: login.email,
+                password: login.password,
+            });
+
+            const token = response.data.token;
+
+            localStorage.setItem('token', token);
+
+            navigate('/table')
+        } catch (error) {
+            console.error('Error during login:', error);
+        }
+    };
     return (
         <MDBContainer fluid className="p-3 my-5 h-custom">
 
@@ -36,16 +50,14 @@ function Sign() {
                     <div className='log-form'>
                         <label>
                             <span className="lname">Email<span className="required">*</span></span>
-                            <input type="text" name="lname" className='input-fix' />
+                            <input type="text" name="email" className='input-fix' onChange={handleChange} />
                         </label>
                         <label>
                             <span>Password<span className="required">*</span></span>
-                            <input type="text" name="cn" className='input-fix' />
+                            <input type="text" name="password" className='input-fix' onChange={handleChange} />
                         </label>
                         <div className='text-center text-md-start mt-4 pt-2'>
-                            <Link to="/table">
-                                <button type="button" className="btn btn-primary">Login</button>
-                            </Link>
+                            <button type="button" className="btn btn-primary" onClick={handleLogin}>Login</button>
                             <p className="small fw-bold mt-2 pt-1 mb-2">Don't have an account? <Link to="/sign-up" className="link-danger">Register</Link></p>
                         </div>
                     </div>
