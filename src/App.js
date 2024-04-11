@@ -67,10 +67,8 @@ const App = () => {
           <Route path="/" element={<ProtectedRoute><DashboardScreen /></ProtectedRoute>} />
           <Route path="/invoice-detail/:id" element={<ProtectedRoute><Invoice /></ProtectedRoute>} />
           <Route path="/company/:id" element={<ProtectedRoute><InvoiceDetailScreen /></ProtectedRoute>} />
-          {/* <Route path="company"> */}
           <Route path="listing" element={<ProtectedRoute><InvoiceListScreen /></ProtectedRoute>} exact />
           <Route path="company" element={<ProtectedRoute><InvoiceDetailScreen /></ProtectedRoute>} />
-          {/* </Route> */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Container>

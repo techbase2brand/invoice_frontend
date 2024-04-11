@@ -413,3 +413,13 @@ p {
 .bank_data div label {
   font-size: 18px;
 }
+
+.flexer{
+  display: flex;
+  gap: 5rem;
+}
+
+.adjust-width{
+  max-width: 400px;
+  width: 100%;
+}

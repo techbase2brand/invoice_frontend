@@ -114,7 +114,7 @@ const Invoice = () => {
                     </div>
                 </div>
 
-                <h3 className='word_amount'>In Words: {formData.currency} {amountInWords}</h3>
+                <h3 className='word_amount'>In Words: {formData.currency} {amountInWords} Only.</h3>
                 <div className="form-head">
 
                     <span className="bill-head">
@@ -224,7 +224,7 @@ const Invoice = () => {
                             <div>
                                 <label></label>
                                 <span>
-                                <img src={`http://localhost:3000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
+                                    <img src={`http://localhost:3000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
                                 </span>
                             </div>
                             <div>

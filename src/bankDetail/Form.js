@@ -114,6 +114,17 @@ const Form = () => {
                             />
 
                         </div>
+                        <div className="text-sm mb-4"
+                        >
+                            <label className="block text-sm font-medium text-gray-700">Acc. Name</label>
+                            <input
+                                name="accName"
+                                value={formData.accName}
+                                placeholder="Acc. Name"
+                                className={defaultInputSmStyle}
+                                onChange={handleChange}
+                            />
+                        </div>
                         <div className="text-sm mb-4">
                             <label className="block text-sm font-medium text-gray-700">Acc. No</label>
                             <input
@@ -124,6 +135,18 @@ const Form = () => {
                                 className={`${defaultInputSmStyle} ${error.accNo && validError}`}
                                 onChange={handleChange}
                             />
+                        </div>
+                        <div className="text-sm mb-4"
+                        >
+                            <label className="block text-sm font-medium text-gray-700">Ifsc Code</label>
+                            <input
+                                name="ifscCode"
+                                value={formData.ifscCode}
+                                placeholder="Ifsc Code"
+                                className={`${defaultInputSmStyle} ${error.ifscCode && validError}`}
+                                onChange={handleChange}
+                            />
+
                         </div>
                         <div className="text-sm mb-4"
                         >
@@ -146,18 +169,7 @@ const Form = () => {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="text-sm mb-4"
-                        >
-                            <label className="block text-sm font-medium text-gray-700">Ifsc Code</label>
-                            <input
-                                name="ifscCode"
-                                value={formData.ifscCode}
-                                placeholder="Ifsc Code"
-                                className={`${defaultInputSmStyle} ${error.ifscCode && validError}`}
-                                onChange={handleChange}
-                            />
 
-                        </div>
                         <div className="text-sm mb-4"
                         >
                             <label className="block text-sm font-medium text-gray-700">Swift Code</label>
@@ -169,17 +181,7 @@ const Form = () => {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className="text-sm mb-4"
-                        >
-                            <label className="block text-sm font-medium text-gray-700">Acc. Name</label>
-                            <input
-                                name="accName"
-                                value={formData.accName}
-                                placeholder="Acc. Name"
-                                className={defaultInputSmStyle}
-                                onChange={handleChange}
-                            />
-                        </div>
+
                         <div className="text-sm mb-4"
                         >
                             <label className="block text-sm font-medium text-gray-700">Trade Name</label>

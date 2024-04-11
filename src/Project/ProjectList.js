@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { defaultInputSmBlack } from "../constants/defaultStyles";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Pagination from "../Pagination/Pagination";
 function ProjectList() {
     const [invoices, setInvoices] = useState([]);
     const [selectedDays, setSelectedDays] = useState("");
@@ -11,9 +12,42 @@ function ProjectList() {
     const [paymentStatus, setPaymentStatus] = useState("");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+
+    const [itemsPerPage] = useState(50);
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(invoices.length / itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = invoices.slice(indexOfFirstItem, indexOfLastItem);
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortColumn, setSortColumn] = useState('');
+
+    const handleSort = (columnName) => {
+        if (sortColumn === columnName) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(columnName);
+            setSortOrder('asc');
+        }
+    };
+
+    const sortedItems = currentItems.sort((a, b) => {
+        if (sortColumn === 'clientName') {
+            return sortOrder === 'asc' ? a.clientName.localeCompare(b.clientName) : b.clientName.localeCompare(a.clientName);
+        } else if (sortColumn === 'company') {
+            return sortOrder === 'asc' ? a.company.localeCompare(b.company) : b.company.localeCompare(a.company);
+        }
+        return sortOrder === 'asc' ? a.clientName.localeCompare(b.clientName) : b.clientName.localeCompare(a.clientName);
+    });
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     const handleStartDateChange = (date) => {
         setStartDate(date);
     };
+
 
     const handleEndDateChange = (date) => {
         setEndDate(date);
@@ -158,21 +192,21 @@ function ProjectList() {
         .filter(item => item.currency === 'USD' && item.amount !== '')
         .reduce((total, item) => total + parseFloat(item.amount), 0);
 
-        const getStatusColor = (paymentStatus) => {
-            switch (paymentStatus) {
-                case 'paid':
-                    return 'paid-row';
-                case 'unpaid':
-                    return 'unpaid-row';
-                default:
-                    return '';
-            }
-        };
+    const getStatusColor = (paymentStatus) => {
+        switch (paymentStatus) {
+            case 'paid':
+                return 'paid-row';
+            case 'unpaid':
+                return 'unpaid-row';
+            default:
+                return '';
+        }
+    };
     return (
         <div>
 
             <div style={{ display: 'flex', gap: '14px' }}>
-                <h1>Total: {invoices.length}</h1>
+                <h1 style={{ fontWeight: '700' }}>Total: {invoices.length}</h1>
                 <p> Paid: {paidInvoicesLength}</p>
                 <p> Unpaid: {unpaidInvoicesLength}</p>
                 <p>Draft: {draftInvoicesLength}</p>
@@ -245,11 +279,13 @@ function ProjectList() {
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className="px-6 py-3" onClick={() => handleSort('clientName')}>
                                 Client Name
+                                <span>{sortOrder === 'asc' ? '▲' : '▼'}</span>
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            <th scope="col" className="px-6 py-3" onClick={() => handleSort('company')}>
                                 Company
+                                <span>{sortOrder === 'asc' ? '▲' : '▼'}</span>
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Bank Name
@@ -275,7 +311,7 @@ function ProjectList() {
                         </tr>
                     </thead>
                     <tbody>
-                        {invoices.map((item) => (
+                        {sortedItems.map((item) => (
                             <tr className={`bg-white border-b dark:bg-gray-800 dark:border-gray-700 ${getStatusColor(item?.paymentStatus)}`} key={item._id}>
                                 <td className="px-6 py-4">{item.client || "N/A"}</td>
                                 <td className="px-6 py-4">{item.company || "N/A"}</td>
@@ -306,8 +342,28 @@ function ProjectList() {
                             </tr>
                         ))}
                     </tbody>
-
                 </table>
+                <div className="flex justify-center mt-4">
+                    <button
+                        className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        onClick={() => paginate(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <div className="flex items-center justify-center mx-4">
+                        Page {currentPage} of {totalPages}
+                    </div>
+                    <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
+                    <button
+                        className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ml-2"
+                        onClick={() => paginate(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+
             </div>
         </div>
     );

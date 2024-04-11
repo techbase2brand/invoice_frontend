@@ -1,9 +1,20 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Pagination from "../../Pagination/Pagination";
 
 function InvoiceTable() {
-  const [company, setCompanyData] = useState();
+  const [company, setCompanyData] = useState([]);
+  const [itemsPerPage] = useState(50);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(company.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = company.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
   // useEffect(() => {
   //   const apiUrl = `http://localhost:3000/api/get-companyData`;
   //   axios.get(apiUrl)
@@ -69,7 +80,7 @@ function InvoiceTable() {
             </tr>
           </thead>
           <tbody>
-            {company?.map((item) => (
+            {currentItems?.map((item) => (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={item._id}>
                 <td className="px-6 py-4">
                   {item.trade}
@@ -102,6 +113,26 @@ function InvoiceTable() {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center mt-4">
+          <button
+            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <div className="flex items-center justify-center mx-4">
+            Page {currentPage} of {totalPages}
+          </div>
+          <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
+          <button
+            className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ml-2"
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
