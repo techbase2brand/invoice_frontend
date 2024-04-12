@@ -22,7 +22,7 @@ const FormCli = () => {
 
     const fetchClientDetail = async (id) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/get-client-data/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/get-client-data/${id}`);
             const bankDetailData = response.data.data;
             setFormData(bankDetailData);
         } catch (error) {
@@ -53,9 +53,9 @@ const FormCli = () => {
     //         try {
     //             let response;
     //             if (id) {
-    //                 response = await axios.put(`http://localhost:3000/api/update-client/${id}`, formData);
+    //                 response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-client/${id}`, formData);
     //             } else {
-    //                 response = await axios.post(`http://localhost:3000/api/client-detail`, formData);
+    //                 response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/client-detail`, formData);
     //             }
     //             if (response.status === 201 || response.status === 200) {
     //                 navigate("/client-Detail")

@@ -29,7 +29,7 @@ const Form = () => {
 
     const fetchBankDetail = async (id) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/get-bank-data/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/get-bank-data/${id}`);
             const bankDetailData = response.data.data;
             setFormData(bankDetailData);
         } catch (error) {
@@ -55,7 +55,7 @@ const Form = () => {
     //     } else {
     //         console.log("yes");
     //         try {
-    //             const response = await axios.post(`http://localhost:3000/api/bank-detail`, formData);
+    //             const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/bank-detail`, formData);
     //             if (response.status === 201) {
     //                 navigate('/bank-Detail');
     //             }
@@ -81,9 +81,9 @@ const Form = () => {
             try {
                 let response;
                 if (id) {
-                    response = await axios.put(`http://localhost:3000/api/update-bank-data/${id}`, formData);
+                    response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-bank-data/${id}`, formData);
                 } else {
-                    response = await axios.post(`http://localhost:3000/api/bank-detail`, formData);
+                    response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/bank-detail`, formData);
                 }
 
                 if (response.status === 201 || response.status === 200) {

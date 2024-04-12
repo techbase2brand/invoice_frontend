@@ -59,7 +59,7 @@ const ProForm = () => {
     }, [id]);
 
     useEffect(() => {
-        const apiUrl = `http://localhost:3000/api/get-companyData`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-companyData`;
         axios.get(apiUrl)
             .then((response) => {
                 setCompanyData(response.data.data)
@@ -78,7 +78,7 @@ const ProForm = () => {
     };
     const fetchInvoiceDetail = async (id) => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/invoice-get/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/invoice-get/${id}`);
             const bankDetailData = response.data.data;
             setInvoiceList(bankDetailData);
         } catch (error) {
@@ -145,7 +145,7 @@ const ProForm = () => {
 
 
     useEffect(() => {
-        const apiUrl = `http://localhost:3000/api/get-clients`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-clients`;
         axios.get(apiUrl)
             .then((response) => {
                 console.log("Client data:", response.data.data);
@@ -157,7 +157,7 @@ const ProForm = () => {
     }, []);
 
     useEffect(() => {
-        const apiUrl = `http://localhost:3000/api/bank-data`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/bank-data`;
         axios.get(apiUrl)
             .then((response) => {
                 setData(response.data.data)
@@ -325,7 +325,7 @@ const ProForm = () => {
         };
 
         if (id) {
-            axios.put(`http://localhost:3000/api/update-invoice/${id}`, formData)
+            axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-invoice/${id}`, formData)
                 .then(response => {
                     console.log('Form data updated successfully:', response.data);
                     navigate("/project-Detail")
@@ -334,7 +334,7 @@ const ProForm = () => {
                     console.error('Error updating form data:', error);
                 });
         } else {
-            axios.post('http://localhost:3000/api/add-clientBank', formData)
+            axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-clientBank`, formData)
                 .then(response => {
                     console.log('Form data submitted successfully:', response.data);
                     navigate("/project-Detail")

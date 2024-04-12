@@ -18,7 +18,7 @@ const ClientList = () => {
     };
     const navigate = useNavigate();
     useEffect(() => {
-        const apiUrl = `http://localhost:3000/api/get-clients`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-clients`;
         axios.get(apiUrl)
             .then((response) => {
                 console.log("response", response)
@@ -30,7 +30,7 @@ const ClientList = () => {
     }, []);
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/api/delete-client/${id}`);
+            await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/delete-client/${id}`);
             setData(data.filter(item => item._id !== id));
         } catch (error) {
             console.error('Error deleting client detail:', error);

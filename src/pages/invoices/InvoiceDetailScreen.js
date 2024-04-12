@@ -24,7 +24,7 @@ const FormCli = () => {
 
   const fetchCompanyDetail = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/get-company/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/get-company/${id}`);
       const bankDetailData = response.data.data;
       setFormData(bankDetailData);
     } catch (error) {
@@ -42,7 +42,7 @@ const FormCli = () => {
     formData.append('image', file);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/upload-image', formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-image`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -78,9 +78,9 @@ const FormCli = () => {
   //     try {
   //       let response;
   //       if (id) {
-  //         response = await axios.put(`http://localhost:3000/api/update-comp-data/${id}`, formData);
+  //         response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-comp-data/${id}`, formData);
   //       } else {
-  //         response = await axios.post(`http://localhost:3000/api/add-companyData`, formData);
+  //         response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-companyData`, formData);
   //       }
   //       if (response.status === 201 || response.status === 200) {
   //         navigate("/listing")
@@ -108,9 +108,9 @@ const FormCli = () => {
       try {
         let response;
         if (id) {
-          response = await axios.put(`http://localhost:3000/api/update-comp-data/${id}`, formData);
+          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-comp-data/${id}`, formData);
         } else {
-          response = await axios.post(`http://localhost:3000/api/add-companyData`, formData);
+          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-companyData`, formData);
         }
         if (response.status === 201 || response.status === 200) {
           navigate("/listing");
@@ -191,7 +191,7 @@ const FormCli = () => {
               </div>
             }
             <div className="mt-3">
-              <button type="submit" class="primary-background-color w-full text-white   hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >Sumbit</button>
+              <button type="submit" class="primary-background-color w-full text-white   hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >{id ? "Update" : "Sumbit"}</button>
             </div>
           </div>
         </form>
