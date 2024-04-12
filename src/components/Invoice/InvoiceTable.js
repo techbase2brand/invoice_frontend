@@ -16,7 +16,7 @@ function InvoiceTable() {
     setCurrentPage(pageNumber);
   };
   // useEffect(() => {
-  //   const apiUrl = `http://localhost:3000/api/get-companyData`;
+  //   const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-companyData`;
   //   axios.get(apiUrl)
   //     .then((response) => {
   //       setCompanyData(response.data.data.reverse())
@@ -26,9 +26,8 @@ function InvoiceTable() {
   //     });
   // }, []);
 
-
   useEffect(() => {
-    const apiUrl = `http://localhost:3000/api/get-companyData`;
+    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-companyData`;
     axios.get(apiUrl)
       .then((response) => {
         const updatedCompanyData = response.data.data.map(item => {
@@ -47,7 +46,7 @@ function InvoiceTable() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/delte-companyData/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/delte-companyData/${id}`);
       setCompanyData(company.filter(item => item._id !== id));
     } catch (error) {
       console.error('Error deleting company detail:', error);

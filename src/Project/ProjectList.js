@@ -61,7 +61,7 @@ function ProjectList() {
         if (invoiceToDuplicate) {
             const duplicatedInvoice = { ...invoiceToDuplicate };
             duplicatedInvoice.selectDate = new Date().toISOString();
-            axios.post('http://localhost:3000/api/add-clientBank', duplicatedInvoice)
+            axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-clientBank`, duplicatedInvoice)
                 .then(response => {
                     fetchInvoices();
                 })
@@ -72,7 +72,7 @@ function ProjectList() {
     };
 
     const fetchInvoices = () => {
-        let apiUrl = "http://localhost:3000/api/get-invoices";
+        let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-invoices`;
         let fromDate;
         if (selectedDays) {
             fromDate = new Date();
@@ -151,7 +151,7 @@ function ProjectList() {
     };
 
     const handleDelete = (deleteId) => {
-        const apiUrl = `http://localhost:3000/api/delete-invoice/${deleteId}`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/delete-invoice/${deleteId}`;
         axios.delete(apiUrl);
         setInvoices(invoices.filter((item) => item._id !== deleteId));
     };
