@@ -25,7 +25,11 @@ import ProjectForm from "./Project/ProjectForm";
 import Login from "./user/Login";
 import SignUp from "./user/SignUp";
 import Invoice from "./FinalInvoice/Invoice";
-
+import EmpCreate from "./employes/EmpCreate";
+import EmpForm from "./employes/EmpForm";
+import CreateWages from "./wages/CreateWages";
+import WagesForm from "./wages/WagesForm";
+import FinalWages from "./FinalInvoice/FinalWages";
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -58,6 +62,12 @@ const App = () => {
           <Route path="/bank-Detail" element={<ProtectedRoute><BankForm /></ProtectedRoute>} />
           <Route path="/client-Detail" element={<ProtectedRoute><ClientForm /></ProtectedRoute>} />
           <Route path="/project-Detail" element={<ProtectedRoute><ProjectForm /></ProtectedRoute>} />
+          <Route path="/emp-data" element={<ProtectedRoute><EmpCreate /></ProtectedRoute>} />
+          <Route path="/emp-create" element={<ProtectedRoute><EmpForm /></ProtectedRoute>} />
+          <Route path="/wages-detail" element={<ProtectedRoute><CreateWages /></ProtectedRoute>} />
+          <Route path="/wages-form" element={<ProtectedRoute><WagesForm /></ProtectedRoute>} />
+          <Route path="/wages-form/:id" element={<ProtectedRoute><WagesForm /></ProtectedRoute>} />
+          <Route path="/emp-create/:id" element={<ProtectedRoute><EmpForm /></ProtectedRoute>} />
           <Route path="/add-data" element={<ProtectedRoute><Form /></ProtectedRoute>} />
           <Route path="/add-data/:id" element={<ProtectedRoute><Form /></ProtectedRoute>} />
           <Route path="/project" element={<ProtectedRoute><ProForm /></ProtectedRoute>} />
@@ -66,6 +76,7 @@ const App = () => {
           <Route path="/add-Client/:id" element={<ProtectedRoute><FormCli /></ProtectedRoute>} />
           <Route path="/" element={<ProtectedRoute><DashboardScreen /></ProtectedRoute>} />
           <Route path="/invoice-detail/:id" element={<ProtectedRoute><Invoice /></ProtectedRoute>} />
+          <Route path="/final-wages/:id" element={<ProtectedRoute><FinalWages /></ProtectedRoute>} />
           <Route path="/company/:id" element={<ProtectedRoute><InvoiceDetailScreen /></ProtectedRoute>} />
           <Route path="listing" element={<ProtectedRoute><InvoiceListScreen /></ProtectedRoute>} exact />
           <Route path="company" element={<ProtectedRoute><InvoiceDetailScreen /></ProtectedRoute>} />

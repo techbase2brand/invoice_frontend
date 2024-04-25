@@ -23,7 +23,7 @@ const Pagination = ({ currentPage, totalPages, paginate }) => {
                         >
                             {pageNumbers.slice(index, index + 5).map((num) => (
                                 <option key={num} value={num}>
-                                    Page {num}
+                                   {num}
                                 </option>
                             ))}
                         </select>
