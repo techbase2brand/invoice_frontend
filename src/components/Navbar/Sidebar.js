@@ -34,6 +34,16 @@ const NAV_DATA = [
     title: "Invoice Detail",
     link: "project-Detail",
     Icon: ClientPlusIcon,
+  },
+  {
+    title: "Add Employee",
+    link: "emp-data",
+    Icon: ClientPlusIcon,
+  },
+  {
+    title: "Create Wages",
+    link: "wages-detail",
+    Icon: ClientPlusIcon,
   }
 ];
 

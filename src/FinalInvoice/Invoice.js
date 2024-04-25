@@ -8,7 +8,7 @@ import numberToWords from 'number-to-words';
 
 const Invoice = () => {
     const [formData, setFormData] = useState({});
-    console.log("formData", formData);
+    const totalAmount = parseInt(formData.amount || "0") + parseInt(formData.AdvanceAmount || "0");
     const { id } = useParams();
     const pdfContentRef = useRef(null);
     // const downloadPdf = async () => {
@@ -37,7 +37,7 @@ const Invoice = () => {
     }, [id]);
 
     const targetRef = useRef();
-    const amount = formData?.amount || 0;
+    const amount = totalAmount || 0;
     const amountInWords = numberToWords.toWords(amount).charAt(0).toUpperCase() + numberToWords.toWords(amount).slice(1);
 
     // const printPDF = () => {
@@ -88,6 +88,8 @@ const Invoice = () => {
                     <div className='thead'>
                         <b>Sr. No.</b>
                         <b>Description of services</b>
+
+                        <b>{formData.amount === "" && "Status"}</b>
                         <b className='text-right'>Amount</b>
                     </div>
 
@@ -98,8 +100,9 @@ const Invoice = () => {
                                 <p key={index}>{desc}</p>
                             ))}
                         </div>
+                        <div><p>{formData.amount === "" ? formData.AdvanceAmount : ""}</p></div>
                         <div className='text-right'>
-                            <p>{formData.currency} {formData.amount}</p>
+                            <p>{formData.currency} {totalAmount}</p>
                         </div>
                     </div>
 
@@ -108,8 +111,9 @@ const Invoice = () => {
                         <div>
                             <p style={{ fontSize: '18px' }}>Total Value</p>
                         </div>
+                        <div></div>
                         <div className='border_total_amount text-right'>
-                            <b>{formData.currency} {formData.amount}</b>
+                            <b>{formData.currency} {totalAmount}</b>
                         </div>
                     </div>
                 </div>

@@ -38,6 +38,7 @@ const ProForm = () => {
     const [payOneer, setPayOneer] = useState('');
     const [payoneerId, setPayoneerId] = useState('');
     const [amount, setAmount] = useState('');
+    const [advanceAmount, setAdvanceAmount] = useState('');
     const [invoicelist, setInvoiceList] = useState(null);
     const [enableGST, setEnableGST] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -115,6 +116,7 @@ const ProForm = () => {
             setGstNo(invoicelist.gstNo);
             setGstIn(invoicelist.gstin);
             setAmount(invoicelist.amount);
+            setAdvanceAmount(invoicelist.AdvanceAmount)
             setPayStatus(invoicelist.paymentStatus);
             setCurrency(invoicelist.currency);
             setSelectCompany(invoicelist.trade);
@@ -272,13 +274,13 @@ const ProForm = () => {
             return;
         }
 
-        if (!amount) {
-            toast.error("Please Add Amount.", {
-                position: "bottom-center",
-                autoClose: 2000,
-            });
-            return;
-        }
+        // if (!advanceAmount) {
+        //     toast.error("Please Add Advance.", {
+        //         position: "bottom-center",
+        //         autoClose: 2000,
+        //     });
+        //     return;
+        // }
 
         const selectedClientName = client.find(item => item._id === selectedClient)?.clientName || '';
         const selectedBankName = data.find(item => item._id === selectBank)?.bankName || '';
@@ -321,7 +323,8 @@ const ProForm = () => {
             enableGST: enableGST,
             client: selectedClientName,
             tradde: trade,
-            bankNamed: selectedBankName
+            bankNamed: selectedBankName,
+            AdvanceAmount: advanceAmount
         };
 
         if (id) {
@@ -863,7 +866,19 @@ const ProForm = () => {
                             </div>
                             <div className="text-sm mb-4"
                             >
-                                <label className="block text-sm font-medium text-gray-700">Amount</label>
+                                <label className="block text-sm font-medium text-gray-700">Advance</label>
+                                <input
+                                    type='text'
+                                    placeholder="Amount"
+                                    name='AdvanceAmount'
+                                    value={advanceAmount}
+                                    className={defaultInputSmStyle}
+                                    onChange={(event) => setAdvanceAmount(event.target.value)}
+                                />
+                            </div>
+                            <div className="text-sm mb-4"
+                            >
+                                <label className="block text-sm font-medium text-gray-700">Full</label>
                                 <input
                                     type='text'
                                     placeholder="Amount"

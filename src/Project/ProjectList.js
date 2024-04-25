@@ -13,7 +13,7 @@ function ProjectList() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
-    const [itemsPerPage] = useState(50);
+    const [itemsPerPage] = useState(2);
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(invoices.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -293,9 +293,9 @@ function ProjectList() {
                             <th scope="col" className="px-6 py-3">
                                 Acc. No
                             </th>
-                            <th scope="col" className="px-6 py-3">
-                                Amount
-                            </th>
+                            {/* <th scope="col" className="px-6 py-3">
+                                Advance Amount
+                            </th> */}
                             <th scope="col" className="px-6 py-3">
                                 Date
                             </th>
@@ -317,7 +317,7 @@ function ProjectList() {
                                 <td className="px-6 py-4">{item.company || "N/A"}</td>
                                 <td className="px-6 py-4">{item.bankNamed || "N/A"}</td>
                                 <td className="px-6 py-4">{item.accNo || "N/A"}</td>
-                                <td className="px-6 py-4">{`${item.currency} ${item.amount}`}</td>
+                                {/* <td className="px-6 py-4">{item.currency} {item.amount}</td> */}
                                 <td className="px-6 py-4">{item.selectDate ? item.selectDate.split("T")[0] : "N/A"}</td>
                                 <td style={{ display: 'flex', gap: '20px' }}>
                                     <Link to={`/project/${item._id}`}>
@@ -352,7 +352,7 @@ function ProjectList() {
                         Previous
                     </button>
                     <div className="flex items-center justify-center mx-4">
-                        Page {currentPage} of {totalPages}
+                        {currentPage} of {totalPages}
                     </div>
                     <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
                     <button
