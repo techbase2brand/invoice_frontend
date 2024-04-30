@@ -8,9 +8,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from "react-toastify";
 const ProForm = () => {
     const [client, setClient] = useState([]);
+    console.log("client", client)
     const [selectedClient, setSelectedClient] = useState('');
     const [state, setState] = useState('');
-    const [selectedProject, setSelectedProject] = useState();
+    const [selectedProject, setSelectedProject] = useState([]);
+    console.log("selectedProject", selectedProject);
     const [companyName, setCompanyName] = useState('');
     const [email, setEmail] = useState('');
     const [mobileNo, setMobileNo] = useState('');
@@ -186,11 +188,14 @@ const ProForm = () => {
         }
     };
     const handleProjectChange = (event) => {
-        if (!event.target.value) {
-            setSelectedProject("");
+        const { value, checked } = event.target;
+        if (checked) {
+            setSelectedProject((prevProjects) => [...prevProjects, value]);
+        } else {
+            setSelectedProject((prevProjects) =>
+                prevProjects.filter((project) => project !== value)
+            );
         }
-        const selectedProjectId = event.target.value;
-        setSelectedProject(selectedProjectId);
     };
 
     const handleBankChange = (event) => {
@@ -479,7 +484,7 @@ const ProForm = () => {
                                         </div>
                                     </>
                                 }
-                                <div className="text-sm mb-4">
+                                {/* <div className="text-sm mb-4">
                                     <select
                                         className={defaultInputSmBlack}
                                         value={selectedProject}
@@ -497,6 +502,30 @@ const ProForm = () => {
                                             ))
                                         }
                                     </select>
+                                </div> */}
+                                <div className="text-sm mb-4">
+                                    <label className="block text-sm font-medium text-gray-700">Select Project</label>
+                                    {client
+                                        .filter((item) => item._id === selectedClient)
+                                        .map((item) => (
+                                            <div key={item._id}>
+                                                {item.project.map((projectName, index) => (
+                                                    <div key={index} style={{
+                                                        display: 'flex',
+                                                        gap: '2rem'
+                                                    }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            id={projectName}
+                                                            value={projectName}
+                                                            onChange={handleProjectChange}
+                                                            checked={selectedProject.includes(projectName)}
+                                                        />
+                                                        <label htmlFor={projectName}>{projectName}</label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ))}
                                 </div>
                                 {description.map((desc, index) => (
                                     <div key={index} className="text-sm mb-4">
@@ -600,7 +629,7 @@ const ProForm = () => {
                                         </div>
                                         <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Signature</label>
-                                            <img src={`http://localhost:3000${signature}`} alt="signature" style={{ width: '20%' }} />
+                                            <img src={`http://localhost:8000${signature}`} alt="signature" style={{ width: '20%' }} />
                                         </div>
                                         <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Gst</label>

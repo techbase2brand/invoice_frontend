@@ -14,11 +14,13 @@ const FormCli = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(false);
   const [enableGST, setEnableGST] = useState(false);
+  const [img, setImg] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
       fetchCompanyDetail(id);
+      setImg(false);
     }
   }, [id]);
 
@@ -37,6 +39,7 @@ const FormCli = () => {
   };
 
   const handleImageUpload = async (e) => {
+    setImg(true);
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append('image', file);
@@ -166,6 +169,13 @@ const FormCli = () => {
             </div>
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Signature</label>
+              {formData && formData.signature && (
+                <div className="mb-2">
+                  {!img &&
+                    <img src={`http://localhost:8000${formData.signature}`} alt="Current Signature" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                  }
+                </div>
+              )}
               <input
                 type="file"
                 accept="image/*"

@@ -64,7 +64,7 @@ const Invoice = () => {
                         <p>{formData.company} </p>
                         <p> {formData.email} </p>
                         <p>{formData.mobileNo} </p>
-                        <p>{formData.project} </p>
+                        {/* <p>{formData.project} </p> */}
                     </div>
                     <div className="invoice-details_data">
                         <div>
@@ -87,6 +87,7 @@ const Invoice = () => {
                 <div className='table_invoce'>
                     <div className='thead'>
                         <b>Sr. No.</b>
+                        <b>Task</b>
                         <b>Description of services</b>
 
                         <b>{formData.amount === "" && "Status"}</b>
@@ -94,7 +95,12 @@ const Invoice = () => {
                     </div>
 
                     <div className='Invoice_data'>
-                        <div><b></b></div>
+                        <div><b> {Array.from({ length: formData?.description?.length }, (_, i) => (
+                            <p key={i}>{i + 1}</p>
+                        ))}</b></div>
+                        <div> {formData?.project?.map((pro, index) => (
+                            <p key={index}>{pro}</p>
+                        ))}</div>
                         <div className='description-data'>
                             {formData?.description?.map((desc, index) => (
                                 <p key={index}>{desc}</p>
@@ -108,17 +114,17 @@ const Invoice = () => {
 
                     <div className='total_amount'>
                         <div></div>
+                        <div></div>
                         <div>
                             <p style={{ fontSize: '18px' }}>Total Value</p>
                         </div>
-                        <div></div>
                         <div className='border_total_amount text-right'>
                             <b>{formData.currency} {totalAmount}</b>
                         </div>
                     </div>
                 </div>
 
-                <h3 className='word_amount'>In Words: {formData.currency} {amountInWords} Only.</h3>
+                <h3 className='word_amount'>In Words: {formData.currency} {amountInWords} Only /-</h3>
                 <div className="form-head">
 
                     <span className="bill-head">
@@ -228,7 +234,7 @@ const Invoice = () => {
                             <div>
                                 <label></label>
                                 <span>
-                                    <img src={`http://localhost:3000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
+                                    <img src={`http://localhost:8000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
                                 </span>
                             </div>
                             <div>
@@ -267,7 +273,7 @@ const Invoice = () => {
                                 </span>
                                 <div>
                                     <p>www.base2brand.com</p>
-                                    <p>info@base2brand.com</p>
+                                    <p>hello@base2brand.com</p>
                                 </div>
                             </div>
 
@@ -282,9 +288,7 @@ const Invoice = () => {
                                     </svg>
                                 </span>
                                 <div>
-                                    <p>G301,SECTOR 115, IMPERIAL HEIGHTS,NEAR BBSB WAR MEMORIAL,KHARAR, Mohali, Punjab, India,
-                                        140301</p>
-                                    <p>hello@base2brand.com</p>
+                                    <p>F-209, Phase 8B, Industrial Area, Sector 74, Sahibzada Ajit Singh Nagar, Punjab 160074</p>
                                 </div>
                             </div>
                         </div>
