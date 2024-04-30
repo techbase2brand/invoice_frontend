@@ -34,7 +34,7 @@ function InvoiceTable() {
           // Prepend base URL to signature field
           return {
             ...item,
-            signature: `http://localhost:3000${item.signature}`
+            signature: `http://localhost:8000${item.signature}`
           };
         });
         setCompanyData(updatedCompanyData.reverse());
@@ -94,7 +94,7 @@ function InvoiceTable() {
                   {item.gstNo}
                 </td>
                 <td className="px-6 py-4">
-                  <img src={item.signature} alt="Uploaded" style={{ maxWidth: '40px', maxHeight: '40px' }} />
+                  <img src={item.signature} alt="Uploaded" style={{ maxWidth: '40px', maxHeight: '40px' }}/>
                 </td>
                 <td style={{ display: 'flex', gap: '20px' }}>
                   <Link to={`/company/${item._id}`}>

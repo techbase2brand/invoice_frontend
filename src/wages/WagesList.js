@@ -18,7 +18,13 @@ const WagesList = () => {
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-wages`;
     axios.get(apiUrl)
       .then((response) => {
-        setData(response.data.data.reverse())
+        const wagesData = response.data.data.map((item) => {
+          return {
+            ...item,
+            signature: `http://localhost:8000${item.signature}`
+          }
+        });
+        setData(wagesData.reverse())
       })
       .catch((error) => {
         console.error('Error fetching invoices:', error);
@@ -60,6 +66,9 @@ const WagesList = () => {
                 Company Name
               </th>
               <th scope="col" class="px-6 py-3">
+                Signature
+              </th>
+              <th scope="col" class="px-6 py-3">
                 Action
               </th>
               <th>Create</th>
@@ -88,6 +97,9 @@ const WagesList = () => {
                 </td>
                 <td className="px-6 py-4">
                   {item.companyName || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  <img src={item.signature} alt="Uploaded" style={{ maxWidth: '40px', maxHeight: '40px' }} />
                 </td>
                 <td style={{ display: 'flex', gap: '20px' }}>
                   <Link to={`/wages-form/${item._id}`}>

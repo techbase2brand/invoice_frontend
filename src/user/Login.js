@@ -25,8 +25,8 @@ const Login = () => {
   //     console.error('Error during login:', error);
   //   }
   // };
-  const email = "ramnishbase2brand@gmail.com";
-  const password = "Ramnish@123"
+  const email = "artibase2brand@gmail.com";
+  const password = "Arti@2024#"
   const token = "123456"
 
   const handleLogin = () => {

@@ -211,15 +211,15 @@ br {
 }
 
 .thead b {
-  min-width: 25%;
-  width: 25%;
-  max-width: 33%;
+  min-width: 20%;
+  width: 19%;
+  max-width: 20%;
   display: inline-block;
 }
 
 .Invoice_data div,
 .total_amount div {
-  min-width: 25%;
+  min-width: 20%;
   width: 25%;
   max-width: 33%;
   display: inline-block;
@@ -532,4 +532,16 @@ p {
 .company-name {
   border: 2px solid;
   border-bottom: unset;
+}
+
+.admin-sign {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+}
+
+.image-adjust {
+  width: 18%;
+  height: 67px;
+  margin-top: 18px;
 }

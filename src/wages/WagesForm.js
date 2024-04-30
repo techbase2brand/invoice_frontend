@@ -8,7 +8,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 const ProForm = () => {
   const [empName, setEmpName] = useState('');
-
   const [familyMember, setFamilyMember] = useState('');
   const [joinDate, setJoinDate] = useState('');
   const [department, setDepartment] = useState('');
@@ -18,8 +17,6 @@ const ProForm = () => {
   const [state, setState] = useState('');
   const [client, setClient] = useState([]);
   const [wages, setWages] = useState(null);
-
-
   const [basic, setBasic] = useState('');
   const [med, setMed] = useState('');
   const [children, setChildren] = useState('');
@@ -31,20 +28,21 @@ const ProForm = () => {
   const [health, setHealth] = useState('');
   const [epf, setEPF] = useState('');
   const [tds, setTds] = useState('');
-
   const [daysMonth, setDaysMonth] = useState('');
   const [workingDays, setWorkingDays] = useState('');
   const [causelLeave, setCauselLeave] = useState('');
   const [medicalLeave, setmedicalLeave] = useState('');
   const [absent, setAbsent] = useState('');
   const [chooseDate, setChooseDate] = useState(null);
+  const [sign, setSign] = useState('')
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const [img, setImg] = useState(false);
 
   useEffect(() => {
     if (id) {
       fetchInvoiceDetail(id);
+      setImg(false);
     }
   }, [id]);
 
@@ -96,6 +94,7 @@ const ProForm = () => {
       setmedicalLeave(wages.medicalLeave)
       setAbsent(wages.absent);
       setChooseDate(new Date(wages.chooseDate));
+      setSign(wages.setSign)
     }
   }, [wages]);
   const handleClientChange = (event) => {
@@ -149,6 +148,7 @@ const ProForm = () => {
       medicalLeave: medicalLeave,
       absent: absent,
       chooseDate: chooseDate,
+      signature: sign.signature,
     };
 
     if (id) {
@@ -203,7 +203,23 @@ const ProForm = () => {
   const handleDateChange = (date) => {
     setChooseDate(date);
   };
-
+  const handleImageUpload = async (e) => {
+    setImg(true);
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-sign`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      const imageUrl = response.data.imageUrl;
+      setSign(prevFormData => ({ ...prevFormData, signature: imageUrl }));
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
   return (
     <div>
       <div
@@ -520,6 +536,21 @@ const ProForm = () => {
                     className={defaultInputSmStyle}
                   />
 
+                </div>
+                <div className="text-sm mb-4">
+                  <label className="block text-sm font-medium text-gray-700">Signature</label>
+                  {wages && wages.signature && (
+                    <div className="mb-2">
+                      {!img &&
+                        <img src={`http://localhost:8000${wages.signature}`} alt="Current Signature" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                      }
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
                 </div>
               </div>
               <div className="mt-3 px-10">
