@@ -8,11 +8,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from "react-toastify";
 const ProForm = () => {
     const [client, setClient] = useState([]);
-    console.log("client", client)
     const [selectedClient, setSelectedClient] = useState('');
     const [state, setState] = useState('');
     const [selectedProject, setSelectedProject] = useState([]);
-    console.log("selectedProject", selectedProject);
+    const [projectDescriptions, setProjectDescriptions] = useState({});
     const [companyName, setCompanyName] = useState('');
     const [email, setEmail] = useState('');
     const [mobileNo, setMobileNo] = useState('');
@@ -317,13 +316,13 @@ const ProForm = () => {
             amount: amount,
             selectDate: selectedDate,
             currency: currency,
-            description: description,
+            description: projectDescriptions,
             trade: selectedTradeName,
             ifsc: comIfsc,
             panNo: comPanNo,
             CompanygstNo: comGst,
             signature: signature,
-            paymentStatus: payStatus,
+            paymentStatus: payStatus || "draft",
             payMethod: paymentMethod,
             enableGST: enableGST,
             client: selectedClientName,
@@ -405,20 +404,27 @@ const ProForm = () => {
         setPayStatus(event.target.value)
     }
 
-    const handleAddDescription = () => {
-        setDescription([...description, '']);
+    const handleAddDescription = (project) => {
+        setProjectDescriptions((prevDescriptions) => ({
+            ...prevDescriptions,
+            [project]: [...(prevDescriptions[project] || []), ''],
+        }));
     };
 
-    const handleRemoveDescription = (index) => {
-        const updatedDescriptions = [...description];
-        updatedDescriptions.splice(index, 1);
-        setDescription(updatedDescriptions);
+    const handleRemoveDescription = (index, project) => {
+        setProjectDescriptions((prevDescriptions) => ({
+            ...prevDescriptions,
+            [project]: prevDescriptions[project].filter((_, i) => i !== index),
+        }));
     };
 
-    const handleDescriptionChange = (value, index) => {
-        const updatedDescriptions = [...description];
-        updatedDescriptions[index] = value;
-        setDescription(updatedDescriptions);
+    const handleDescriptionChange = (value, index, project) => {
+        setProjectDescriptions((prevDescriptions) => ({
+            ...prevDescriptions,
+            [project]: prevDescriptions[project].map((desc, i) =>
+                i === index ? value : desc
+            ),
+        }));
     };
     return (
         <div>
@@ -503,7 +509,7 @@ const ProForm = () => {
                                         }
                                     </select>
                                 </div> */}
-                                <div className="text-sm mb-4">
+                                {/* <div className="text-sm mb-4">
                                     <label className="block text-sm font-medium text-gray-700">Select Project</label>
                                     {client
                                         .filter((item) => item._id === selectedClient)
@@ -527,6 +533,7 @@ const ProForm = () => {
                                             </div>
                                         ))}
                                 </div>
+
                                 {description.map((desc, index) => (
                                     <div key={index} className="text-sm mb-4">
                                         <label className="block text-sm font-medium text-gray-700">Add Description</label>
@@ -548,7 +555,69 @@ const ProForm = () => {
                                             </div>
                                         )}
                                     </div>
-                                ))}
+                                ))} */}
+                                <div className="text-sm mb-4">
+
+                                    {client
+                                        .filter((item) => item._id === selectedClient)
+                                        .map((item) => (
+
+                                            <div key={item._id}>
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    Select Project
+                                                </label>
+                                                {item.project.map((projectName, index) => (
+                                                    <div key={index} className='project-ch'>
+                                                        <div className='check-pro'>
+                                                            <input
+                                                                type="checkbox"
+                                                                id={projectName}
+                                                                value={projectName}
+                                                                onChange={handleProjectChange}
+                                                                checked={selectedProject.includes(projectName)}
+                                                                style={{ width: '20px' }}
+                                                            />
+                                                            <label htmlFor={projectName}>{projectName}</label>
+                                                        </div>
+                                                        {selectedProject.includes(projectName) && (
+                                                            <>
+                                                                {projectDescriptions[projectName] &&
+                                                                    projectDescriptions[projectName].map((desc, descIndex) => (
+                                                                        <div key={descIndex} className="text-sm mb-4">
+                                                                            <label className="block text-sm font-medium text-gray-700">
+                                                                                Description {descIndex + 1}
+                                                                            </label>
+                                                                            <input
+                                                                                type="text"
+                                                                                placeholder={`Description ${descIndex + 1}`}
+                                                                                value={desc}
+                                                                                className={defaultInputSmStyle}
+                                                                                onChange={(e) =>
+                                                                                    handleDescriptionChange(
+                                                                                        e.target.value,
+                                                                                        descIndex,
+                                                                                        projectName
+                                                                                    )
+                                                                                }
+                                                                            />
+                                                                            {descIndex !== 0 && (
+                                                                                <div style={{ float: 'right' }} onClick={() => handleRemoveDescription(descIndex,
+                                                                                    projectName)}>
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 1024 1024"><path fill="currentColor" d="M696 480H328c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h368c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8" /><path fill="currentColor" d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448s448-200.6 448-448S759.4 64 512 64m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372s372 166.6 372 372s-166.6 372-372 372" /></svg>
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    ))}
+                                                                <div style={{ float: 'right', marginTop: '-16px' }} onClick={() => handleAddDescription(projectName)}>
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2m0 18a8 8 0 1 1 8-8a8 8 0 0 1-8 8" /><path fill="currentColor" d="M15 11h-2V9a1 1 0 0 0-2 0v2H9a1 1 0 0 0 0 2h2v2a1 1 0 0 0 2 0v-2h2a1 1 0 0 0 0-2" /></svg>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ))}
+                                </div>
                                 <div className="text-sm mb-4">
                                     <label className="block text-sm font-medium text-gray-700">Invoice Date</label>
                                     <DatePicker
