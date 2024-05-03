@@ -6,6 +6,7 @@ import numberToWords from 'number-to-words';
 import blobToBase64 from 'blob-to-base64'
 const FinalWages = () => {
     const [formData, setFormData] = useState({});
+    console.log("form", formData)
     const { id } = useParams();
     const targetRef = useRef();
     const totalRateAmount = parseInt(formData.basic || "0") + parseInt(formData.med || "0") + parseInt(formData.children || "0")
@@ -47,9 +48,14 @@ const FinalWages = () => {
         const year = date.getUTCFullYear().toString();
         return `${day}-${month}-${year}`;
     };
-  
-    
-    
+
+    const formatChoose = (dateString) => {
+        const date = new Date(dateString);
+        const month = date.toLocaleString('default', { month: 'short' });
+        const day = date.getUTCDate().toString().padStart(2, '0');
+        return `${month}-${day}`;
+    };
+
 
     return (
         <div>
@@ -68,7 +74,7 @@ const FinalWages = () => {
                                 </tr>
                                 <tr>
                                     <td className='sal-advice'>Salary Advice for The Month</td>
-                                    <td className='sal-advice'>{formData?.chooseDate?.split("T")[0]}</td>
+                                    <td className='sal-advice'>{formatChoose(formData?.chooseDate)}</td>
                                     <td className='sal-advice'>{formatChooseDate(formData?.chooseDate)}</td>
                                 </tr>
                                 <tr className='bot-border'>

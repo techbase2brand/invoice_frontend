@@ -8,6 +8,7 @@ import numberToWords from 'number-to-words';
 
 const Invoice = () => {
     const [formData, setFormData] = useState({});
+    console.log("formData", formData)
     const totalAmount = parseInt(formData.amount || "0") + parseInt(formData.AdvanceAmount || "0");
     const { id } = useParams();
     const pdfContentRef = useRef(null);
@@ -45,7 +46,7 @@ const Invoice = () => {
     // };
     return (
         <div>
-            <button type="button" class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
+            <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
 
@@ -88,37 +89,42 @@ const Invoice = () => {
                     <div className='thead'>
                         <b>Sr. No.</b>
                         <b>Task</b>
-                        <b>Description of services</b>
+                        <b>Description</b>
 
-                        <b>{formData.amount === "" && "Status"}</b>
+                        <b className='status_ph'>{formData.amount === "" && "Status"}</b>
                         <b className='text-right'>Amount</b>
                     </div>
 
                     <div className='Invoice_data'>
                         <div><b> {Array.from({ length: formData?.description?.length }, (_, i) => (
                             <p key={i}>{i + 1}</p>
-                        ))}</b></div>
-                        <div> {formData?.project?.map((pro, index) => (
-                            <p key={index}>{pro}</p>
-                        ))}</div>
-                        <div className='description-data'>
-                            {formData?.description?.map((desc, index) => (
-                                <p key={index}>{desc}</p>
+                        ))}</b>
+                        </div>
+                        <div className='combine_div'>
+                            {formData.description && Object.entries(formData.description).map(([key, value]) => (
+                                <div className='task_desc'>
+                                    <p key={key}>{key}</p>
+                                    <div className='desc_data'>
+                                        {value.map((val, index) => (
+                                            <p key={index}>{val}</p>
+                                        ))}
+                                    </div>
+                                </div>
                             ))}
                         </div>
-                        <div><p>{formData.amount === "" ? formData.AdvanceAmount : ""}</p></div>
+                        <div className='status_ph'><p>{formData.amount === "" ? formData.AdvanceAmount : ""}</p></div>
                         <div className='text-right'>
                             <p>{formData.currency} {totalAmount}</p>
                         </div>
                     </div>
 
-                    <div className='total_amount'>
-                        <div></div>
-                        <div></div>
-                        <div>
+                    <div className='total_amount flex_ph'>
+                        <div className='blank_ph'></div>
+                        <div className='blank_ph'></div>
+                        <div className='ph_view'>
                             <p style={{ fontSize: '18px' }}>Total Value</p>
                         </div>
-                        <div className='border_total_amount text-right'>
+                        <div className='border_total_amount text-right ph_view'>
                             <b>{formData.currency} {totalAmount}</b>
                         </div>
                     </div>
@@ -127,7 +133,7 @@ const Invoice = () => {
                 <h3 className='word_amount'>In Words: {formData.currency} {amountInWords} Only /-</h3>
                 <div className="form-head">
 
-                    <span className="bill-head">
+                    <span className="bill-head full_ph">
                         {formData.bankNamed && "Bank Detail"}
                         {formData.PaytmId && "Paytm Detail"}
                         {formData.payPalId && "PayPal Detail"}
@@ -135,13 +141,13 @@ const Invoice = () => {
                         {formData.payoneerId && "Payoneer Detail"}
 
                     </span>
-                    <span className="bill-head">Company Detail</span>
+                    <span className="bill-head ph_hide">Company Detail</span>
                 </div>
-                <div className="invoice-body">
+                <div className="invoice-body ph_bill">
                     <div className="invoice_bank">
                         <div>
                             {formData.bankNamed &&
-                                <div className="bank_data">
+                                <div className="bank_data main_bank_ph">
                                     <div>
                                         <label>Bank</label>
                                         <span>{formData.bankNamed}</span>
@@ -207,7 +213,9 @@ const Invoice = () => {
                         </div>
                     </div>
                     <div className="invoice_bank">
-                        <div className='bank_data'>
+                        <div className='bank_data main_bank_ph'>
+                            <span className="bill-head desc_hide">Company Detail</span>
+
                             <div>
                                 <label>Trade Name</label>
                                 <span>{formData.trade}</span>
@@ -234,7 +242,7 @@ const Invoice = () => {
                             <div>
                                 <label></label>
                                 <span>
-                                    <img src={`http://localhost:8000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
+                                    <img className='sign_mam' src={`http://localhost:8000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
                                 </span>
                             </div>
                             <div>
