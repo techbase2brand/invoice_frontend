@@ -135,10 +135,15 @@ function ProjectList() {
                 const filteredData = response?.data?.data?.filter(item => {
                     const invoiceDate = new Date(item.selectDate);
                     const selectDate = new Date(item.selectDate);
-                    return (!searchTerm || item.client.toLowerCase().includes(searchTerm.toLowerCase()) || item.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    return (!searchTerm || item.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         item.accNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         item.bankNamed.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        item.project.toLowerCase().includes(searchTerm.toLowerCase())) &&
+                        item.accName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.mobileNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        item.tradeName.toLowerCase().includes(searchTerm.toLowerCase())
+                    ) &&
                         (!selectedDays || invoiceDate >= fromDate) &&
                         (!startDate || invoiceDate >= startDate) &&
                         (!endDate || selectDate <= endDate);

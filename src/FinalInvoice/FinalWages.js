@@ -6,7 +6,6 @@ import numberToWords from 'number-to-words';
 import blobToBase64 from 'blob-to-base64'
 const FinalWages = () => {
     const [formData, setFormData] = useState({});
-    console.log("form", formData)
     const { id } = useParams();
     const targetRef = useRef();
     const totalRateAmount = parseInt(formData.basic || "0") + parseInt(formData.med || "0") + parseInt(formData.children || "0")
@@ -63,12 +62,13 @@ const FinalWages = () => {
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
                 <div className="table-container">
                     <div className="salary-slip">
-                        <h2 className='company-name'>{formData.companyName}</h2>
+                        <h2 className='company-name'>
+                        <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" />
+                            {formData.companyName}
+                            </h2>
                         <table style={{ width: '100%' }}>
                             <tbody className='table-body'>
-                                <tr>
-                                    <td colSpan="3" className='head-line'></td>
-                                </tr>
+                               
                                 <tr>
                                     <td colSpan="3" className='sal-advice'><span>Salary Slip</span></td>
                                 </tr>

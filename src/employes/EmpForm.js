@@ -14,12 +14,15 @@ const EmpForm = () => {
     designation: '',
     empCode: '',
     companyName: '',
+    companylogo: '',
   });
   const [error, setError] = useState(false);
+  const [img, setImg] = useState(false);
   const { id } = useParams();
   useEffect(() => {
     if (id) {
       fetchBankDetail(id);
+      setImg(false);
     }
   }, [id]);
 
@@ -87,7 +90,24 @@ const EmpForm = () => {
       }
     }
   };
+  const handleLogoUpload = async (e) => {
+    setImg(true);
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
 
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-wages-logo`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      const imageUrl = response.data.imageUrl;
+      setFormData(prevFormData => ({ ...prevFormData, companylogo: imageUrl }));
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
 
   return (
     <div>
@@ -172,6 +192,21 @@ const EmpForm = () => {
                 placeholder="Company Name"
                 className={defaultInputSmStyle}
                 onChange={handleChange}
+              />
+            </div>
+            <div className="text-sm mb-4">
+              <label className="block text-sm font-medium text-gray-700">Company logo</label>
+              {formData && formData.companylogo && (
+                <div className="mb-2">
+                  {!img &&
+                    <img src={`http://localhost:8000${formData.companylogo}`} alt="Current Signature" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                  }
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleLogoUpload}
               />
             </div>
             <div className="mt-3">

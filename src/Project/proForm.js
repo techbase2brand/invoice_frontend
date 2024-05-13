@@ -46,10 +46,12 @@ const ProForm = () => {
     const [description, setDescription] = useState(['']);
     const [company, setCompanyData] = useState([]);
     const [selectCompany, setSelectCompany] = useState('');
+    const [amounts, setAmounts] = useState({});
     const [comGst, setComGst] = useState('');
     const [comIfsc, setComIfsc] = useState('');
     const [comPanNo, setComPanNo] = useState('');
     const [signature, setSignature] = useState('');
+    const [logo, setLogo] = useState('');
     const [trade, setTrade] = useState('');
     const navigate = useNavigate();
     const { id } = useParams();
@@ -60,6 +62,18 @@ const ProForm = () => {
         }
     }, [id]);
 
+    const calculateTotalAmount = (amounts) => {
+        let total = 0;
+        for (const task in amounts) {
+            const values = amounts[task];
+            for (const key in values) {
+                total += parseInt(values[key]);
+            }
+        }
+        return total;
+    };
+
+    const totalAmount = calculateTotalAmount(amounts);
     useEffect(() => {
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-companyData`;
         axios.get(apiUrl)
@@ -87,6 +101,17 @@ const ProForm = () => {
             console.error('Error fetching bank detail:', error);
         }
     };
+
+    const handleAmountChange = (value, index, projectName) => {
+        setAmounts(prevAmounts => ({
+            ...prevAmounts,
+            [projectName]: {
+                ...(prevAmounts[projectName] || []),
+                [index]: value
+            }
+        }));
+    };
+
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
@@ -124,15 +149,18 @@ const ProForm = () => {
             setComIfsc(invoicelist.ifsc);
             setComPanNo(invoicelist.panNo);
             setSignature(invoicelist.signature);
+            setLogo(invoicelist.companylogo)
             setComGst(invoicelist.CompanygstNo);
             setPayStatus(invoicelist.paymentStatus);
-            setDescription(invoicelist.description);
             setPaymentMethod(invoicelist.payMethod)
             const enableGSTValue = invoicelist.enableGST === "true";
             setEnableGST(enableGSTValue);
             setAccName(invoicelist.accName);
             setTradeName(invoicelist.tradeName);
-            setTrade(invoicelist.tradde)
+            setTrade(invoicelist.tradde);
+            setDescription(invoicelist.description);
+            setProjectDescriptions(invoicelist.description);
+            setAmounts(invoicelist.amounts)
         }
     }, [invoicelist]);
     useEffect(() => {
@@ -151,7 +179,6 @@ const ProForm = () => {
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-clients`;
         axios.get(apiUrl)
             .then((response) => {
-                console.log("Client data:", response.data.data);
                 setClient(response.data.data)
             })
             .catch((error) => {
@@ -237,7 +264,7 @@ const ProForm = () => {
             setComIfsc(selectedCompany.ifsc);
             setComPanNo(selectedCompany.panNo);
             setSignature(selectedCompany.signature);
-
+            setLogo(selectedCompany.companylogo)
         }
     };
     const handleSubmit = () => {
@@ -277,14 +304,6 @@ const ProForm = () => {
             });
             return;
         }
-
-        // if (!advanceAmount) {
-        //     toast.error("Please Add Advance.", {
-        //         position: "bottom-center",
-        //         autoClose: 2000,
-        //     });
-        //     return;
-        // }
 
         const selectedClientName = client.find(item => item._id === selectedClient)?.clientName || '';
         const selectedBankName = data.find(item => item._id === selectBank)?.bankName || '';
@@ -328,13 +347,14 @@ const ProForm = () => {
             client: selectedClientName,
             tradde: trade,
             bankNamed: selectedBankName,
-            AdvanceAmount: advanceAmount
+            AdvanceAmount: advanceAmount || totalAmount,
+            amounts: amounts,
+            companylogo: logo
         };
 
         if (id) {
             axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-invoice/${id}`, formData)
                 .then(response => {
-                    console.log('Form data updated successfully:', response.data);
                     navigate("/project-Detail")
                 })
                 .catch(error => {
@@ -343,7 +363,6 @@ const ProForm = () => {
         } else {
             axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-clientBank`, formData)
                 .then(response => {
-                    console.log('Form data submitted successfully:', response.data);
                     navigate("/project-Detail")
                 })
                 .catch(error => {
@@ -590,10 +609,26 @@ const ProForm = () => {
                                                                             <input
                                                                                 type="text"
                                                                                 placeholder={`Description ${descIndex + 1}`}
-                                                                                value={desc}
+                                                                                value={(projectDescriptions[projectName] && projectDescriptions[projectName][descIndex]) || desc}
                                                                                 className={defaultInputSmStyle}
                                                                                 onChange={(e) =>
                                                                                     handleDescriptionChange(
+                                                                                        e.target.value,
+                                                                                        descIndex,
+                                                                                        projectName
+                                                                                    )
+                                                                                }
+                                                                            />
+                                                                            <label className="block text-sm font-medium text-gray-700">
+                                                                                Amount
+                                                                            </label>
+                                                                            <input
+                                                                                type="text"
+                                                                                placeholder={`Amount ${descIndex + 1}`}
+                                                                                value={(amounts[projectName] && amounts[projectName][descIndex]) || ''}
+                                                                                className={defaultInputSmStyle}
+                                                                                onChange={(e) =>
+                                                                                    handleAmountChange(
                                                                                         e.target.value,
                                                                                         descIndex,
                                                                                         projectName
@@ -628,7 +663,7 @@ const ProForm = () => {
                                     />
                                 </div>
                                 <label className="block text-sm font-medium text-gray-700">ADD GST</label>
-                                <input type='checkbox' name="enableGST" value={enableGST} onChange={handleCheckboxChange} checked={enableGST === true} />
+                                <input type='checkbox' style={{ width: '20px' }} name="enableGST" value={enableGST} onChange={handleCheckboxChange} checked={enableGST === true} />
                                 {enableGST &&
                                     <>
                                         <div className="text-sm mb-4"
@@ -699,6 +734,10 @@ const ProForm = () => {
                                         <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Signature</label>
                                             <img src={`http://localhost:8000${signature}`} alt="signature" style={{ width: '20%' }} />
+                                        </div>
+                                        <div className="text-sm mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Company Logo</label>
+                                            <img src={`http://localhost:8000${logo}`} alt="Company Logo" style={{ width: '20%' }} />
                                         </div>
                                         <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Gst</label>
@@ -962,18 +1001,20 @@ const ProForm = () => {
                                     <option value="CAD">CAD</option>
                                 </select>
                             </div>
-                            <div className="text-sm mb-4"
-                            >
-                                <label className="block text-sm font-medium text-gray-700">Advance</label>
-                                <input
-                                    type='text'
-                                    placeholder="Amount"
-                                    name='AdvanceAmount'
-                                    value={advanceAmount}
-                                    className={defaultInputSmStyle}
-                                    onChange={(event) => setAdvanceAmount(event.target.value)}
-                                />
-                            </div>
+                            {
+                                !amount &&
+                                <div className="text-sm mb-4"
+                                >
+                                    <label className="block text-sm font-medium text-gray-700">Advance</label>
+                                    <input
+                                        type='text'
+                                        placeholder="Amount"
+                                        name='AdvanceAmount'
+                                        value={totalAmount || advanceAmount}
+                                        className={defaultInputSmStyle}
+                                        onChange={(event) => setAdvanceAmount(event.target.value)}
+                                    />
+                                </div>}
                             <div className="text-sm mb-4"
                             >
                                 <label className="block text-sm font-medium text-gray-700">Full</label>

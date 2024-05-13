@@ -25,7 +25,6 @@ const ImageUpload = ({
   const onFileChange = useCallback(
     (e) => {
       const file = e.target.files[0];
-      console.log(file.type);
       let allowedExtensions = /(jpg|jpeg|png)$/i;
       const isValid = allowedExtensions.exec(file.type);
 

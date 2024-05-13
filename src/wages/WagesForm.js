@@ -14,6 +14,7 @@ const ProForm = () => {
   const [designation, setDesignation] = useState('');
   const [empCode, setEmpCode] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [logo, setLogo] = useState('')
   const [state, setState] = useState('');
   const [client, setClient] = useState([]);
   const [wages, setWages] = useState(null);
@@ -76,6 +77,7 @@ const ProForm = () => {
       setDesignation(wages.designation);
       setEmpCode(wages.empCode);
       setCompanyName(wages.companyName);
+      setLogo(wages.companylogo)
       setState(wages.empName);
       setBasic(wages.basic)
       setMed(wages.med)
@@ -105,6 +107,7 @@ const ProForm = () => {
       setDesignation("")
       setEmpCode("")
       setCompanyName("")
+      setLogo("");
     }
     const selectedClientId = event.target.value;
     setState(selectedClientId);
@@ -116,7 +119,8 @@ const ProForm = () => {
       setDepartment(selectedClient.department);
       setDesignation(selectedClient.designation)
       setEmpCode(selectedClient.empCode)
-      setCompanyName(selectedClient.companyName)
+      setCompanyName(selectedClient.companyName);
+      setLogo(selectedClient.companylogo)
     }
   };
 
@@ -149,6 +153,7 @@ const ProForm = () => {
       absent: absent,
       chooseDate: chooseDate,
       signature: sign.signature,
+      companylogo: logo
     };
 
     if (id) {
@@ -317,6 +322,10 @@ const ProForm = () => {
                         className={defaultInputSmStyle}
                         onChange={(event) => setCompanyName(event.target.value)}
                       />
+                    </div>
+                    <div className="text-sm mb-4">
+                      <label className="block text-sm font-medium text-gray-700">Company Logo</label>
+                      <img src={`http://localhost:8000${logo}`} alt="Company Logo" style={{ width: '20%' }} />
                     </div>
                   </>
                 }

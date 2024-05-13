@@ -9,7 +9,20 @@ import numberToWords from 'number-to-words';
 const Invoice = () => {
     const [formData, setFormData] = useState({});
     console.log("formData", formData)
-    const totalAmount = parseInt(formData.amount || "0") + parseInt(formData.AdvanceAmount || "0");
+    // const totalAmount = parseInt(formData.amount || "0") + parseInt(formData.AdvanceAmount || "0");
+    const calculateTotalAmount = () => {
+        let total = 0;
+        for (const task in formData.amounts) {
+            const amounts = formData.amounts[task];
+            for (const key in amounts) {
+                total += parseInt(amounts[key]);
+            }
+        }
+        return total;
+    };
+
+    // Usage:
+    const totalAmount = `${!formData.amount ? calculateTotalAmount() : formData.amount}`;
     const { id } = useParams();
     const pdfContentRef = useRef(null);
     // const downloadPdf = async () => {
@@ -50,11 +63,13 @@ const Invoice = () => {
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
 
-                <div className="logo">
-                    <img src="/logo-svg-01.png" alt="Company Logo" />
-                    <p className="form-num">{formData.invoice}</p>
+                <div className="logo text_invoice">
+                    {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
+                    <img src={`http://localhost:8000${formData.companylogo}`} alt="Company Logo" />
+                    {/* <p className="form-num">{formData.invoice}</p> */}
+                    <h2 className="tax-in">TAX INVOICE</h2>
+
                 </div>
-                <h2 className="tax-in">TAX INVOICE</h2>
                 <div className="form-head">
                     <span className="bill-head">Bill To</span>
                     <span className="bill-head">ORIGINAL FOR RECIPIENT</span>
@@ -91,38 +106,66 @@ const Invoice = () => {
                         <b>Task</b>
                         <b>Description</b>
 
-                        <b className='status_ph'>{formData.amount === "" && "Status"}</b>
+                        <b className='status_ph'>Status</b>
                         <b className='text-right'>Amount</b>
                     </div>
 
                     <div className='Invoice_data'>
-                        <div><b> {Array.from({ length: formData?.description?.length }, (_, i) => (
+                        {/* <div><b> {formData?.project?.map((item, i) => (
                             <p key={i}>{i + 1}</p>
                         ))}</b>
-                        </div>
+                        </div> */}
                         <div className='combine_div'>
-                            {formData.description && Object.entries(formData.description).map(([key, value]) => (
-                                <div className='task_desc'>
-                                    <p key={key}>{key}</p>
-                                    <div className='desc_data'>
-                                        {value.map((val, index) => (
-                                            <p key={index}>{val}</p>
-                                        ))}
-                                    </div>
+                            {formData.description && Object.entries(formData.description).map(([key, value], index) => (
+                                <div className='deta_combine'>
+                                    <p key={index}>{index + 1}</p>
+                                    <div className='task_combine'> 
+                                        <p style={{ fontWeight: '600' }} key={key}>{key}</p>
+                                        <div className='desc_data PDF_Desc'>
+                                            {value.map((val, index) => (
+                                                <p key={index}>{val}</p>
+                                            ))}
+                                        </div> 
+                                </div>
                                 </div>
                             ))}
+
                         </div>
-                        <div className='status_ph'><p>{formData.amount === "" ? formData.AdvanceAmount : ""}</p></div>
-                        <div className='text-right'>
+                        <div className='status_ph'><p>{formData.amount === "" ? "Advance" : "Full"}</p></div>
+                        {/* <div className='text-right'>
                             <p>{formData.currency} {totalAmount}</p>
+                            <p>1</p>
+                            <p>2</p>
+                        </div> */}
+                        <div className='text-right'>
+                            {formData.amount === "" ? <>
+                                {formData.amounts && Object.entries(formData.amounts).map(([key, amountObj]) => {
+                                    const descriptionArr = formData?.description[key] || [];
+                                    return (
+                                        <div className='task_desc right_amount' key={key}>
+                                            <div className='desc_data right_amount'>
+                                                {descriptionArr && descriptionArr.map((desc, index) => (
+                                                    <p key={index}>
+                                                        {amountObj[index]}
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </>
+                                :
+                                <p>{formData.currency} {totalAmount}</p>
+                            }
                         </div>
+
                     </div>
 
                     <div className='total_amount flex_ph'>
                         <div className='blank_ph'></div>
                         <div className='blank_ph'></div>
                         <div className='ph_view'>
-                            <p style={{ fontSize: '18px' }}>Total Value</p>
+                            <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
                         </div>
                         <div className='border_total_amount text-right ph_view'>
                             <b>{formData.currency} {totalAmount}</b>
@@ -134,11 +177,11 @@ const Invoice = () => {
                 <div className="form-head">
 
                     <span className="bill-head full_ph">
-                        {formData.bankNamed && "Bank Detail"}
-                        {formData.PaytmId && "Paytm Detail"}
-                        {formData.payPalId && "PayPal Detail"}
-                        {formData.wiseId && "Wise Detail"}
-                        {formData.payoneerId && "Payoneer Detail"}
+                        {formData.payMethod === "bank" && "Bank Detail"}
+                        {formData.payMethod === "paytm" && "Paytm Detail"}
+                        {formData.payMethod === "paypal" && "PayPal Detail"}
+                        {formData.payMethod === "wise" && "Wise Detail"}
+                        {formData.payMethod === "payOneer" && "Payoneer Detail"}
 
                     </span>
                     <span className="bill-head ph_hide">Company Detail</span>
