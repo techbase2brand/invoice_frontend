@@ -21,7 +21,6 @@ const ClientList = () => {
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-clients`;
         axios.get(apiUrl)
             .then((response) => {
-                console.log("response", response)
                 setData(response.data.data.reverse())
             })
             .catch((error) => {

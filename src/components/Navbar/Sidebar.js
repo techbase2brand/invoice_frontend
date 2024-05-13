@@ -55,7 +55,6 @@ const navItemDefaultClasses = "block px-4 py-2 rounded-md flex flex-1";
 function Sidebar() {
   const { showNavbar, initLoading, toggleNavbar } = useAppContext();
   const { pathname } = useLocation();
-  console.log("pathname", pathname)
   const company = useSelector(getCompanyData);
 
   const onClickNavbar = useCallback(() => {

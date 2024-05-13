@@ -23,7 +23,6 @@ function InvoiceSettingModal(props) {
 
   const onCancelHandler = useCallback(() => {
     dispatch(setSettingModalOpen(false));
-    console.log("Click");
   }, [dispatch]);
 
   const onClickBg = useCallback(
