@@ -32,7 +32,7 @@
 .logo.text_invoice img, .com_logo {
   width: 125px;
   height: 90px;
-  object-fit: contain;
+  object-fit: contain !important;
 }
 .app-wraper {
   background-color: #fafafa;
@@ -70,6 +70,7 @@
 }
 .deta_combine p {
   width: 50%;
+  font-size: 18px;
 }
 .right_amount {
   width: 100% !important;
@@ -78,6 +79,7 @@
 }
 .desc_data.PDF_Desc p {
   width: 100% !important;
+
 }
 .task_desc p {
   width: 100%;
@@ -230,9 +232,11 @@ br {
 }
 .logo.text_invoice {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: -4rem;
 }
 .form-num {
   margin-left: 26rem;
@@ -247,13 +251,28 @@ br {
 
 .invoice {
   width: 62%;
-  margin: 0 auto;
-  padding: 20px;
-  background: #fff;
-  border: 2px solid #ccc;
+  margin: 0 auto; 
+  background: #fff; 
   border-radius: 5px;
+  position: relative;
 }
-
+.invoice_section_new{
+  padding: 20px;
+  background: #ffffffe8;
+    z-index: 99;
+    position: relative;
+}
+img.logo_invoice_overlap {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  left: 50%;
+}
+.desc_data.PDF_Desc p {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 2;
+}
 .invoice-body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -276,6 +295,8 @@ br {
   width: 19%;
   max-width: 20%;
   display: inline-block;
+  color: #042da0;
+  font-size: 18px;
 }
 
 .Invoice_data div,
@@ -307,15 +328,16 @@ br {
 }
 
 h3.word_amount {
-  font-size: 18px;
-  margin-bottom: 2rem;
-  margin-top: 1rem;
+  font-size: 20px;
+  margin-bottom: 6rem;
+  margin-top: 4rem;
   font-weight: 700;
 }
 
 .bank_data div {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .bank_data span {
@@ -380,6 +402,8 @@ td {
   border-bottom: 1px solid black;
   width: 49%;
   padding-bottom: 10px;
+  color: #042da0;
+  font-size: 18px;
   /* text-align: center; */
 }
 .desc_data {
@@ -392,14 +416,18 @@ td {
   font-size: 18px;
 }
 
-.main-footer {
+/* .main-footer {
   padding: 24px 0 24px;
   background: #f5aa64;
+} */
+.main-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
-
 .footer {
   display: flex;
-  background: #6866ed;
+  /* background: #6866ed; */
   color: white;
   font-size: 14px;
   width: auto;
@@ -408,7 +436,8 @@ td {
 }
 
 .middle {
-  padding: 17px;
+  padding: 17px 12px;
+  font-size: 12px;
 }
 
 .address {
@@ -424,6 +453,7 @@ td {
   display: flex;
   align-items: center;
   gap: 7px;
+  font-size: 13px;
 }
 
 p {
@@ -453,26 +483,47 @@ p {
 .invoice-details_data div {
   display: flex;
   justify-content: space-between;
+  line-height: 1.8;
 }
 
 .invoice-details_data span {
   font-weight: 500;
+  font-size: 18px;
 }
-
+.status_ph p {
+  /* background: #047dd652; */
+  /* width: fit-content; */
+  /* padding: 1px 20px; */
+  /* border: 1px solid #052fa5; */
+  /* border-radius: 40px; */
+  margin-top: 10px;
+  /* color: #042da0; */
+  font-weight: 600;
+  line-height: 1.5;
+  /* height: 28px; */
+  font-size: 16px;
+}
+.border_total_amount.text-right.ph_view b {
+  font-style: italic;
+  font-size: 20px;
+}
 .invoice-details_data div label {
   font-size: 18px;
+  
 }
 
 .invoice-detail p {
   font-size: 18px;
+  line-height: 1.5;
 }
 
 .description-data p {
   font-size: 18px;
 }
 
-.text-right p {
-  font-size: 17px;
+.text-right p { 
+  font-size: 18px;
+    font-weight: 500;
 }
 
 .bank_data div label {

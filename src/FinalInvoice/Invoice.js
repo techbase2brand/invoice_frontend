@@ -4,8 +4,7 @@ import jsPDF from 'jspdf';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import generatePDF from "react-to-pdf";
-import numberToWords from 'number-to-words';
-
+import numberToWords from 'number-to-words'; 
 const Invoice = () => {
     const [formData, setFormData] = useState({});
     console.log("formData", formData)
@@ -62,17 +61,20 @@ const Invoice = () => {
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
-
+                <img className='logo_invoice_overlap' src={`http://localhost:8000${formData.companylogo}`} />
+                <img src='/header_invoice.png' className='w-full' />
                 <div className="logo text_invoice">
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
                     <img src={`http://localhost:8000${formData.companylogo}`} alt="Company Logo" />
                     {/* <p className="form-num">{formData.invoice}</p> */}
-                    <h2 className="tax-in">TAX INVOICE</h2>
+                    {/* <h2 className="tax-in">TAX INVOICE</h2> */}
 
                 </div>
+                <div className='invoice_section_new'>
+                
                 <div className="form-head">
                     <span className="bill-head">Bill To</span>
-                    <span className="bill-head">ORIGINAL FOR RECIPIENT</span>
+                    <span className="bill-head">Original For Recipient</span>
                 </div>
                 <div className="invoice-body">
                     <div className="invoice-detail">
@@ -295,6 +297,8 @@ const Invoice = () => {
                         </div>
                     </div>
                 </div>
+                 
+                </div>
                 <div className="main-footer">
                     <div className="footer">
                         <div className="middle">
@@ -345,6 +349,7 @@ const Invoice = () => {
                         </div>
                     </div>
                 </div>
+                <img src='/invoice_banner.png' className='w-full' /> 
             </div>
         </div>
     )
