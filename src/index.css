@@ -295,7 +295,7 @@ img.logo_invoice_overlap {
   width: 19%;
   max-width: 20%;
   display: inline-block;
-  color: #f75231;
+  color: #042da0;
   font-size: 18px;
 }
 
@@ -402,7 +402,7 @@ td {
   border-bottom: 1px solid black;
   width: 49%;
   padding-bottom: 10px;
-  color: #f75231;
+  color: #042da0;
   font-size: 18px;
   /* text-align: center; */
 }
