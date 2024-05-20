@@ -295,7 +295,7 @@ img.logo_invoice_overlap {
   width: 19%;
   max-width: 20%;
   display: inline-block;
-  color: #042da0;
+  color: #f75231;
   font-size: 18px;
 }
 
@@ -312,7 +312,7 @@ img.logo_invoice_overlap {
 }
 
 .table_invoce .thead {
-  border-top: 1px solid #000;
+  /* border-top: 1px solid #000; */
   border-bottom: 1px solid #000;
   padding-bottom: 10px;
 }
@@ -329,8 +329,8 @@ img.logo_invoice_overlap {
 
 h3.word_amount {
   font-size: 20px;
-  margin-bottom: 6rem;
-  margin-top: 4rem;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
   font-weight: 700;
 }
 
@@ -402,7 +402,7 @@ td {
   border-bottom: 1px solid black;
   width: 49%;
   padding-bottom: 10px;
-  color: #042da0;
+  color: #f75231;
   font-size: 18px;
   /* text-align: center; */
 }
@@ -668,6 +668,9 @@ p {
 }
 
 @media screen and (max-width: 767px) {
+  .invoice_section_new {
+    padding: 0px;
+  }
   .invoice {
     width: 100%;
     padding: 12px;

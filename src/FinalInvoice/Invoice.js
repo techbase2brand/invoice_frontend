@@ -62,7 +62,7 @@ const Invoice = () => {
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
                 <img className='logo_invoice_overlap' src={`http://localhost:8000${formData.companylogo}`} />
-                <img src='/header_invoice.png' className='w-full' />
+                <img src='/pdf_header.png' className='w-full' />
                 <div className="logo text_invoice">
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
                     <img src={`http://localhost:8000${formData.companylogo}`} alt="Company Logo" />
@@ -120,7 +120,7 @@ const Invoice = () => {
                         <div className='combine_div'>
                             {formData.description && Object.entries(formData.description).map(([key, value], index) => (
                                 <div className='deta_combine'>
-                                    <p key={index}>{index + 1}</p>
+                                    <p style={{ fontWeight: '600' }}  key={index}>{index + 1}</p>
                                     <div className='task_combine'> 
                                         <p style={{ fontWeight: '600' }} key={key}>{key}</p>
                                         <div className='desc_data PDF_Desc'>
@@ -349,7 +349,7 @@ const Invoice = () => {
                         </div>
                     </div>
                 </div>
-                <img src='/invoice_banner.png' className='w-full' /> 
+                <img src='/pdf_footer.png' className='w-full' /> 
             </div>
         </div>
     )
