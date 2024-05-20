@@ -61,7 +61,7 @@ const Invoice = () => {
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
-                <img className='logo_invoice_overlap' src='/b2b.png' />
+                <img className='logo_invoice_overlap' src='/b2b-icon.png' />
                 <img src='/header_invoice.png' className='w-full' />
                 <div className="logo text_invoice">
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
