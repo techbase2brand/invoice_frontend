@@ -4,7 +4,7 @@ import jsPDF from 'jspdf';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import generatePDF from "react-to-pdf";
-import numberToWords from 'number-to-words'; 
+import numberToWords from 'number-to-words';
 const Invoice = () => {
     const [formData, setFormData] = useState({});
     console.log("formData", formData)
@@ -71,233 +71,238 @@ const Invoice = () => {
 
                 </div>
                 <div className='invoice_section_new'>
-                
-                <div className="form-head">
-                    <span className="bill-head">Bill To</span>
-                    <span className="bill-head">Original For Recipient</span>
-                </div>
-                <div className="invoice-body">
-                    <div className="invoice-detail">
-                        <b>{formData.client}  </b>
-                        <p>{formData.company} </p>
-                        <p> {formData.email} </p>
-                        <p>{formData.mobileNo} </p>
-                        {/* <p>{formData.project} </p> */}
+
+                    <div className="form-head">
+                        <span className="bill-head">Bill To</span>
+                        <span className="bill-head">Original For Recipient</span>
                     </div>
-                    <div className="invoice-details_data">
-                        <div>
-                            <label>Invoice No.</label>
-                            <span>{formData.invoiceNo}</span>
+                    <div className="invoice-body">
+                        <div className="invoice-detail">
+                            <b>{formData.client}  </b>
+                            <p>{formData.company} </p>
+                            <p> {formData.email} </p>
+                            <p>{formData.mobileNo} </p>
+                            {/* <p>{formData.project} </p> */}
                         </div>
-                        <div>
-                            <label>Invoice Date</label>
-                            <span>{formData.selectDate ? formData.selectDate.split("T")[0] : "N/A"}</span>
-                        </div>
-                        {formData.gstNo &&
+                        <div className="invoice-details_data">
                             <div>
-                                <label>GST Code</label>
-                                <span>{formData.gstNo}</span>
+                                <label>Invoice No.</label>
+                                <span>{formData.invoiceNo}</span>
                             </div>
-                        }
+                            <div>
+                                <label>Invoice Date</label>
+                                <span>{formData.selectDate ? formData.selectDate.split("T")[0] : "N/A"}</span>
+                            </div>
+                            {formData.gstNo &&
+                                <div>
+                                    <label>GST Code</label>
+                                    <span>{formData.gstNo}</span>
+                                </div>
+                            }
+                        </div>
                     </div>
-                </div>
 
-                <div className='table_invoce'>
-                    <div className='thead'>
-                        <b>Sr. No.</b>
-                        <b>Task</b>
-                        <b>Description</b>
+                    <div className='table_invoce'>
+                        <div className='thead'>
+                            <b>Sr. No.</b>
+                            <b>Task</b>
+                            <b>Description</b>
 
-                        <b className='status_ph'>Status</b>
-                        <b className='text-right'>Amount</b>
-                    </div>
+                            <b className='status_ph'>Status</b>
+                            <b className='text-right'>Amount</b>
+                        </div>
 
-                    <div className='Invoice_data'>
-                        {/* <div><b> {formData?.project?.map((item, i) => (
+                        <div className='Invoice_data'>
+                            {/* <div><b> {formData?.project?.map((item, i) => (
                             <p key={i}>{i + 1}</p>
                         ))}</b>
                         </div> */}
-                        <div className='combine_div'>
-                            {formData.description && Object.entries(formData.description).map(([key, value], index) => (
-                                <div className='deta_combine'>
-                                    <p style={{ fontWeight: '600' }}  key={index}>{index + 1}</p>
-                                    <div className='task_combine'> 
-                                        <p style={{ fontWeight: '600' }} key={key}>{key}</p>
-                                        <div className='desc_data PDF_Desc'>
-                                            {value.map((val, index) => (
-                                                <p key={index}>{val}</p>
-                                            ))}
-                                        </div> 
-                                </div>
-                                </div>
-                            ))}
+                            <div className='combine_div'>
+                                {formData.description && Object.entries(formData.description).map(([key, value], index) => (
+                                    <div className='deta_combine'>
+                                        <p style={{ fontWeight: '600' }} key={index}>{index + 1}</p>
+                                        <div className='task_combine'>
+                                            <p style={{ fontWeight: '600' }} key={key}>{key}</p>
+                                            <div className='desc_data PDF_Desc'>
+                                                {value.map((val, index) => (
+                                                    <p key={index}>{val}</p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
 
-                        </div>
-                        <div className='status_ph'><p>{formData.amount === "" ? "Advance" : "Full"}</p></div>
-                        {/* <div className='text-right'>
+                            </div>
+                            <div className='status_ph'><p>{formData.amount === "" ? "Advance" : "Full"}</p></div>
+                            {/* <div className='text-right'>
                             <p>{formData.currency} {totalAmount}</p>
                             <p>1</p>
                             <p>2</p>
                         </div> */}
-                        <div className='text-right'>
-                            {formData.amount === "" ? <>
-                                {formData.amounts && Object.entries(formData.amounts).map(([key, amountObj]) => {
-                                    const descriptionArr = formData?.description[key] || [];
-                                    return (
-                                        <div className='task_desc right_amount' key={key}>
-                                            <div className='desc_data right_amount'>
-                                                {descriptionArr && descriptionArr.map((desc, index) => (
-                                                    <p key={index}>
-                                                        {amountObj[index]}
-                                                    </p>
-                                                ))}
+                            <div className='text-right'>
+                                {formData.amount === "" ? <>
+                                    {formData.amounts && Object.entries(formData.amounts).map(([key, amountObj]) => {
+                                        const descriptionArr = formData?.description[key] || [];
+                                        return (
+                                            <div className='task_desc right_amount' key={key}>
+                                                <div className='desc_data right_amount'>
+                                                    {descriptionArr && descriptionArr.map((desc, index) => (
+                                                        <p key={index}>
+                                                            {amountObj[index]}
+                                                        </p>
+                                                    ))}
+                                                </div>
                                             </div>
+                                        );
+                                    })}
+                                </>
+                                    :
+                                    <p>{formData.currency} {totalAmount}</p>
+                                }
+                            </div>
+
+                        </div>
+
+                        <div className='total_amount flex_ph'>
+                            <div className='blank_ph'></div>
+                            <div className='blank_ph'></div>
+                            <div className='ph_view'>
+                                <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
+                            </div>
+                            <div className='border_total_amount text-right ph_view'>
+                                <b>{formData.currency} {totalAmount}</b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 className='word_amount'>In Words: {formData.currency} {amountInWords} Only /-</h3>
+                    <div className="form-head">
+
+                        <span className="bill-head full_ph">
+                            {formData.payMethod === "bank" && "Bank Detail"}
+                            {formData.payMethod === "paytm" && "Paytm Detail"}
+                            {formData.payMethod === "paypal" && "PayPal Detail"}
+                            {formData.payMethod === "wise" && "Wise Detail"}
+                            {formData.payMethod === "payOneer" && "Payoneer Detail"}
+
+                        </span>
+                        <span className="bill-head ph_hide">Company Detail</span>
+                    </div>
+                    <div className="invoice-body ph_bill">
+                        <div className="invoice_bank">
+                            <div>
+                                {formData.bankNamed &&
+                                    <div className="bank_data main_bank_ph">
+                                        <div>
+                                            <label>Bank</label>
+                                            <span>{formData.bankNamed}</span>
                                         </div>
-                                    );
-                                })}
-                            </>
-                                :
-                                <p>{formData.currency} {totalAmount}</p>
-                            }
-                        </div>
+                                        <div>
+                                            <label>Branch</label>
+                                            <span>{formData.BranchName} </span>
+                                        </div>
+                                        <div>
+                                            <label>Account No.</label>
+                                            <span>{formData.accNo}</span>
+                                        </div>
+                                        <div>
+                                            <label>Account Name
+                                            </label>
+                                            <span>{formData.accName}</span>
+                                        </div>
+                                        <div>
+                                            <label>Account Type
+                                            </label>
+                                            <span>{formData.accType}</span>
+                                        </div>
+                                        <div>
+                                            <label>IFSC
+                                            </label>
+                                            <span>{formData.ifscCode}</span>
+                                        </div>
+                                        <div>
+                                            <label>Swift Code
+                                            </label>
+                                            <span>{formData.swiftCode}</span>
+                                        </div>
 
-                    </div>
+                                    </div>
+                                }
+                                <div className="bank_data">
+                                    {formData.PaytmId &&
+                                        <div>
+                                            <label>Paytm Id
+                                            </label>
+                                            <span>{formData.PaytmId}</span>
+                                        </div>
+                                    }
 
-                    <div className='total_amount flex_ph'>
-                        <div className='blank_ph'></div>
-                        <div className='blank_ph'></div>
-                        <div className='ph_view'>
-                            <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
-                        </div>
-                        <div className='border_total_amount text-right ph_view'>
-                            <b>{formData.currency} {totalAmount}</b>
-                        </div>
-                    </div>
-                </div>
 
-                <h3 className='word_amount'>In Words: {formData.currency} {amountInWords} Only /-</h3>
-                <div className="form-head">
-
-                    <span className="bill-head full_ph">
-                        {formData.payMethod === "bank" && "Bank Detail"}
-                        {formData.payMethod === "paytm" && "Paytm Detail"}
-                        {formData.payMethod === "paypal" && "PayPal Detail"}
-                        {formData.payMethod === "wise" && "Wise Detail"}
-                        {formData.payMethod === "payOneer" && "Payoneer Detail"}
-
-                    </span>
-                    <span className="bill-head ph_hide">Company Detail</span>
-                </div>
-                <div className="invoice-body ph_bill">
-                    <div className="invoice_bank">
-                        <div>
-                            {formData.bankNamed &&
-                                <div className="bank_data main_bank_ph">
-                                    <div>
-                                        <label>Bank</label>
-                                        <span>{formData.bankNamed}</span>
-                                    </div>
-                                    <div>
-                                        <label>Branch</label>
-                                        <span>{formData.BranchName} </span>
-                                    </div>
-                                    <div>
-                                        <label>Account No.</label>
-                                        <span>{formData.accNo}</span>
-                                    </div>
-                                    <div>
-                                        <label>Account Name
-                                        </label>
-                                        <span>{formData.accName}</span>
-                                    </div>
-                                    <div>
-                                        <label>Account Type
-                                        </label>
-                                        <span>{formData.accType}</span>
-                                    </div>
-                                    <div>
-                                        <label>IFSC
-                                        </label>
-                                        <span>{formData.ifscCode}</span>
-                                    </div>
-
+                                    {formData.payPalId &&
+                                        <div>
+                                            <label>Paypal Id
+                                            </label>
+                                            <span>{formData.payPalId}</span>
+                                        </div>
+                                    }
+                                    {formData.wiseId &&
+                                        <div>
+                                            <label>Wise Id
+                                            </label>
+                                            <span>{formData.wiseId}</span>
+                                        </div>
+                                    }
+                                    {formData.payoneerId &&
+                                        <div>
+                                            <label>Payoneer Id
+                                            </label>
+                                            <span>{formData.payoneerId}</span>
+                                        </div>
+                                    }
                                 </div>
-                            }
-                            <div className="bank_data">
-                                {formData.PaytmId &&
-                                    <div>
-                                        <label>Paytm Id
-                                        </label>
-                                        <span>{formData.PaytmId}</span>
-                                    </div>
-                                }
-
-
-                                {formData.payPalId &&
-                                    <div>
-                                        <label>Paypal Id
-                                        </label>
-                                        <span>{formData.payPalId}</span>
-                                    </div>
-                                }
-                                {formData.wiseId &&
-                                    <div>
-                                        <label>Wise Id
-                                        </label>
-                                        <span>{formData.wiseId}</span>
-                                    </div>
-                                }
-                                {formData.payoneerId &&
-                                    <div>
-                                        <label>Payoneer Id
-                                        </label>
-                                        <span>{formData.payoneerId}</span>
-                                    </div>
-                                }
                             </div>
                         </div>
-                    </div>
-                    <div className="invoice_bank">
-                        <div className='bank_data main_bank_ph'>
-                            <span className="bill-head desc_hide">Company Detail</span>
+                        <div className="invoice_bank">
+                            <div className='bank_data main_bank_ph'>
+                                <span className="bill-head desc_hide">Company Detail</span>
 
-                            <div>
-                                <label>Trade Name</label>
-                                <span>{formData.trade}</span>
-                            </div>
-                            {formData.gstNo &&
                                 <div>
-                                    <label>Ifsc Code</label>
-                                    <span>{formData.ifsc}</span>
+                                    <label>Trade Name</label>
+                                    <span>{formData.trade}</span>
                                 </div>
-                            }
-                            <>
-                                <div>
-                                    <label>GSTIN</label>
-                                    <span><input type="text" className='transprent_gst' value={formData.CompanygstNo} /></span>
-                                </div>
+                                {formData.gstNo &&
+                                    <div>
+                                        <label>Ifsc Code</label>
+                                        <span>{formData.ifsc}</span>
+                                    </div>
+                                }
+                                <>
+                                    <div>
+                                        <label>GSTIN</label>
+                                        <span><input type="text" className='transprent_gst' value={formData.CompanygstNo} /></span>
+                                    </div>
 
-                            </>
-                            {!formData.gstNo &&
+                                </>
+                                {!formData.gstNo &&
+                                    <div>
+                                        <label>PAN</label>
+                                        <span>{formData.panNo}</span>
+                                    </div>
+                                }
                                 <div>
-                                    <label>PAN</label>
-                                    <span>{formData.panNo}</span>
+                                    <label></label>
+                                    <span>
+                                        <img className='sign_mam' src={`http://localhost:8000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
+                                    </span>
                                 </div>
-                            }
-                            <div>
-                                <label></label>
-                                <span>
-                                    <img className='sign_mam' src={`http://localhost:8000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
-                                </span>
-                            </div>
-                            <div>
-                                <label></label>
-                                <span>{formData.trade}</span>
+                                <div>
+                                    <label></label>
+                                    <span>{formData.trade}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                 
+
                 </div>
                 <div className="main-footer">
                     <div className="footer">
@@ -349,7 +354,7 @@ const Invoice = () => {
                         </div>
                     </div>
                 </div>
-                <img src='/invoice_banner.png' className='w-full' /> 
+                <img src='/invoice_banner.png' className='w-full' />
             </div>
         </div>
     )

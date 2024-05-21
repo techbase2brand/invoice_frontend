@@ -65,9 +65,9 @@ const WagesList = () => {
               <th scope="col" class="px-6 py-3">
                 Company Name
               </th>
-              <th scope="col" class="px-6 py-3">
+              {/* <th scope="col" class="px-6 py-3">
                 Signature
-              </th>
+              </th> */}
               <th scope="col" class="px-6 py-3">
                 Action
               </th>
@@ -98,9 +98,9 @@ const WagesList = () => {
                 <td className="px-6 py-4">
                   {item.companyName || "N/A"}
                 </td>
-                <td className="px-6 py-4">
+                {/* <td className="px-6 py-4">
                   <img src={item.signature} alt="Uploaded" style={{ maxWidth: '40px', maxHeight: '40px' }} />
-                </td>
+                </td> */}
                 <td style={{ display: 'flex', gap: '20px' }}>
                   <Link to={`/wages-form/${item._id}`}>
                     <span>

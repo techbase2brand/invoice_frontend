@@ -64,7 +64,7 @@ const FinalWages = () => {
                     <div className="salary-slip">
                         <h2 className='company-name'>
                         <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" />
-                            {formData.companyName}
+                            {/* {formData.companyName} */}
                             </h2>
                         <table style={{ width: '100%' }}>
                             <tbody className='table-body'>
@@ -153,8 +153,8 @@ const FinalWages = () => {
                             </tbody>
                         </table>
                         <div className='admin-sign'>
-                            <h1 className="company-head" >For {formData.companyName}</h1>
-                            <img src={`http://localhost:8000${formData.signature}`} alt="Uploaded" className='image-adjust' />
+                            <h1 className="company-head" >This is a system genrated Pdf sign not required.</h1>
+                            {/* <img src={`http://localhost:8000${formData.signature}`} alt="Uploaded" className='image-adjust' /> */}
                         </div>
                     </div>
                 </div>

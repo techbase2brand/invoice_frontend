@@ -90,24 +90,24 @@ const EmpForm = () => {
       }
     }
   };
-  const handleLogoUpload = async (e) => {
-    setImg(true);
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
+  // const handleLogoUpload = async (e) => {
+  //   setImg(true);
+  //   const file = e.target.files[0];
+  //   const formData = new FormData();
+  //   formData.append('image', file);
 
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-wages-logo`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      const imageUrl = response.data.imageUrl;
-      setFormData(prevFormData => ({ ...prevFormData, companylogo: imageUrl }));
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
+  //   try {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-wages-logo`, formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     });
+  //     const imageUrl = response.data.imageUrl;
+  //     setFormData(prevFormData => ({ ...prevFormData, companylogo: imageUrl }));
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
 
   return (
     <div>
@@ -194,7 +194,7 @@ const EmpForm = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="text-sm mb-4">
+            {/* <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Company logo</label>
               {formData && formData.companylogo && (
                 <div className="mb-2">
@@ -208,7 +208,7 @@ const EmpForm = () => {
                 accept="image/*"
                 onChange={handleLogoUpload}
               />
-            </div>
+            </div> */}
             <div className="mt-3">
               <button type="submit" class="primary-background-color w-full text-white   hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >{id ? "Update" : "Submit"}</button>
             </div>
