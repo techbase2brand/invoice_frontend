@@ -31,8 +31,9 @@
 }
 .logo.text_invoice img, .com_logo {
   width: 125px;
-  height: 90px;
+  /* height: 90px; */
   object-fit: contain !important;
+  padding: 10px;
 }
 .app-wraper {
   background-color: #fafafa;
@@ -69,8 +70,13 @@
   text-transform: capitalize;
 }
 .deta_combine p {
-  width: 50%;
-  font-size: 18px;
+  width: 41%;
+  font-size: 17px;
+}
+img.w-full.header_invoice {
+  height: 180px;
+  object-fit: cover;
+  margin-bottom: 5px;
 }
 .right_amount {
   width: 100% !important;
@@ -97,7 +103,7 @@
   padding: 7.1px 0px;
 }
 .combine_div {
-  min-width: 60% !important; 
+  min-width: 70% !important; 
 }
 
 .text-default-color {
@@ -258,6 +264,8 @@ br {
 }
 .invoice_section_new{
   padding: 20px;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
   background: #ffffffe8;
     z-index: 99;
     position: relative;
@@ -269,9 +277,16 @@ img.logo_invoice_overlap {
   left: 50%;
 }
 .desc_data.PDF_Desc p {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 500;
-  line-height: 2;
+  /* line-height: 2; */
+}
+.status_ph {
+  min-width: 10% !important;
+  max-width: 10% !important;
+}
+b.space_desc {
+  min-width: 30%;
 }
 .invoice-body {
   display: grid;
@@ -329,8 +344,8 @@ img.logo_invoice_overlap {
 
 h3.word_amount {
   font-size: 20px;
-  margin-bottom: 3rem;
-  margin-top: 3rem;
+  margin-bottom: 1rem;
+  /* margin-top: 3rem;   */
   font-weight: 700;
 }
 
@@ -522,7 +537,7 @@ p {
 }
 
 .text-right p { 
-  font-size: 18px;
+  font-size: 17px;
     font-weight: 500;
 }
 
@@ -550,6 +565,9 @@ p {
 
 .salary-slip {
   margin-bottom: 20px;
+  background: #ffffffde;
+  z-index: 9;
+  position: relative;
 }
 
 .salary-slip h2 {
@@ -565,8 +583,8 @@ p {
 .salary-slip th,
 .salary-slip td {
   padding: 5px;
-  border-right: 2px solid !important;
-  border-left: 2px solid;
+  border-right: 1px solid !important;
+  border-left: 1px solid;
 }
 
 .salary-slip th {
@@ -575,7 +593,7 @@ p {
 }
 
 .salary-slip tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f9f9f945;
 }
 
 .salary-slip .total {
@@ -602,13 +620,20 @@ p {
 }
 
 .salary-slip .section-header {
-  background-color: #eee;
+  background-color: #eeeeee47;
   font-weight: bold;
 }
 
-
+.width_add{
+  width: 40%;
+}
 .table-row {
   float: right;
+  font-weight: 700;
+}
+.bold_data{
+  font-weight: 700 !important;
+
 }
 
 .company-head {
@@ -620,6 +645,7 @@ p {
 
 .table-body tr td {
   font-weight: 600;
+  line-height: 3;
 }
 
 .sal-advice {

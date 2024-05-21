@@ -62,7 +62,7 @@ const Invoice = () => {
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
                 <img className='logo_invoice_overlap' src='/b2b-icon.png' />
-                <img src='/header_invoice.png' className='w-full' />
+                <img src='/header_invoice.png' className='w-full header_invoice' />
                 <div className="logo text_invoice">
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
                     <img src={`http://localhost:8000${formData.companylogo}`} alt="Company Logo" />
@@ -106,7 +106,7 @@ const Invoice = () => {
                         <div className='thead'>
                             <b>Sr. No.</b>
                             <b>Task</b>
-                            <b>Description</b>
+                            <b className='space_desc'>Description</b>
 
                             <b className='status_ph'>Status</b>
                             <b className='text-right'>Amount</b>
