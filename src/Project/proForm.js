@@ -53,6 +53,10 @@ const ProForm = () => {
     const [signature, setSignature] = useState('');
     const [logo, setLogo] = useState('');
     const [trade, setTrade] = useState('');
+    const [companyLogos, setCompanyLogos] = useState([]);
+    const [selectedLogo, setSelectedLogo] = useState('');
+    const [signatures, setSignatures] = useState([]);
+    const signaturePayload = signatures.map(signature => signature.signature);
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -73,6 +77,33 @@ const ProForm = () => {
         return total;
     };
 
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/get-signature`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    setSignatures(data.data);
+                } else {
+                    console.error('Failed to fetch signatures:', data.message);
+                }
+            })
+            .catch(error => console.error('Error fetching signatures:', error));
+    }, []);
+
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/get-companyLogo`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    setCompanyLogos(data.data);
+                } else {
+                    console.error('Failed to fetch company logos:', data.message);
+                }
+            })
+            .catch(error => console.error('Error fetching company logos:', error));
+    }, []);
+
+
     const totalAmount = calculateTotalAmount(amounts);
     useEffect(() => {
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-companyData`;
@@ -84,7 +115,9 @@ const ProForm = () => {
                 console.error('Error fetching invoices:', error);
             });
     }, []);
-
+    const handleSelectChange = (event) => {
+        setSelectedLogo(event.target.value);
+    };
     const handleCheckboxChange = (event) => {
         setEnableGST(event.target.checked);
         if (!event.target.checked) {
@@ -161,6 +194,7 @@ const ProForm = () => {
             setDescription(invoicelist.description);
             setProjectDescriptions(invoicelist.description);
             setAmounts(invoicelist.amounts)
+            setSelectedLogo(invoicelist.companylogo)
         }
     }, [invoicelist]);
     useEffect(() => {
@@ -340,7 +374,7 @@ const ProForm = () => {
             ifsc: comIfsc,
             panNo: comPanNo,
             CompanygstNo: comGst,
-            signature: signature,
+            signature: signaturePayload[0],
             paymentStatus: payStatus || "draft",
             payMethod: paymentMethod,
             enableGST: enableGST,
@@ -349,7 +383,7 @@ const ProForm = () => {
             bankNamed: selectedBankName,
             AdvanceAmount: advanceAmount || totalAmount,
             amounts: amounts,
-            companylogo: logo
+            companylogo: selectedLogo
         };
 
         if (id) {
@@ -623,7 +657,7 @@ const ProForm = () => {
                                                                                 Amount
                                                                             </label>
                                                                             <input
-                                                                                type="text"
+                                                                                type="number"
                                                                                 placeholder={`Amount ${descIndex + 1}`}
                                                                                 value={(amounts[projectName] && amounts[projectName][descIndex]) || ''}
                                                                                 className={defaultInputSmStyle}
@@ -731,14 +765,14 @@ const ProForm = () => {
                                                 onChange={(event) => setComPanNo(event.target.value)}
                                             />
                                         </div>
-                                        <div className="text-sm mb-4">
+                                        {/* <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Signature</label>
                                             <img src={`http://localhost:8000${signature}`} alt="signature" style={{ width: '20%' }} />
                                         </div>
                                         <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Company Logo</label>
                                             <img src={`http://localhost:8000${logo}`} alt="Company Logo" style={{ width: '20%' }} />
-                                        </div>
+                                        </div> */}
                                         <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Gst</label>
                                             <input
@@ -1013,6 +1047,7 @@ const ProForm = () => {
                                         value={totalAmount || advanceAmount}
                                         className={defaultInputSmStyle}
                                         onChange={(event) => setAdvanceAmount(event.target.value)}
+                                        disabled={!advanceAmount}
                                     />
                                 </div>}
                             <div className="text-sm mb-4"
@@ -1037,6 +1072,19 @@ const ProForm = () => {
                                     <option value="paid">Paid</option>
                                     <option value="unpaid">Unpaid</option>
                                     <option value="draft">Draft</option>
+                                </select>
+                            </div>
+                            <div className="text-sm mb-4">
+                                <select
+                                    className={defaultInputSmBlack}
+                                    value={selectedLogo}
+                                    onChange={handleSelectChange}
+                                >
+                                    <option value="">Select Company Logo</option>
+                                    {companyLogos.map(logo => (
+                                        <option key={logo._id} value={logo.companylogo}>{logo.name}</option>
+                                    ))}
+
                                 </select>
                             </div>
                             <div className="mt-3 px-10">

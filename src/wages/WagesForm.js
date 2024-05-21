@@ -39,6 +39,10 @@ const ProForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [img, setImg] = useState(false);
+  const [companyLogos, setCompanyLogos] = useState([]);
+  const [selectedLogo, setSelectedLogo] = useState('');
+  // const [signatures, setSignatures] = useState([]);
+  // const signaturePayload = signatures.map(signature => signature.signature);
 
   useEffect(() => {
     if (id) {
@@ -46,6 +50,32 @@ const ProForm = () => {
       setImg(false);
     }
   }, [id]);
+
+  // useEffect(() => {
+  //   fetch(`${process.env.REACT_APP_API_BASE_URL}/get-signature`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       if (data.success) {
+  //         setSignatures(data.data);
+  //       } else {
+  //         console.error('Failed to fetch signatures:', data.message);
+  //       }
+  //     })
+  //     .catch(error => console.error('Error fetching signatures:', error));
+  // }, []);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/get-companyLogo`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setCompanyLogos(data.data);
+        } else {
+          console.error('Failed to fetch company logos:', data.message);
+        }
+      })
+      .catch(error => console.error('Error fetching company logos:', error));
+  }, []);
 
   useEffect(() => {
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-empData`;
@@ -77,7 +107,7 @@ const ProForm = () => {
       setDesignation(wages.designation);
       setEmpCode(wages.empCode);
       setCompanyName(wages.companyName);
-      setLogo(wages.companylogo)
+      setSelectedLogo(wages.companylogo)
       setState(wages.empName);
       setBasic(wages.basic)
       setMed(wages.med)
@@ -152,8 +182,8 @@ const ProForm = () => {
       medicalLeave: medicalLeave,
       absent: absent,
       chooseDate: chooseDate,
-      signature: sign.signature,
-      companylogo: logo
+      // signature: signaturePayload[0],
+      companylogo: selectedLogo
     };
 
     if (id) {
@@ -178,7 +208,9 @@ const ProForm = () => {
         });
     }
   };
-
+  const handleSelectChange = (event) => {
+    setSelectedLogo(event.target.value);
+  };
 
   const handlePaymentStatus = (event) => {
     setDaysMonth(event.target.value)
@@ -208,23 +240,23 @@ const ProForm = () => {
   const handleDateChange = (date) => {
     setChooseDate(date);
   };
-  const handleImageUpload = async (e) => {
-    setImg(true);
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-sign`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      const imageUrl = response.data.imageUrl;
-      setSign(prevFormData => ({ ...prevFormData, signature: imageUrl }));
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
+  // const handleImageUpload = async (e) => {
+  //   setImg(true);
+  //   const file = e.target.files[0];
+  //   const formData = new FormData();
+  //   formData.append('image', file);
+  //   try {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-sign`, formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data'
+  //       }
+  //     });
+  //     const imageUrl = response.data.imageUrl;
+  //     setSign(prevFormData => ({ ...prevFormData, signature: imageUrl }));
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
   return (
     <div>
       <div
@@ -323,10 +355,10 @@ const ProForm = () => {
                         onChange={(event) => setCompanyName(event.target.value)}
                       />
                     </div>
-                    <div className="text-sm mb-4">
+                    {/* <div className="text-sm mb-4">
                       <label className="block text-sm font-medium text-gray-700">Company Logo</label>
                       <img src={`http://localhost:8000${logo}`} alt="Company Logo" style={{ width: '20%' }} />
-                    </div>
+                    </div> */}
                   </>
                 }
               </div>
@@ -547,6 +579,19 @@ const ProForm = () => {
 
                 </div>
                 <div className="text-sm mb-4">
+                  <select
+                    className={defaultInputSmBlack}
+                    value={selectedLogo}
+                    onChange={handleSelectChange}
+                  >
+                    <option value="">Select Company Logo</option>
+                    {companyLogos.map(logo => (
+                      <option key={logo._id} value={logo.companylogo}>{logo.name}</option>
+                    ))}
+
+                  </select>
+                </div>
+                {/* <div className="text-sm mb-4">
                   <label className="block text-sm font-medium text-gray-700">Signature</label>
                   {wages && wages.signature && (
                     <div className="mb-2">
@@ -560,7 +605,7 @@ const ProForm = () => {
                     accept="image/*"
                     onChange={handleImageUpload}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="mt-3 px-10">
                 <Button block={1} onClick={handleSubmit}>

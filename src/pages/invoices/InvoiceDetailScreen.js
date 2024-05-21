@@ -12,6 +12,10 @@ const FormCli = () => {
     signature: '',
     companylogo: '',
   });
+  const [logo, setLogo] = useState({
+    name: '',
+    companylogo: '',
+  });
   const navigate = useNavigate();
   const [error, setError] = useState(false);
   const [enableGST, setEnableGST] = useState(false);
@@ -52,7 +56,7 @@ const FormCli = () => {
         }
       });
       const imageUrl = response.data.imageUrl;
-      setFormData(prevFormData => ({ ...prevFormData, signature: imageUrl }));
+      setFormData(prevFormData => ({ ...prevFormData,name: 'Signature', signature: imageUrl }));
     } catch (error) {
       console.error('Error uploading image:', error);
     }
@@ -71,7 +75,8 @@ const FormCli = () => {
         }
       });
       const imageUrl = response.data.imageUrl;
-      setFormData(prevFormData => ({ ...prevFormData, companylogo: imageUrl }));
+      // setLogo(prevFormData => ({ ...prevFormData,name : 'Arti',signature: imageUrl }));
+      setLogo(prevFormData => ({ ...prevFormData, name: 'SAI Legal', companylogo: imageUrl }));
     } catch (error) {
       console.error('Error uploading image:', error);
     }
@@ -131,7 +136,7 @@ const FormCli = () => {
         if (id) {
           response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-comp-data/${id}`, formData);
         } else {
-          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-companyData`, formData);
+          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-companyLogo`, logo);
         }
         if (response.status === 201 || response.status === 200) {
           navigate("/listing");
