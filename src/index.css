@@ -101,6 +101,7 @@ img.w-full.header_invoice {
   display: flex !important;
   border-bottom: 1px solid #ccc;
   padding: 7.1px 0px;
+   line-height: 2;
 }
 .combine_div {
   min-width: 70% !important; 
@@ -269,6 +270,7 @@ br {
   background: #ffffffe8;
     z-index: 99;
     position: relative;
+    height: 100vh;
 }
 img.logo_invoice_overlap {
   position: absolute;
@@ -286,7 +288,7 @@ img.logo_invoice_overlap {
   max-width: 10% !important;
 }
 b.space_desc {
-  min-width: 30%;
+  min-width: 30% !important;
 }
 .invoice-body {
   display: grid;
