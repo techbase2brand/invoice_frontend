@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from "react-toastify";
+import moment from 'moment';
 const ProForm = () => {
     const [client, setClient] = useState([]);
     const [selectedClient, setSelectedClient] = useState('');
@@ -146,7 +147,8 @@ const ProForm = () => {
     };
 
     const handleDateChange = (date) => {
-        setSelectedDate(date);
+        const localDate = moment(date).startOf('day').toDate();
+        setSelectedDate(localDate);
     };
 
     useEffect(() => {
@@ -291,7 +293,7 @@ const ProForm = () => {
         // if (!selectedCompanyId) {
         //     setSelectCompany("");
         // }
-        setSelectCompany(selectedCompanyId);
+        // setSelectCompany(selectedCompanyId);
         const selectedCompany = company.find(item => item._id === selectedCompanyId);
         if (selectedCompany) {
             setComGst(selectedCompany.gstNo);
@@ -341,7 +343,8 @@ const ProForm = () => {
 
         const selectedClientName = client.find(item => item._id === selectedClient)?.clientName || '';
         const selectedBankName = data.find(item => item._id === selectBank)?.bankName || '';
-        const selectedTradeName = company.find(item => item._id === selectCompany)?.trade || '';
+        const selectedTradeName = company.find(item => item._id === trade)?.trade || '';
+        const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
         const formData = {
             clientName: state,
             company: companyName,
@@ -367,7 +370,7 @@ const ProForm = () => {
             gstNo: gstNo,
             gstin: gstin,
             amount: amount,
-            selectDate: selectedDate,
+            selectDate: formattedDate,
             currency: currency,
             description: projectDescriptions,
             trade: selectedTradeName,
@@ -632,10 +635,10 @@ const ProForm = () => {
                                                             />
                                                             <label htmlFor={projectName}>{projectName}</label>
                                                         </div>
-                                                        {selectedProject.includes(projectName) && (
+                                                        {selectedProject?.includes(projectName) && (
                                                             <>
                                                                 {projectDescriptions[projectName] &&
-                                                                    projectDescriptions[projectName].map((desc, descIndex) => (
+                                                                    projectDescriptions[projectName]?.map((desc, descIndex) => (
                                                                         <div key={descIndex} className="text-sm mb-4">
                                                                             <label className="block text-sm font-medium text-gray-700">
                                                                                 Description {descIndex + 1}
@@ -743,7 +746,7 @@ const ProForm = () => {
                                         ))}
                                     </select>
                                 </div>
-                                {selectCompany &&
+                                {trade &&
                                     <>
                                         <div className="text-sm mb-4">
                                             <label className="block text-sm font-medium text-gray-700">Ifsc</label>
@@ -1033,6 +1036,7 @@ const ProForm = () => {
                                     <option value="USD">USD</option>
                                     <option value="INR">INR</option>
                                     <option value="CAD">CAD</option>
+                                    <option value="GBP">GBP</option>
                                 </select>
                             </div>
                             {
@@ -1047,14 +1051,14 @@ const ProForm = () => {
                                         value={totalAmount || advanceAmount}
                                         className={defaultInputSmStyle}
                                         onChange={(event) => setAdvanceAmount(event.target.value)}
-                                        disabled={!advanceAmount}
+                                        disabled={!advanceAmount || advanceAmount}
                                     />
                                 </div>}
                             <div className="text-sm mb-4"
                             >
                                 <label className="block text-sm font-medium text-gray-700">Full</label>
                                 <input
-                                    type='text'
+                                    type='number'
                                     placeholder="Amount"
                                     name='amount'
                                     value={amount}

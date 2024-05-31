@@ -70,9 +70,9 @@ function InvoiceTable() {
               <th scope="col" class="px-6 py-3">
                 GST
               </th>
-              <th scope="col" class="px-6 py-3">
+              {/* <th scope="col" class="px-6 py-3">
                 Signature
-              </th>
+              </th> */}
               <th scope="col" class="px-6 py-3">
                 Action
               </th>
@@ -93,9 +93,9 @@ function InvoiceTable() {
                 <td className="px-6 py-4">
                   {item.gstNo}
                 </td>
-                <td className="px-6 py-4">
+                {/* <td className="px-6 py-4">
                   <img src={item.signature} alt="Uploaded" style={{ maxWidth: '40px', maxHeight: '40px' }}/>
-                </td>
+                </td> */}
                 <td style={{ display: 'flex', gap: '20px' }}>
                   <Link to={`/company/${item._id}`}>
                     <span >

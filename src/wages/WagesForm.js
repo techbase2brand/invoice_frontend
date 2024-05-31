@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from "react-toastify";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
 const ProForm = () => {
   const [empName, setEmpName] = useState('');
   const [familyMember, setFamilyMember] = useState('');
@@ -43,6 +44,13 @@ const ProForm = () => {
   const [selectedLogo, setSelectedLogo] = useState('');
   // const [signatures, setSignatures] = useState([]);
   // const signaturePayload = signatures.map(signature => signature.signature);
+
+
+  const totalAmount = parseInt(basic || "0") + parseInt(med || "0") + parseInt(children || "0") + parseInt(house || "0")
+    + parseInt(conveyance || "0") + parseInt(earning || "0") + parseInt(arrear || "0") + parseInt(reimbursement || "0") + parseInt(health || "0")
+    + parseInt(epf || "0") + parseInt(tds || "0");
+
+  console.log("basic", totalAmount);
 
   useEffect(() => {
     if (id) {
@@ -156,6 +164,7 @@ const ProForm = () => {
 
   const handleSubmit = () => {
     const selectedEmpName = client.find(item => item._id === empName)?.empName || '';
+    const formattedDate = moment(chooseDate).format('YYYY-MM-DD');
     const formData = {
       empName: state,
       familyMember: familyMember,
@@ -181,7 +190,7 @@ const ProForm = () => {
       causelLeave: causelLeave,
       medicalLeave: medicalLeave,
       absent: absent,
-      chooseDate: chooseDate,
+      chooseDate: formattedDate,
       // signature: signaturePayload[0],
       companylogo: selectedLogo
     };
@@ -238,7 +247,8 @@ const ProForm = () => {
   };
 
   const handleDateChange = (date) => {
-    setChooseDate(date);
+    const localDate = moment(date).startOf('day').toDate();
+    setChooseDate(localDate);
   };
   // const handleImageUpload = async (e) => {
   //   setImg(true);
@@ -369,7 +379,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">Basic</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="Basic"
                   name='basic'
                   value={basic}
@@ -381,7 +391,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">Med.</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="Med."
                   name='med'
                   value={med}
@@ -393,7 +403,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">children education allowance</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="children education allowance"
                   name='children'
                   value={children}
@@ -405,7 +415,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">House Rent allowance</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="House Rent allowance"
                   name='house'
                   value={house}
@@ -417,7 +427,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">Conveyance allowance</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="Conveyance allowance"
                   name='conveyance'
                   value={conveyance}
@@ -429,7 +439,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">other Earning</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="other Earning"
                   name='earning'
                   value={earning}
@@ -441,7 +451,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">Arrear</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="Arrear"
                   name='arrear'
                   value={arrear}
@@ -453,7 +463,7 @@ const ProForm = () => {
               >
                 <label className="block text-sm font-medium text-gray-700">Reimbursement</label>
                 <input
-                  type='text'
+                  type='number'
                   placeholder="Reimbursement"
                   name='reimbursement'
                   value={reimbursement}
@@ -471,7 +481,7 @@ const ProForm = () => {
                 >
                   <label className="block text-sm font-medium text-gray-700">Health</label>
                   <input
-                    type='text'
+                    type='number'
                     placeholder="Health"
                     name='health'
                     value={health}
@@ -483,7 +493,7 @@ const ProForm = () => {
                 >
                   <label className="block text-sm font-medium text-gray-700">EPF.</label>
                   <input
-                    type='text'
+                    type='number'
                     placeholder="EPF."
                     name='epf'
                     value={epf}
@@ -495,7 +505,7 @@ const ProForm = () => {
                 >
                   <label className="block text-sm font-medium text-gray-700">TDS.</label>
                   <input
-                    type='text'
+                    type='number'
                     placeholder="TDS."
                     name='tds'
                     value={tds}
@@ -524,19 +534,20 @@ const ProForm = () => {
                 >
                   <label className="block text-sm font-medium text-gray-700">Working Days</label>
                   <input
-                    type='text'
+                    type='number'
                     placeholder="Working Days"
                     name='workingDays'
                     value={workingDays}
                     className={defaultInputSmStyle}
                     onChange={(event) => setWorkingDays(event.target.value)}
+                    disabled={!daysMonth || daysMonth}
                   />
                 </div>
                 <div className="text-sm mb-4"
                 >
                   <label className="block text-sm font-medium text-gray-700">Casual Leave</label>
                   <input
-                    type='text'
+                    type='number'
                     placeholder="Casual Leave"
                     name='causelLeave'
                     value={causelLeave}
@@ -548,7 +559,7 @@ const ProForm = () => {
                 >
                   <label className="block text-sm font-medium text-gray-700">Medical Leave</label>
                   <input
-                    type='text'
+                    type='number'
                     placeholder="Medical Leave"
                     name='medicalLeave'
                     value={medicalLeave}
@@ -560,7 +571,7 @@ const ProForm = () => {
                 >
                   <label className="block text-sm font-medium text-gray-700">Absent</label>
                   <input
-                    type='text'
+                    type='number'
                     placeholder="Absent"
                     name='absent'
                     value={absent}
@@ -572,11 +583,23 @@ const ProForm = () => {
                   <label className="block text-sm font-medium text-gray-700">Choose Date</label>
                   <DatePicker
                     selected={chooseDate}
-                    placeholderText='Date of Joining'
+                    placeholderText='Date'
                     onChange={handleDateChange}
                     className={defaultInputSmStyle}
                   />
 
+                </div>
+                <div className="text-sm mb-4"
+                >
+                  <label className="block text-sm font-medium text-gray-700">Total Rupess</label>
+                  <input
+                    type='text'
+                    placeholder="Amount"
+                    name='AdvanceAmount'
+                    value={totalAmount}
+                    className={defaultInputSmStyle}
+                    disabled={totalAmount || !totalAmount}
+                  />
                 </div>
                 <div className="text-sm mb-4">
                   <select
