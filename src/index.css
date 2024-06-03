@@ -634,6 +634,8 @@ p {
 .table-row {
   float: right;
   font-weight: 700;
+  position: relative;
+    right: 8px;
 }
 .bold_data{
   font-weight: 700 !important;
