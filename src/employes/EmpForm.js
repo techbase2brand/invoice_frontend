@@ -155,11 +155,22 @@ const EmpForm = () => {
             </div>
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Date of Joining</label>
-              <DatePicker
+              {/* <DatePicker
                 selected={selectedDate}
                 placeholderText='Date of Joining'
                 onChange={handleDateChange}
                 className={defaultInputSmStyle}
+              /> */}
+               <DatePicker
+                selected={selectedDate}
+                placeholderText='Date of Joining'
+                onChange={handleDateChange}
+                className={defaultInputSmStyle}
+                showYearDropdown
+                showMonthDropdown
+                dateFormat="yyyy-MM-dd"
+                yearDropdownItemNumber={15}
+                scrollableYearDropdown
               />
             </div>
             <div className="text-sm mb-4">

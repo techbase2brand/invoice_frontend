@@ -586,6 +586,11 @@ const ProForm = () => {
                     placeholderText='Date'
                     onChange={handleDateChange}
                     className={defaultInputSmStyle}
+                    showYearDropdown
+                    showMonthDropdown
+                    dateFormat="yyyy-MM-dd"
+                    yearDropdownItemNumber={15}
+                    scrollableYearDropdown
                   />
 
                 </div>
