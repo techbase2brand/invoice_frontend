@@ -2,25 +2,103 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import Pagination from '../Pagination/Pagination';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { defaultInputSmBlack } from '../constants/defaultStyles';
 const WagesList = () => {
   const [data, setData] = useState([]);
+  console.log("data", data)
   const [itemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDays, setSelectedDays] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const totalPages = Math.ceil(data.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  // const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+
+  const currentItems = data
+    .filter(item => {
+      if (!searchTerm) return true;
+      return (
+        item.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.familyMember.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.designation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.empCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    })
+    .filter(item => {
+      if (!selectedDays) return true;
+
+      const today = new Date();
+      let cutoffDate = new Date(today);
+
+      switch (selectedDays) {
+        case "7":
+          cutoffDate.setDate(cutoffDate.getDate() - 7);
+          break;
+        case "30":
+          cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+          break;
+        case "90":
+          cutoffDate.setMonth(cutoffDate.getMonth() - 3);
+          break;
+        case "180":
+          cutoffDate.setMonth(cutoffDate.getMonth() - 6);
+          break;
+        case "365":
+          cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
+          break;
+        default:
+          return true; // Handle unexpected cases
+      }
+
+      const chooseDate = new Date(item.chooseDate);
+      return chooseDate <= today && chooseDate >= cutoffDate;
+    })
+
+    .filter(item => {
+      if (!startDate || !endDate) return true;
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const chooseDate = new Date(item.chooseDate);
+      return chooseDate >= start && chooseDate <= end;
+    })
+    .slice(indexOfFirstItem, indexOfLastItem);
+
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  const handleSelectChange = (e) => {
+    setSelectedDays(e.target.value);
+  };
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+  };
+
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
+  };
+
   useEffect(() => {
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-wages`;
     axios.get(apiUrl)
       .then((response) => {
         const wagesData = response.data.data.map((item) => {
+          const formattedChooseDate = new Date(item.chooseDate).toISOString().split('T')[0];
+          const formattedJoinDate = new Date(item.joinDate).toISOString().split('T')[0];
           return {
             ...item,
+            chooseDate: formattedChooseDate,
+            joinDate: formattedJoinDate,
             signature: `http://localhost:8000${item.signature}`
           }
         });
@@ -38,20 +116,64 @@ const WagesList = () => {
       console.error('Error deleting bank detail:', error);
     }
   };
+  const calculateSum = (item) => {
+    const fields = ['basic', 'med', 'children', 'house', 'conveyance', 'earning', 'arrear', 'reimbursement', 'health', 'epf', 'tds'];
+    return fields.reduce((sum, field) => sum + parseFloat(item[field] || 0), 0);
+  };
   return (
     <div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div style={{ display: 'flex', gap: '3px' }}>
+          <div className="client-form-wrapper" style={{ width: '12%' }}>
+            <input
+              type="text"
+              placeholder="Search"
+              className={defaultInputSmBlack}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div>
+            <select
+              className={defaultInputSmBlack}
+              value={selectedDays === '' ? '' : `${selectedDays}`}
+              onChange={handleSelectChange}
+            >
+              <option value="">Select date range</option>
+              <option value="7">Last 1 week</option>
+              <option value="30">Last 1 month</option>
+              <option value="90">Last 3 months</option>
+              <option value="180">Last 6 months</option>
+              <option value="365">Last 1 year</option>
+            </select>
+          </div>
+          <div className="date-range-picker">
+            <DatePicker
+              className={defaultInputSmBlack}
+              selected={startDate}
+              onChange={handleStartDateChange}
+              placeholderText="Select start date"
+            />
+            <span className=" text-gray-500">to</span>
+            <DatePicker
+              className={defaultInputSmBlack}
+              selected={endDate}
+              onChange={handleEndDateChange}
+              placeholderText="Select end date"
+            />
+          </div>
+        </div>
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
+              <th scope="col" class="px-6 py-3">
+                Date
+              </th>
               <th scope="col" class="px-6 py-3">
                 Emp. Name
               </th>
               <th scope="col" class="px-6 py-3">
                 F/H Name
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Date of Joining
               </th>
               <th scope="col" class="px-6 py-3">
                 Dept.
@@ -65,9 +187,9 @@ const WagesList = () => {
               <th scope="col" class="px-6 py-3">
                 Company Name
               </th>
-              {/* <th scope="col" class="px-6 py-3">
-                Signature
-              </th> */}
+              <th scope="col" class="px-6 py-3">
+                RS
+              </th>
               <th scope="col" class="px-6 py-3">
                 Action
               </th>
@@ -78,13 +200,13 @@ const WagesList = () => {
             {currentItems?.map((item) => (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={item._id}>
                 <td className="px-6 py-4">
+                  {item?.chooseDate?.split("T")[0] || "N/A"}
+                </td>
+                <td className="px-6 py-4">
                   {item.employeeName || "N/A"}
                 </td>
                 <td className="px-6 py-4">
                   {item.familyMember || "N/A"}
-                </td>
-                <td className="px-6 py-4">
-                  {item?.joinDate?.split("T")[0] || "N/A"}
                 </td>
                 <td className="px-6 py-4">
                   {item.department || "N/A"}
@@ -98,9 +220,9 @@ const WagesList = () => {
                 <td className="px-6 py-4">
                   {item.companyName || "N/A"}
                 </td>
-                {/* <td className="px-6 py-4">
-                  <img src={item.signature} alt="Uploaded" style={{ maxWidth: '40px', maxHeight: '40px' }} />
-                </td> */}
+                <td className="px-6 py-4">
+                  {calculateSum(item)}
+                </td>
                 <td style={{ display: 'flex', gap: '20px' }}>
                   <Link to={`/wages-form/${item._id}`}>
                     <span>

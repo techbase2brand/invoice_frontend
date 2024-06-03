@@ -608,7 +608,9 @@ p {
   text-align: right;
   border-bottom: 2px solid;
 }
-
+.date-range-picker{
+  display: flex;
+}
 .salary-slip .amount {
   text-align: right;
 }

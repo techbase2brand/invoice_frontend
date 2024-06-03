@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Pagination from "../Pagination/Pagination";
 import { Link, useNavigate } from "react-router-dom";
 import InvoiceIcon from "../components/Icons/InvoiceIcon";
+import WagesList from "../wages/WagesList";
 function DashboardScreen() {
   const [paymentStatus, setPaymentStatus] = useState("");
   const [invoices, setInvoices] = useState([]);
@@ -403,6 +404,8 @@ function DashboardScreen() {
           </figure>
         </div>
       </div>
+      <h2 className="font-title text-2xl ">Wages List</h2>
+      <WagesList/>
     </div>
   );
 }

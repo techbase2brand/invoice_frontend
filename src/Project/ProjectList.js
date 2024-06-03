@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { defaultInputSmBlack } from "../constants/defaultStyles";
 import DatePicker from "react-datepicker";
@@ -12,8 +12,7 @@ function ProjectList() {
     const [paymentStatus, setPaymentStatus] = useState("");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-
-    const [itemsPerPage] = useState(2);
+    const [itemsPerPage] = useState(50);
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(invoices.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -21,6 +20,29 @@ function ProjectList() {
     const currentItems = invoices.slice(indexOfFirstItem, indexOfLastItem);
     const [sortOrder, setSortOrder] = useState('asc');
     const [sortColumn, setSortColumn] = useState('');
+    const [duplicateFilter, setDuplicateFilter] = useState("");
+    const [openItemId, setOpenItemId] = useState(null);
+    const [isOpen, setIsOpen] = useState(true);
+    const dropdownRef = useRef(null);
+    const handleToggleDropdown = (itemId) => {
+        if (openItemId === itemId) {
+            setOpenItemId(null);
+        } else {
+            setOpenItemId(itemId);
+        }
+    };
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        }
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
 
     const handleSort = (columnName) => {
         if (sortColumn === columnName) {
@@ -39,6 +61,7 @@ function ProjectList() {
         }
         return sortOrder === 'asc' ? a.clientName.localeCompare(b.clientName) : b.clientName.localeCompare(a.clientName);
     });
+    console.log("sortedItems", sortedItems)
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -48,7 +71,6 @@ function ProjectList() {
         setStartDate(date);
     };
 
-
     const handleEndDateChange = (date) => {
         setEndDate(date);
     };
@@ -56,11 +78,28 @@ function ProjectList() {
         fetchInvoices();
     }, []);
 
+    // const handleDuplicate = (duplicateId) => {
+    //     const invoiceToDuplicate = invoices.find((item) => item._id === duplicateId);
+    //     if (invoiceToDuplicate) {
+    //         const duplicatedInvoice = { ...invoiceToDuplicate };
+    //         duplicatedInvoice.selectDate = new Date().toISOString();
+    //         axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-clientBank`, duplicatedInvoice)
+    //             .then(response => {
+    //                 fetchInvoices();
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error duplicating invoice:', error);
+    //             });
+    //     }
+    // };
+
     const handleDuplicate = (duplicateId) => {
         const invoiceToDuplicate = invoices.find((item) => item._id === duplicateId);
         if (invoiceToDuplicate) {
             const duplicatedInvoice = { ...invoiceToDuplicate };
+            delete duplicatedInvoice._id;
             duplicatedInvoice.selectDate = new Date().toISOString();
+            duplicatedInvoice.duplicate = "Duplicated";
             axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-clientBank`, duplicatedInvoice)
                 .then(response => {
                     fetchInvoices();
@@ -146,7 +185,8 @@ function ProjectList() {
                     ) &&
                         (!selectedDays || invoiceDate >= fromDate) &&
                         (!startDate || invoiceDate >= startDate) &&
-                        (!endDate || selectDate <= endDate);
+                        (!endDate || selectDate <= endDate) &&
+                        (!duplicateFilter || item.duplicate === duplicateFilter);
                 });
                 setInvoices(filteredData.reverse());
             })
@@ -159,6 +199,10 @@ function ProjectList() {
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/delete-invoice/${deleteId}`;
         axios.delete(apiUrl);
         setInvoices(invoices.filter((item) => item._id !== deleteId));
+    };
+
+    const handleDuplicateFilterChange = (e) => {
+        setDuplicateFilter(e.target.value);
     };
 
     const handleSelectChange = (e) => {
@@ -178,8 +222,7 @@ function ProjectList() {
     const totalCAD = invoices.filter(item => item.currency === 'CAD').length
     const totalINR = invoices.filter(item => item.currency === 'INR').length
     const totalUSD = invoices.filter(item => item.currency === 'USD').length
-
-
+    const DuplicateData = invoices.filter(item => item.duplicate === 'Duplicated').length;
 
     const totalAUDCr = invoices
         .filter(item => item.currency === 'AUD' && item.amount !== '')
@@ -209,24 +252,25 @@ function ProjectList() {
     };
     return (
         <div>
+            <h1 className="font-black">Invoices: {invoices.length}</h1>
+            <div style={{ display: 'flex', gap: '14px' }}>
 
-            <div style={{ display: 'flex', gap: '14px' }}>
-                <h1 style={{ fontWeight: '700' }}>Total: {invoices.length}</h1>
-                <p> Paid: {paidInvoicesLength}</p>
-                <p> Unpaid: {unpaidInvoicesLength}</p>
-                <p>Draft: {draftInvoicesLength}</p>
-                <p> AUD: {totalAUD}</p>
-                <p> CAD: {totalCAD}</p>
-                <p> INR: {totalINR}</p>
-                <p> USD: {totalUSD}</p>
+                <p><span className="font-black"> Paid:</span> {paidInvoicesLength}</p>
+                <p> <span className="font-black">Unpaid:</span> {unpaidInvoicesLength}</p>
+                <p><span className="font-black">Draft:</span> {draftInvoicesLength}</p>
+                <p><span className="font-black"> AUD:</span> {totalAUD}</p>
+                <p> <span className="font-black">CAD:</span> {totalCAD}</p>
+                <p> <span className="font-black">INR:</span> {totalINR}</p>
+                <p> <span className="font-black">USD:</span> {totalUSD}</p>
             </div>
             <div style={{ display: 'flex', gap: '14px' }}>
-                <p>Total Amount</p>
-                <p> AUD: {totalAUDCr}</p>
-                <p> CAD: {totalCADCr}</p>
-                <p> INR: {totalINRCr}</p>
-                <p> USD: {totalUSDCr}</p>
+                <p><span className="font-black">Total Amount</span></p>
+                <p> <span className="font-black">AUD:</span> {totalAUDCr}</p>
+                <p><span className="font-black"> CAD:</span> {totalCADCr}</p>
+                <p> <span className="font-black">INR:</span> {totalINRCr}</p>
+                <p><span className="font-black"> USD:</span> {totalUSDCr}</p>
             </div>
+            <h1><span className="font-black">Duplicated:</span>{DuplicateData}</h1>
             <div style={{ display: 'flex', gap: '3px' }}>
                 <div className="client-form-wrapper" style={{ width: '12%' }}>
                     <input
@@ -263,7 +307,14 @@ function ProjectList() {
                         <option value="draft">Draft</option>
                     </select>
                 </div>
-                <div className="date-range-picker">
+                <div>
+                    <select value={duplicateFilter} onChange={handleDuplicateFilterChange} className={defaultInputSmBlack}>
+                        <option value="">Filter by Duplicate Status</option>
+                        <option value="Duplicated">Duplicated</option>
+                        <option value="">Not Duplicated</option>
+                    </select>
+                </div>
+                <div className="date-range-picker" style={{ display: 'flex' }}>
                     <DatePicker
                         className={defaultInputSmBlack}
                         selected={startDate}
@@ -298,6 +349,9 @@ function ProjectList() {
                             <th scope="col" className="px-6 py-3">
                                 Acc. No
                             </th>
+                            <th>
+                                Status
+                            </th>
                             {/* <th scope="col" className="px-6 py-3">
                                 Advance Amount
                             </th> */}
@@ -307,12 +361,13 @@ function ProjectList() {
                             <th scope="col" className="px-6 py-3">
                                 Action
                             </th>
-                            <th scope="col" className="px-6 py-3">
+                            {/* <th scope="col" className="px-6 py-3">
                                 Create
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Duplicate
                             </th>
+                            <th></th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -322,27 +377,53 @@ function ProjectList() {
                                 <td className="px-6 py-4">{item.company || "N/A"}</td>
                                 <td className="px-6 py-4">{item.bankNamed || "N/A"}</td>
                                 <td className="px-6 py-4">{item.accNo || "N/A"}</td>
+                                <td>
+                                    {item.duplicate &&
+                                        <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">{item.duplicate}</span>
+                                    }
+                                </td>
                                 {/* <td className="px-6 py-4">{item.currency} {item.amount}</td> */}
                                 <td className="px-6 py-4">{item.selectDate ? item.selectDate.split("T")[0] : "N/A"}</td>
-                                <td style={{ display: 'flex', gap: '20px' }}>
-                                    <Link to={`/project/${item._id}`}>
-                                        <span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="feather feather-edit" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
-                                        </span>
-                                    </Link>
-                                    <span onClick={() => handleDelete(item._id)}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 16 16">
-                                            <path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z"></path>
-                                        </svg>
-                                    </span>
-                                </td>
-                                <td>
-                                    <Link to={`/invoice-detail/${item._id}`}>
-                                        <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">pdf</button>
-                                    </Link>
-                                </td>
-                                <td>
-                                    <button type="button" className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900" onClick={() => handleDuplicate(item._id)}>Duplicate</button>
+                                <td className="p-0">
+                                    <div key={item._id} className="">
+                                        <button
+                                            id={`menuButton-${item._id}`}
+                                            type="button"
+                                            className="rounded-full p-2 bg-gray-300"
+                                            onClick={() => handleToggleDropdown(item._id)}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+                                            </svg>
+                                        </button>
+                                        {openItemId === item._id && (
+                                            <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                                <div className="py-1 flex flex-col space-y-2" role="menu" aria-orientation="vertical" aria-labelledby={`menuButton-${item._id}`}>
+                                                    <Link to={`/project/${item._id}`} className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100" role="menuitem">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="feather feather-edit w-6 h-6 mr-2" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                                                        Edit
+                                                    </Link>
+                                                    <button className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 focus:outline-none" onClick={() => handleDelete(item._id)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 16 16" className="w-6 h-6 mr-2">
+                                                            <path d="M 6.496094 1 C 5.675781 1 5 1.675781 5 2.496094 L 5 3 L 2 3 L 2 4 L 3 4 L 3 12.5 C 3 13.328125 3.671875 14 4.5 14 L 10.5 14 C 11.328125 14 12 13.328125 12 12.5 L 12 4 L 13 4 L 13 3 L 10 3 L 10 2.496094 C 10 1.675781 9.324219 1 8.503906 1 Z M 6.496094 2 L 8.503906 2 C 8.785156 2 9 2.214844 9 2.496094 L 9 3 L 6 3 L 6 2.496094 C 6 2.214844 6.214844 2 6.496094 2 Z M 5 5 L 6 5 L 6 12 L 5 12 Z M 7 5 L 8 5 L 8 12 L 7 12 Z M 9 5 L 10 5 L 10 12 L 9 12 Z"></path>
+                                                        </svg>
+                                                        Delete
+                                                    </button>
+                                                    <Link to={`/invoice-detail/${item._id}`} className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 focus:outline-none">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="feather feather-file w-6 h-6 mr-2" fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24"><path d="M15.25 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" /><path d="M15.25 2v4.75h4.75" /></svg>
+                                                        Download PDF
+                                                    </Link>
+                                                    <button className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 focus:outline-none" onClick={() => handleDuplicate(item._id)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="feather feather-file w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                                        </svg>
+                                                        Duplicate
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
                                 </td>
                             </tr>
                         ))}
@@ -368,8 +449,8 @@ function ProjectList() {
                         Next
                     </button>
                 </div>
-
             </div>
+
         </div>
     );
 }

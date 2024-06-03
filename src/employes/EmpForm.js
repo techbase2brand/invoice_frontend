@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
 const EmpForm = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({
@@ -52,8 +53,8 @@ const EmpForm = () => {
 
   const handleDateChange = (date) => {
     const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-
-    setSelectedDate(date);
+    const localDate = moment(date).startOf('day').toDate();
+    setSelectedDate(localDate);
     setFormData({ ...formData, joinDate: adjustedDate });
   };
 
@@ -74,7 +75,8 @@ const EmpForm = () => {
     } else {
       try {
         let response;
-        const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : '';
+        // const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : '';
+        const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
         const updatedFormData = { ...formData, joinDate: formattedDate };
 
         if (id) {
