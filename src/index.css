@@ -30,8 +30,7 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 .logo.text_invoice img, .com_logo {
-  width: 125px;
-  /* height: 90px; */
+  width: 120px; 
   object-fit: contain !important;
   padding: 10px;
 }
@@ -585,8 +584,8 @@ p {
 .salary-slip th,
 .salary-slip td {
   padding: 5px;
-  border-right: 1px solid !important;
-  border-left: 1px solid;
+  border-right: 1px solid #ccc !important;
+  border-left: 1px solid #ccc; 
 }
 
 .salary-slip th {
@@ -595,7 +594,7 @@ p {
 }
 
 .salary-slip tr:nth-child(even) {
-  background-color: #f9f9f945;
+  background-color: #00468114;
 }
 
 .salary-slip .total {
@@ -622,8 +621,9 @@ p {
 }
 
 .salary-slip .section-header {
-  background-color: #eeeeee47;
+  /* background-color: #004681; */
   font-weight: bold;
+  color: #004681;
 }
 
 .width_add{
@@ -647,11 +647,11 @@ p {
 
 .table-body tr td {
   font-weight: 600;
-  line-height: 3;
+  line-height: 1.5;
 }
 
 .sal-advice {
-  border-bottom: 2px solid;
+  border-bottom: 1px solid #ccc;
   height: 25px;
   border-right: unset !important;
 }
@@ -664,19 +664,37 @@ p {
 }
 
 .bot-border {
-  border-bottom: 2px solid;
+  border-bottom: 1px solid #ccc;
 }
-
+td.sal-advice {
+  border-top: 1px solid #ccc;
+}
+tbody.table-body {
+  box-shadow: 0px 9px 20px #cccccc85;
+}
 .sal-advice span {
   display: flex;
   justify-content: space-evenly;
 }
-
+.wages_header h3 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #fd7c50;
+}
+.wages_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 10px;
+  background: #ebf0f5;
+  border-bottom: 5px solid #004681;
+  box-shadow: 0px 5px 10px #cccccc6b;
+}
 .company-name {
-  border: 2px solid; 
+  /* border: 1px solid #ccc;  */
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 .admin-sign {

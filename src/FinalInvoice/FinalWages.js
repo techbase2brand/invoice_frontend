@@ -60,20 +60,24 @@ const FinalWages = () => {
         <div>
             <button type="button" className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
+            <div className='wages_header'>
+            <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" />
+            {/* <img className='com_logo' src='/b2b-icon.png' /> */}
+
+                    <h3>Salary Slip</h3>
+                </div>
                 <div className="p-5 w-full">
                 <img className='logo_invoice_overlap width_add' src='/b2b-icon.png' />
+                
                     
                     <div className="salary-slip">
                         <h2 className='company-name'>
-                        <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" />
+                        {/* <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" /> */}
+
                             {/* {formData.companyName} */}
                             </h2>
                         <table style={{ width: '100%' }}>
-                            <tbody className='table-body'>
-                               
-                                <tr>
-                                    <td colSpan="3" className='sal-advice slip'><span>Salary Slip</span></td>
-                                </tr>
+                            <tbody className='table-body'> 
                                 <tr>
                                     <td className='sal-advice'>Salary Advice for The Month</td>
                                     <td className='sal-advice bold_data'>{formatChoose(formData?.chooseDate)}</td>
@@ -81,7 +85,9 @@ const FinalWages = () => {
                                 </tr>
                                 <tr className='bot-border'>
                                     <td >Emp. Name<span className='table-row'>{formData.employeeName}</span></td>
-                                    <td colspan="2">Dept.<span className='table-row'>{formData.department}</span></td>
+                                    <td  >Dept. </td>
+                                    <td className='bold_data'>{formData.department}</td>
+
                                 </tr>
                                 <tr className='bot-border'>
                                     <td >F/H Name<span className='table-row'>{formData.familyMember}</span></td>
