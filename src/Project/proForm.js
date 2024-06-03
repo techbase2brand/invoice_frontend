@@ -697,6 +697,11 @@ const ProForm = () => {
                                         placeholderText='select Date'
                                         onChange={handleDateChange}
                                         className={defaultInputSmStyle}
+                                        showYearDropdown
+                                        showMonthDropdown
+                                        dateFormat="yyyy-MM-dd"
+                                        yearDropdownItemNumber={15}
+                                        scrollableYearDropdown
                                     />
                                 </div>
                                 <label className="block text-sm font-medium text-gray-700">ADD GST</label>
