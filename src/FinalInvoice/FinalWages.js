@@ -1,174 +1,350 @@
-import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 import generatePDF from "react-to-pdf";
-import numberToWords from 'number-to-words';
-import blobToBase64 from 'blob-to-base64'
+import numberToWords from "number-to-words";
+import blobToBase64 from "blob-to-base64";
+
+
+import { savePDF } from '@progress/kendo-react-pdf';
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+
+
+
 const FinalWages = () => {
-    const [formData, setFormData] = useState({});
-    const { id } = useParams();
-    const targetRef = useRef();
-    const totalRateAmount = parseInt(formData.basic || "0") + parseInt(formData.med || "0") + parseInt(formData.children || "0")
-        + parseInt(formData.house || "0") + parseInt(formData.conveyance || "0") + parseInt(formData.earning || "0")
-        + parseInt(formData.arrear || "0") + parseInt(formData.reimbursement || "0")
+  const [formData, setFormData] = useState({});
+  const { id } = useParams();
+  const targetRef = useRef();
+  const totalRateAmount =
+    parseInt(formData.basic || "0") +
+    parseInt(formData.med || "0") +
+    parseInt(formData.children || "0") +
+    parseInt(formData.house || "0") +
+    parseInt(formData.conveyance || "0") +
+    parseInt(formData.earning || "0") +
+    parseInt(formData.arrear || "0") +
+    parseInt(formData.reimbursement || "0");
 
-    const deduction = parseInt(formData.health || "0") + parseInt(formData.epf || "0") + parseInt(formData.tds || "0");
+  const deduction =
+    parseInt(formData.health || "0") +
+    parseInt(formData.epf || "0") +
+    parseInt(formData.tds || "0");
 
-    //salary-deduction
-    const finalAmount = Math.abs(totalRateAmount - deduction);
+  //salary-deduction
+  const finalAmount = Math.abs(totalRateAmount - deduction);
 
-    //Net Salary in words................
-    const amountInWords = numberToWords.toWords(finalAmount).charAt(0).toUpperCase() + numberToWords.toWords(finalAmount).slice(1);
+  //Net Salary in words................
+  const amountInWords =
+    numberToWords.toWords(finalAmount).charAt(0).toUpperCase() +
+    numberToWords.toWords(finalAmount).slice(1);
 
-    useEffect(() => {
-        if (id) {
-            const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/wages-get/${id}`;
-            axios.get(apiUrl)
-                .then((response) => {
-                    const invoiceData = response.data.data;
-                    setFormData(invoiceData);
-                })
-                .catch((error) => {
-                    console.error('Error fetching Wages details:', error);
-                });
-        }
-    }, [id]);
+  useEffect(() => {
+    if (id) {
+      const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/wages-get/${id}`;
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          const invoiceData = response.data.data;
+          setFormData(invoiceData);
+        })
+        .catch((error) => {
+          console.error("Error fetching Wages details:", error);
+        });
+    }
+  }, [id]);
 
-    const formatDate = (inputDate) => {
-        const date = new Date(inputDate);
-        const options = { day: 'numeric', month: 'short', year: 'numeric' };
-        return date.toLocaleDateString('en-GB', options);
-    };
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    return date.toLocaleDateString("en-GB", options);
+  };
 
-    const formatChooseDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = date.getUTCDate().toString().padStart(2, '0');
-        const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
-        const year = date.getUTCFullYear().toString();
-        return `${day}-${month}-${year}`;
-    };
+  const formatChooseDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getUTCDate().toString().padStart(2, "0");
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
+    const year = date.getUTCFullYear().toString();
+    return `${day}-${month}-${year}`;
+  };
 
-    const formatChoose = (dateString) => {
-        const date = new Date(dateString);
-        const month = date.toLocaleString('default', { month: 'short' });
-        const day = date.getUTCDate().toString().padStart(2, '0');
-        return `${month}-${day}`;
-    };
+  const formatChoose = (dateString) => {
+    const date = new Date(dateString);
+    const month = date.toLocaleString("default", { month: "short" });
+    const day = date.getUTCDate().toString().padStart(2, "0");
+    return `${month}-${day}`;
+  };
+
+  useEffect(() => {
+    if (id) {
+      const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/wages-get/${id}`;
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          setFormData(response.data.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching Wages details:', error);
+        });
+    }
+  }, [id]);
+
+  const handleCreatePdfAndSendEmail = async () => {
+    const input = document.getElementById('PDF_Download');
+    html2canvas(input).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        console.log("imgDataaa",imgData);
+        const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "px",
+            format: [canvas.width, canvas.height]
+        });
+        pdf.addImage(imgData, 'PNG', 0, 0);
+
+        // Get the PDF as a Blob
+        const pdfBlob = pdf.output('blob');
+        console.log("pdfBlobpdfBlob",pdfBlob);
+
+        // Create FormData object for sending to the server
+        const formData = new FormData();
+        formData.append("file", pdfBlob, "wages.pdf");
 
 
-    return (
-        <div>
-            <button type="button" className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
-            <div className="invoice" id="PDF_Download" ref={targetRef}  >
-            <div className='wages_header'>
-            <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" />
-            {/* <img className='com_logo' src='/b2b-icon.png' /> */}
+console.log("formData",formData);
+        // Send the blob to the backend
+        axios.post('http://localhost:8000/api/upload-pdf', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            console.log('PDF Uploaded and Email Sent', response.data);
+        }).catch(error => {
+            console.error('Error uploading PDF:', error);
+        });
+    }).catch(error => {
+        console.error('Error generating PDF:', error);
+    });
+};
 
-                    <h3>Salary Slip</h3>
-                </div>
-                <div className="p-5 w-full">
-                <img className='logo_invoice_overlap width_add' src='/b2b-icon.png' />
-                
-                    
-                    <div className="salary-slip">
-                        <h2 className='company-name'>
-                        {/* <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" /> */}
+  // const handleDownloadAndSendEmail = async () => {
+  //   const input = document.getElementById('PDF_Download');
+  //   html2canvas(input)
+  //     .then((canvas) => {
+  //       const imgData = canvas.toDataURL('image/png');
+  //       const pdf = new jsPDF({
+  //         orientation: "portrait",
+  //         unit: "px",
+  //         format: [canvas.width, canvas.height]
+  //       });
+  //       pdf.addImage(imgData, 'PNG', 0, 0);
+  //       pdf.save('FinalWagesReport.pdf');
+  //       // To get the blob from the pdf
+  //       const pdfBlob = pdf.output('blob');
+  //       const pdfUrl = URL.createObjectURL(pdfBlob);
+  //       console.log('PDF URL:', pdfUrl);
+  //       // Optionally, you can open the URL in a new tab
+  //       window.open(pdfUrl, '_blank');
 
-                            {/* {formData.companyName} */}
-                            </h2>
-                        <table style={{ width: '100%' }}>
-                            <tbody className='table-body'> 
-                                <tr>
-                                    <td className='sal-advice'>Salary Advice for The Month</td>
-                                    <td className='sal-advice bold_data'>{formatChoose(formData?.chooseDate)}</td>
-                                    <td className='sal-advice bold_data'>{formatChooseDate(formData?.chooseDate)}</td>
-                                </tr>
-                                <tr className='bot-border'>
-                                    <td >Emp. Name<span className='table-row'>{formData.employeeName}</span></td>
-                                    <td  >Dept. </td>
-                                    <td className='bold_data'>{formData.department}</td>
+  //       // Here, you might want to send the PDF via email, using the blob or the URL
+  //       // sendEmailWithAttachments(pdfUrl);
+  //     })
+  //     .catch(error => console.error('Error generating PDF:', error));
+  // };
+  return (
+    <div>
+      <button
+        type="button"
+        className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
+      >
+        Pdf Download
+      </button>
 
-                                </tr>
-                                <tr className='bot-border'>
-                                    <td >F/H Name<span className='table-row'>{formData.familyMember}</span></td>
-                                    <td >Designation</td>
-                                    <td className='bold_data'>{formData.designation}</td>
-                                </tr>
-                                <tr className='bot-border'>
-                                    {/* <td >Date Of Joining<span className='table-row'>{formData.joinDate}</span></td> */}
-                                    <td>Date Of Joining<span className='table-row'>{formatDate(formData.joinDate)}</span></td>
+      <button
+        type="button"
+        className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        onClick={handleCreatePdfAndSendEmail}
+      >
+        Create PDF and Send Email
+      </button>
 
-                                    <td >Employee Code</td>
-                                    <td className='bold_data'>{formData.empCode}</td>
-                                </tr>
-                                <tr className='bot-border'>
-                                    <td className="section-header">Rate of salary/Wages</td>
-                                    <td className="section-header">Deduction</td>
-                                    <td className="section-header">Attendance/Leave</td>
-                                </tr>
-                                <tr>
-                                    <td >Basic<span className='table-row'>{formData.basic}</span></td>
-                                    <td >Health Insurar<span className='table-row'>{formData.health}</span></td>
-                                    <td >Days of this month<span className='table-row'>{formData.daysMonth}</span></td>
-                                </tr>
-                                <tr>
-                                    <td >Med.<span className='table-row'>{formData.med}</span></td>
-                                    <td >EPF<span className='table-row'>{formData.epf}</span></td>
-                                    <td >Working Days<span className='table-row'>{formData.workingDays}</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Children education Allowance<span className='table-row'>{formData.children}</span></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Conveyance Allowance<span className='table-row'>{formData.conveyance}</span></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>House Rent Allowance<span className='table-row'>{formData.house}</span></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Other Earnings<span className='table-row'>{formData.earning}</span></td>
-                                    <td></td>
-                                    <td >Casual Leave<span className='table-row'>{formData.causelLeave}</span></td>
+      <div className="invoice" id="PDF_Download" ref={targetRef}>
+        <div className="wages_header">
+          <img
+            src={`http://localhost:8000${formData.companylogo}`}
+            className="com_logo"
+            alt="Company Logo"
+          />
+          {/* <img className='com_logo' src='/b2b-icon.png' /> */}
 
-                                </tr>
-                                <tr>
-                                    <td>Arrear<span className='table-row'>{formData.arrear}</span></td>
-                                    <td></td>
-                                    <td >Medical Leave<span className='table-row'>{formData.medicalLeave}</span></td>
-
-                                </tr>
-                                <tr style={{ borderBottom: '2px solid' }}>
-                                    <td>Reimbursement<span className='table-row'>{formData.reimbursement}</span></td>
-                                    <td >TDS<span className='table-row'>{formData.tds}</span></td>
-                                    <td >Absent<span className='table-row'>{formData.absent}</span></td>
-
-                                </tr>
-                                <tr>
-                                    <td className="total" >Gross Salary<span className='table-row'>{totalRateAmount}</span></td>
-                                    <td className="total" >Total<span className='table-row'>{deduction}</span></td>
-                                    <td className="total" >Net Salary<span className='table-row'>{finalAmount}</span></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" className="total">Net Salary (in words)</td>
-                                    <td className="net-salary amount">{amountInWords} Only/-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div className='admin-sign'>
-                            <h1 className="company-head" >This is a system genrated Pdf sign not required.</h1>
-                            {/* <img src={`http://localhost:8000${formData.signature}`} alt="Uploaded" className='image-adjust' /> */}
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <h3>Salary Slip</h3>
         </div>
-    )
-}
+        <div className="p-5 w-full">
+          <img className="logo_invoice_overlap width_add" src="/b2b-icon.png" />
 
-export default FinalWages
+          <div className="salary-slip">
+            <h2 className="company-name">
+              {/* <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" /> */}
+
+              {/* {formData.companyName} */}
+            </h2>
+            <table style={{ width: "100%" }}>
+              <tbody className="table-body">
+                <tr>
+                  <td className="sal-advice">Salary Advice for The Month</td>
+                  <td className="sal-advice bold_data">
+                    {formatChoose(formData?.chooseDate)}
+                  </td>
+                  <td className="sal-advice bold_data">
+                    {formatChooseDate(formData?.chooseDate)}
+                  </td>
+                </tr>
+                <tr className="bot-border">
+                  <td>
+                    Emp. Name
+                    <span className="table-row">{formData.employeeName}</span>
+                  </td>
+                  <td>Dept. </td>
+                  <td className="bold_data">{formData.department}</td>
+                </tr>
+                <tr className="bot-border">
+                  <td>
+                    F/H Name
+                    <span className="table-row">{formData.familyMember}</span>
+                  </td>
+                  <td>Designation</td>
+                  <td className="bold_data">{formData.designation}</td>
+                </tr>
+                <tr className="bot-border">
+                  {/* <td >Date Of Joining<span className='table-row'>{formData.joinDate}</span></td> */}
+                  <td>
+                    Date Of Joining
+                    <span className="table-row">
+                      {formatDate(formData.joinDate)}
+                    </span>
+                  </td>
+
+                  <td>Employee Code</td>
+                  <td className="bold_data">{formData.empCode}</td>
+                </tr>
+                <tr className="bot-border">
+                  <td className="section-header">Rate of salary/Wages</td>
+                  <td className="section-header">Deduction</td>
+                  <td className="section-header">Attendance/Leave</td>
+                </tr>
+                <tr>
+                  <td>
+                    Basic<span className="table-row">{formData.basic}</span>
+                  </td>
+                  <td>
+                    Health Insurar
+                    <span className="table-row">{formData.health}</span>
+                  </td>
+                  <td>
+                    Days of this month
+                    <span className="table-row">{formData.daysMonth}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Med.<span className="table-row">{formData.med}</span>
+                  </td>
+                  <td>
+                    EPF<span className="table-row">{formData.epf}</span>
+                  </td>
+                  <td>
+                    Working Days
+                    <span className="table-row">{formData.workingDays}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Children education Allowance
+                    <span className="table-row">{formData.children}</span>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    Conveyance Allowance
+                    <span className="table-row">{formData.conveyance}</span>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    House Rent Allowance
+                    <span className="table-row">{formData.house}</span>
+                  </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    Other Earnings
+                    <span className="table-row">{formData.earning}</span>
+                  </td>
+                  <td></td>
+                  <td>
+                    Casual Leave
+                    <span className="table-row">{formData.causelLeave}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Arrear<span className="table-row">{formData.arrear}</span>
+                  </td>
+                  <td></td>
+                  <td>
+                    Medical Leave
+                    <span className="table-row">{formData.medicalLeave}</span>
+                  </td>
+                </tr>
+                <tr style={{ borderBottom: "2px solid" }}>
+                  <td>
+                    Reimbursement
+                    <span className="table-row">{formData.reimbursement}</span>
+                  </td>
+                  <td>
+                    TDS<span className="table-row">{formData.tds}</span>
+                  </td>
+                  <td>
+                    Absent<span className="table-row">{formData.absent}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="total">
+                    Gross Salary
+                    <span className="table-row">{totalRateAmount}</span>
+                  </td>
+                  <td className="total">
+                    Total<span className="table-row">{deduction}</span>
+                  </td>
+                  <td className="total">
+                    Net Salary<span className="table-row">{finalAmount}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" className="total">
+                    Net Salary (in words)
+                  </td>
+                  <td className="net-salary amount">{amountInWords} Only/-</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="admin-sign">
+              <h1 className="company-head">
+                This is a system genrated Pdf sign not required.
+              </h1>
+              {/* <img src={`http://localhost:8000${formData.signature}`} alt="Uploaded" className='image-adjust' /> */}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FinalWages;
