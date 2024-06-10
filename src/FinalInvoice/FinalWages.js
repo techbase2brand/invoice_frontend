@@ -4,28 +4,27 @@ import { useParams } from "react-router-dom";
 import generatePDF from "react-to-pdf";
 import numberToWords from "number-to-words";
 import blobToBase64 from "blob-to-base64";
-import { savePDF } from '@progress/kendo-react-pdf';
+import { savePDF } from "@progress/kendo-react-pdf";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
 const FinalWages = () => {
   const [formData, setFormData] = useState({});
   const [emailData, setEmailData] = useState({
-    to: '',
-    cc: '',
-    subject: ''
+    to: "",
+    cc: "",
+    subject: "",
   });
   const [emailStatus, setEmailStatus] = useState({
     loading: false,
-    message: '',
-    error: false
+    message: "",
+    error: false,
   });
 
   const [showEmailFields, setShowEmailFields] = useState(false);
-  console.log("data",formData   );
+  console.log("data", formData);
   const { id } = useParams();
   const targetRef = useRef();
-
 
   const totalRateAmount =
     parseInt(formData.basic || "0") +
@@ -44,7 +43,7 @@ const FinalWages = () => {
 
   //salary-deduction
   const finalAmount = Math.abs(totalRateAmount - deduction);
-  console.log("targetReftargetReftargetReftargetRef==========",targetRef);
+  console.log("targetReftargetReftargetReftargetRef==========", targetRef);
   //Net Salary in words................
   const amountInWords =
     numberToWords.toWords(finalAmount).charAt(0).toUpperCase() +
@@ -95,7 +94,7 @@ const FinalWages = () => {
           setFormData(response.data.data);
         })
         .catch((error) => {
-          console.error('Error fetching Wages details:', error);
+          console.error("Error fetching Wages details:", error);
         });
     }
   }, [id]);
@@ -110,47 +109,60 @@ const FinalWages = () => {
     setShowEmailFields(!showEmailFields);
   };
 
-
   const handleCreatePdfAndSendEmail = async () => {
-    setEmailStatus({ loading: true, message: '', error: false });
-    const input = document.getElementById('PDF_Download');
+    setEmailStatus({ loading: true, message: "", error: false });
+    const input = document.getElementById("PDF_Download");
     if (!input) {
-      setEmailStatus({ loading: false, message: 'PDF download element not found.', error: true });
+      setEmailStatus({
+        loading: false,
+        message: "PDF download element not found.",
+        error: true,
+      });
       return;
     }
 
     try {
       const canvas = await html2canvas(input, { scale: 2 });
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "px",
-        format: [canvas.width, canvas.height]
+        format: [canvas.width, canvas.height],
       });
-      pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+      pdf.addImage(imgData, "JPEG", 0, 0, canvas.width, canvas.height);
 
-      const blob = pdf.output('blob');
+      const blob = pdf.output("blob");
       const formData = new FormData();
       formData.append("pdfFile", blob, "GeneratedDocument.pdf");
       formData.append("to", emailData.to);
       formData.append("cc", emailData.cc);
       formData.append("subject", emailData.subject);
 
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/uploadPDF`, {
-        method: "POST",
-        body: formData
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/uploadPDF`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const data = await response.json();
       if (data.success) {
-        setEmailStatus({ loading: false, message: 'Email sent successfully!', error: false });
+        setEmailStatus({
+          loading: false,
+          message: "Email sent successfully!",
+          error: false,
+        });
       } else {
         setEmailStatus({ loading: false, message: data.message, error: true });
       }
     } catch (error) {
-      setEmailStatus({ loading: false, message: 'Failed to send email: ' + error.message, error: true });
+      setEmailStatus({
+        loading: false,
+        message: "Failed to send email: " + error.message,
+        error: true,
+      });
     }
   };
-
 
   return (
     <div>
@@ -162,7 +174,6 @@ const FinalWages = () => {
         Pdf Download
       </button>
 
-
       <button
         // className="email-button"
         onClick={toggleEmailFields}
@@ -171,52 +182,56 @@ const FinalWages = () => {
         Create PDF and Send Email
       </button>
       {showEmailFields && (
-        <div className="input-fields">
-          <input
-            type="text"
-            placeholder="To Email"
-            name="to"
-            value={emailData.to}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            placeholder="CC Email"
-            name="cc"
-            value={emailData.cc}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            placeholder="Email Subject"
-            name="subject"
-            value={emailData.subject}
-            onChange={handleInputChange}
-          />
-          <button
-            className={`send-button ${canSendEmail ? 'active' : 'disabled'}`}
-            onClick={handleCreatePdfAndSendEmail}
-            disabled={!canSendEmail}
-            style={{
-              backgroundColor: canSendEmail ? 'green' : undefined,
-              color: canSendEmail ? 'white' : undefined
-            }}
-          >
-            Send Email
-          </button>
+        <div className="share-file-row-os">
+          <div className="share-file-col-os">
+            <input
+              type="text"
+              placeholder="To Email"
+              name="to"
+              value={emailData.to}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="share-file-col-os">
+            <input
+              type="text"
+              placeholder="CC Email"
+              name="cc"
+              value={emailData.cc}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="share-file-col-os">
+            <input
+              type="text"
+              placeholder="Email Subject"
+              name="subject"
+              value={emailData.subject}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="share-file-submit-btn-os">
+            <button
+              className={`send-button ${canSendEmail ? "active" : "disabled"}`}
+              onClick={handleCreatePdfAndSendEmail}
+              disabled={!canSendEmail}
+              style={{
+                backgroundColor: canSendEmail ? "green" : undefined,
+                color: canSendEmail ? "white" : undefined,
+              }}
+            >
+              Send Email
+            </button>
+          </div>
         </div>
       )}
-      {emailStatus?.loading && (
-      <div className="loader">
-        Sending Email...
-      </div>
-    )}
+      {emailStatus?.loading && <div className="loader">Sending Email...</div>}
 
       {emailStatus?.message && (
-      <div style={{ color: emailStatus.error ? 'red' : 'green' }}>
-        {emailStatus.message}
-      </div>
-    )}
+        <div style={{ color: emailStatus.error ? "red" : "green" }}>
+          {emailStatus.message}
+        </div>
+      )}
       {/* <div id="PDF_Download" ref={target8Ref}> */}
 
       <div className="invoice" id="PDF_Download" ref={targetRef}>
@@ -230,7 +245,7 @@ const FinalWages = () => {
 
           <h3>Salary Slip</h3>
         </div>
-        <div className="p-5 w-full">
+        <div className="py-5 w-full">
           <img className="logo_invoice_overlap width_add" src="/b2b-icon.png" />
 
           <div className="salary-slip">
@@ -394,8 +409,6 @@ const FinalWages = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };
