@@ -30,6 +30,9 @@ import EmpForm from "./employes/EmpForm";
 import CreateWages from "./wages/CreateWages";
 import WagesForm from "./wages/WagesForm";
 import FinalWages from "./FinalInvoice/FinalWages";
+import CreditForm from "./Credit/CreditForm";
+import CreditDetail from "./Credit/CreditDetail";
+import CreditCardHistory from "./Credit/CreditCardHistory";
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -65,8 +68,12 @@ const App = () => {
           <Route path="/emp-data" element={<ProtectedRoute><EmpCreate /></ProtectedRoute>} />
           <Route path="/emp-create" element={<ProtectedRoute><EmpForm /></ProtectedRoute>} />
           <Route path="/wages-detail" element={<ProtectedRoute><CreateWages /></ProtectedRoute>} />
+          <Route path="/credit-details" element={<ProtectedRoute><CreditDetail /></ProtectedRoute>} />
+          <Route path="/credit-card-history" element={<ProtectedRoute><CreditCardHistory /></ProtectedRoute>} />
           <Route path="/wages-form" element={<ProtectedRoute><WagesForm /></ProtectedRoute>} />
           <Route path="/wages-form/:id" element={<ProtectedRoute><WagesForm /></ProtectedRoute>} />
+          <Route path="/credit-form/:id" element={<ProtectedRoute><CreditForm /></ProtectedRoute>} />
+          <Route path="/credit-form" element={<ProtectedRoute><CreditForm /></ProtectedRoute>} />
           <Route path="/emp-create/:id" element={<ProtectedRoute><EmpForm /></ProtectedRoute>} />
           <Route path="/add-data" element={<ProtectedRoute><Form /></ProtectedRoute>} />
           <Route path="/add-data/:id" element={<ProtectedRoute><Form /></ProtectedRoute>} />
