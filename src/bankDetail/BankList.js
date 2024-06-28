@@ -15,7 +15,7 @@ const BankList = () => {
         setCurrentPage(pageNumber);
     };
     useEffect(() => {
-        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/bank-data`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/bank-data`;
         axios.get(apiUrl)
             .then((response) => {
                 setData(response.data.data.reverse())
@@ -26,7 +26,7 @@ const BankList = () => {
     }, []);
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/delete-detail/${id}`);
+            await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-detail/${id}`);
             setData(data.filter(item => item._id !== id));
         } catch (error) {
             console.error('Error deleting bank detail:', error);

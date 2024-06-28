@@ -31,7 +31,7 @@ const FormCli = () => {
 
   const fetchCompanyDetail = async (id) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/get-company/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-company/${id}`);
       const bankDetailData = response.data.data;
       setFormData(bankDetailData);
     } catch (error) {
@@ -50,7 +50,7 @@ const FormCli = () => {
   //   formData.append('image', file);
 
   //   try {
-  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-image`, formData, {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/upload-image`, formData, {
   //       headers: {
   //         'Content-Type': 'multipart/form-data'
   //       }
@@ -69,7 +69,7 @@ const FormCli = () => {
   //   formData.append('image', file);
 
   //   try {
-  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-companylogo`, formData, {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/upload-companylogo`, formData, {
   //       headers: {
   //         'Content-Type': 'multipart/form-data'
   //       }
@@ -104,9 +104,9 @@ const FormCli = () => {
   //     try {
   //       let response;
   //       if (id) {
-  //         response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-comp-data/${id}`, formData);
+  //         response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`, formData);
   //       } else {
-  //         response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-companyData`, formData);
+  //         response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-companyData`, formData);
   //       }
   //       if (response.status === 201 || response.status === 200) {
   //         navigate("/listing")
@@ -134,9 +134,9 @@ const FormCli = () => {
       try {
         let response;
         if (id) {
-          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-comp-data/${id}`, formData);
+          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`, formData);
         } else {
-          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-companyData`, formData);
+          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-companyData`, formData);
         }
         if (response.status === 201 || response.status === 200) {
           navigate("/listing");

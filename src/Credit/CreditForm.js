@@ -21,7 +21,7 @@ const CreditForm = () => {
     //Getting data according to id
     const fetchCreditDetail = async (id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/update-credit-data/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/update-credit-data/${id}`);
             const bankDetailData = response.data.data;
             // Check if dates are valid before setting them
             if (bankDetailData.stateMentDate) {
@@ -87,9 +87,9 @@ const CreditForm = () => {
         }
         try {
             if (id) {
-                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-detail/${id}`, formData);
+                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-detail/${id}`, formData);
             } else {
-                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-bank-data`, formData);
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-bank-data`, formData);
             }
             navigate('/credit-details');
         } catch (error) {

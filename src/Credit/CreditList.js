@@ -18,7 +18,7 @@ const CreditList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/credit-history`);
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/credit-history`);
         if (response.data.success) {
           setData(response.data.data.reverse());
         }
@@ -45,7 +45,7 @@ const CreditList = () => {
   };
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/delete-credit-data/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-credit-data/${id}`);
       setData(data.filter(item => item._id !== id));
     } catch (error) {
       console.error('Error deleting bank detail:', error);

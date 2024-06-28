@@ -29,7 +29,7 @@ const EmpForm = () => {
 
   const fetchBankDetail = async (id) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/get-emp-data/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-emp-data/${id}`);
       const bankDetailData = response.data.data;
       bankDetailData.joinDate = bankDetailData.joinDate ? new Date(bankDetailData.joinDate) : null;
       setFormData(bankDetailData);
@@ -80,9 +80,9 @@ const EmpForm = () => {
         const updatedFormData = { ...formData, joinDate: formattedDate };
 
         if (id) {
-          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-emp-data/${id}`, updatedFormData);
+          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-emp-data/${id}`, updatedFormData);
         } else {
-          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-emp-data`, updatedFormData);
+          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-emp-data`, updatedFormData);
         }
         if (response.status === 201 || response.status === 200) {
           navigate('/emp-data');
@@ -99,7 +99,7 @@ const EmpForm = () => {
   //   formData.append('image', file);
 
   //   try {
-  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-wages-logo`, formData, {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/upload-wages-logo`, formData, {
   //       headers: {
   //         'Content-Type': 'multipart/form-data'
   //       }

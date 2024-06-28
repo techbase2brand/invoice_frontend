@@ -83,7 +83,7 @@ function ProjectList() {
     //     if (invoiceToDuplicate) {
     //         const duplicatedInvoice = { ...invoiceToDuplicate };
     //         duplicatedInvoice.selectDate = new Date().toISOString();
-    //         axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-clientBank`, duplicatedInvoice)
+    //         axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`, duplicatedInvoice)
     //             .then(response => {
     //                 fetchInvoices();
     //             })
@@ -100,7 +100,7 @@ function ProjectList() {
             delete duplicatedInvoice._id;
             duplicatedInvoice.selectDate = new Date().toISOString();
             duplicatedInvoice.duplicate = "Duplicated";
-            axios.post(`${process.env.REACT_APP_API_BASE_URL}/add-clientBank`, duplicatedInvoice)
+            axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`, duplicatedInvoice)
                 .then(response => {
                     fetchInvoices();
                 })
@@ -111,7 +111,7 @@ function ProjectList() {
     };
 
     const fetchInvoices = () => {
-        let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-invoices`;
+        let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-invoices`;
         let fromDate;
         if (selectedDays) {
             fromDate = new Date();
@@ -196,7 +196,7 @@ function ProjectList() {
     };
 
     const handleDelete = (deleteId) => {
-        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/delete-invoice/${deleteId}`;
+        const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/delete-invoice/${deleteId}`;
         axios.delete(apiUrl);
         setInvoices(invoices.filter((item) => item._id !== deleteId));
     };
