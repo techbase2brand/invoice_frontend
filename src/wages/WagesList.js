@@ -7,7 +7,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { defaultInputSmBlack } from '../constants/defaultStyles';
 const WagesList = () => {
   const [data, setData] = useState([]);
-  console.log("data", data)
   const [itemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');

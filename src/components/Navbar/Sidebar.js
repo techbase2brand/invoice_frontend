@@ -44,6 +44,16 @@ const NAV_DATA = [
     title: "Create Wages",
     link: "wages-detail",
     Icon: ClientPlusIcon,
+  },
+  {
+    title: "Credit Card",
+    link: "credit-details",
+    Icon: ClientPlusIcon,
+  },
+  {
+    title: "Credit Card History",
+    link: "credit-card-history",
+    Icon: ClientPlusIcon,
   }
 ];
 
