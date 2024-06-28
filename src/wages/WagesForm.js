@@ -60,7 +60,7 @@ const ProForm = () => {
   }, [id]);
 
   // useEffect(() => {
-  //   fetch(`${process.env.REACT_APP_API_BASE_URL}/get-signature`)
+  //   fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-signature`)
   //     .then(response => response.json())
   //     .then(data => {
   //       if (data.success) {
@@ -73,7 +73,7 @@ const ProForm = () => {
   // }, []);
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/get-companyLogo`)
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-companyLogo`)
       .then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -86,7 +86,7 @@ const ProForm = () => {
   }, []);
 
   useEffect(() => {
-    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-empData`;
+    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-empData`;
     axios.get(apiUrl)
       .then((response) => {
         setClient(response.data.data)
@@ -98,7 +98,7 @@ const ProForm = () => {
 
   const fetchInvoiceDetail = async (id) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/wages-get/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/wages-get/${id}`);
       const bankDetailData = response.data.data;
       setWages(bankDetailData);
     } catch (error) {
@@ -196,7 +196,7 @@ const ProForm = () => {
     };
 
     if (id) {
-      axios.put(`${process.env.REACT_APP_API_BASE_URL}/update-wages/${id}`, formData)
+      axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-wages/${id}`, formData)
         .then(response => {
           navigate("/wages-detail")
         })
@@ -204,7 +204,7 @@ const ProForm = () => {
           console.error('Error updating form data:', error);
         });
     } else {
-      axios.post(`${process.env.REACT_APP_API_BASE_URL}/created-wages`, formData)
+      axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/created-wages`, formData)
         .then(response => {
           navigate("/wages-detail")
         })
@@ -256,7 +256,7 @@ const ProForm = () => {
   //   const formData = new FormData();
   //   formData.append('image', file);
   //   try {
-  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload-sign`, formData, {
+  //     const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/upload-sign`, formData, {
   //       headers: {
   //         'Content-Type': 'multipart/form-data'
   //       }

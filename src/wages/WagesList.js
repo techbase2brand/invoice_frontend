@@ -88,7 +88,7 @@ const WagesList = () => {
   };
 
   useEffect(() => {
-    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-wages`;
+    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-wages`;
     axios.get(apiUrl)
       .then((response) => {
         const wagesData = response.data.data.map((item) => {
@@ -109,7 +109,7 @@ const WagesList = () => {
   }, []);
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/delted-wages/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delted-wages/${id}`);
       setData(data.filter(item => item._id !== id));
     } catch (error) {
       console.error('Error deleting bank detail:', error);

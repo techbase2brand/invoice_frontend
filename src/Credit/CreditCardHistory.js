@@ -26,7 +26,7 @@ const CreditCardHistory = () => {
 
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_BASE_URL}/importUser`,
+                `${process.env.REACT_APP_API_BASE_URL}/api/importUser`,
                 formData,
                 {
                     headers: {
@@ -47,7 +47,7 @@ const CreditCardHistory = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_BASE_URL}/credit-history`
+                `${process.env.REACT_APP_API_BASE_URL}/api/credit-history`
             );
             if (response.data.success) {
                 const fetchedData = response.data.data.reverse();
@@ -67,7 +67,7 @@ const CreditCardHistory = () => {
 
     const fetchFilterData = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/csv-history`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/csv-history`);
             if (response.data.success) {
                 const fetchedData = response.data.data;
                 const filteredData = fetchedData.filter(item => item.accountId === filterData);

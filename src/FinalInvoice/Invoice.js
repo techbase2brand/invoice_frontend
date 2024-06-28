@@ -37,7 +37,7 @@ const Invoice = () => {
 
     useEffect(() => {
         if (id) {
-            const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/invoice-get/${id}`;
+            const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/invoice-get/${id}`;
             axios.get(apiUrl)
                 .then((response) => {
                     const invoiceData = response.data.data;

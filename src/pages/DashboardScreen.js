@@ -92,7 +92,7 @@ function DashboardScreen() {
   };
 
   const fetchInvoices = () => {
-    let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/get-invoices`;
+    let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-invoices`;
     let fromDate;
     if (selectedDays) {
       fromDate = new Date();

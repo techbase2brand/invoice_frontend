@@ -22,7 +22,7 @@ const FinalWages = () => {
 
     useEffect(() => {
         if (id) {
-            const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/wages-get/${id}`;
+            const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/wages-get/${id}`;
             axios.get(apiUrl)
                 .then((response) => {
                     const invoiceData = response.data.data;

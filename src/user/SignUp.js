@@ -20,7 +20,7 @@ const SignUp = () => {
       e.preventDefault();
   
       try {
-        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/template`, formData);
+        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/template`, formData);
   
         if (response.status === 201) {
           navigate("/")

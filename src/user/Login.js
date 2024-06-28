@@ -12,7 +12,7 @@ const Login = () => {
   }
   // const handleLogin = async () => {
   //   try {
-  //     const response = await axios.post('${process.env.REACT_APP_API_BASE_URL}/login', {
+  //     const response = await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/login', {
   //       email: login.email,
   //       password: login.password,
   //     });
