@@ -65,7 +65,7 @@ const Invoice = () => {
                 <img src='/header_invoice.png' className='w-full header_invoice' />
                 <div className="logo text_invoice">
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
-                    <img src={`http://localhost:8000${formData.companylogo}`} alt="Company Logo" />
+                    <img src={`https://invoice-backend.base2brand.com${formData.companylogo}`} alt="Company Logo" />
                     {/* <p className="form-num">{formData.invoice}</p> */}
                     {/* <h2 className="tax-in">TAX INVOICE</h2> */}
 

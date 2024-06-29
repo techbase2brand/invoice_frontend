@@ -98,7 +98,7 @@ const WagesList = () => {
             ...item,
             chooseDate: formattedChooseDate,
             joinDate: formattedJoinDate,
-            signature: `http://localhost:8000${item.signature}`
+            signature: `${process.env.REACT_APP_API_BASE_URL}/api/${item.signature}`
           }
         });
         setData(wagesData.reverse())

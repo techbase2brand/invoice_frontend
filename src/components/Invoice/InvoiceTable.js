@@ -34,7 +34,7 @@ function InvoiceTable() {
           // Prepend base URL to signature field
           return {
             ...item,
-            signature: `http://localhost:8000${item.signature}`
+            signature: `${process.env.REACT_APP_API_BASE_URL}${item.signature}`
           };
         });
         setCompanyData(updatedCompanyData.reverse());
