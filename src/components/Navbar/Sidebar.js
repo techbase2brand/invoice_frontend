@@ -46,7 +46,7 @@ const NAV_DATA = [
     Icon: ClientPlusIcon,
   },
   {
-    title: "Credit Card",
+    title: "Credit Cards",
     link: "credit-details",
     Icon: ClientPlusIcon,
   },
