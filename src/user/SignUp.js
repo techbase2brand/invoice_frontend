@@ -18,14 +18,17 @@ const SignUp = () => {
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-  
+      if (formData.password !== formData.confirmPassword) {
+        alert("Passwords do not match");
+        return;
+      }
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/template`, formData);
   
         if (response.status === 201) {
           navigate("/")
         } else if (response.status === 400) {
-          console.log('Email ID already exists');
+            alert(response.data.message);
         } else {
           console.error('Error creating user:', response.statusText);
         }
