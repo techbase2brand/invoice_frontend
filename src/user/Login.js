@@ -1,5 +1,8 @@
+import axios from 'axios';
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
+
 const Login = () => {
   const [login, setLogin] = useState({
     email: '',
@@ -10,35 +13,37 @@ const Login = () => {
     e.preventDefault();
     setLogin({ ...login, [e.target.name]: e.target.value })
   }
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await axios.post('${process.env.REACT_APP_API_BASE_URL}/api/login', {
-  //       email: login.email,
-  //       password: login.password,
-  //     });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const encryptedPassword = CryptoJS.AES.encrypt(login.password, 'your-secret-key').toString();
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/login`, {
+        email: login.email,
+        password: encryptedPassword,
+      });
 
-  //     const token = response.data.token;
-
-  //     localStorage.setItem('token', token);
-  //     navigate('/')
-  //   } catch (error) {
-  //     console.error('Error during login:', error);
-  //   }
-  // };
-  const email = "artibase2brand@gmail.com";
-  const password = "Arti@2024#"
-  const token = "123456"
-
-  const handleLogin = () => {
-    if (email === login.email && password === login.password) {
-      localStorage.setItem('email', email);
-      localStorage.setItem('password', password);
+      const token = response.data.token;
       localStorage.setItem('token', token);
-      navigate("/")
-    } else {
-      alert("please check amail and password!")
+      navigate('/');
+    } catch (error) {
+      console.error('Error during login:', error);
+      alert("Invalid email or password");
     }
-  }
+  };
+  // const email = "artibase2brand@gmail.com";
+  // const password = "Arti@2024#"
+  // const token = "123456"
+
+  // const handleLogin = () => {
+  //   if (email === login.email && password === login.password) {
+  //     localStorage.setItem('email', email);
+  //     localStorage.setItem('password', password);
+  //     localStorage.setItem('token', token);
+  //     navigate("/")
+  //   } else {
+  //     alert("please check amail and password!")
+  //   }
+  // }
   return (
     <>
       <section class="bg-gray-50 dark:bg-gray-900">
@@ -72,9 +77,9 @@ const Login = () => {
                   </div>
                 </div> */}
                 <button type="submit" class="primary-background-color w-full text-white   hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
-                {/* <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don’t have an account yet? <Link to="/sign-up" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</Link>
-                </p> */}
+                </p>
               </form>
             </div>
           </div>
