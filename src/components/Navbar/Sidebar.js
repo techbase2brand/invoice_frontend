@@ -54,6 +54,11 @@ const NAV_DATA = [
     title: "Credit Card History",
     link: "credit-card-history",
     Icon: ClientPlusIcon,
+  },
+  {
+    title: "Appointment letter",
+    link: "appointment-letter",
+    Icon: ClientPlusIcon,
   }
 ];
 
