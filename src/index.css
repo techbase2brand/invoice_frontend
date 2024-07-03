@@ -601,13 +601,26 @@ p {
   font-weight: bold;
   border-bottom: 2px solid;
 }
-
+.appoint_section_new{
+  padding: 20px;
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+    background: #ffffffe8;
+    z-index: 99;
+    position: relative;
+    height: auto;
+}
 .salary-slip .net-salary {
   font-size: 1.2em;
   font-weight: bold;
   text-align: right;
   border-bottom: 2px solid;
 }
+.ck-editor__editable_inline {
+  min-height: 300px;
+}
+
+
 .date-range-picker{
   display: flex;
 }

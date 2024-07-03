@@ -33,6 +33,9 @@ import FinalWages from "./FinalInvoice/FinalWages";
 import CreditForm from "./Credit/CreditForm";
 import CreditDetail from "./Credit/CreditDetail";
 import CreditCardHistory from "./Credit/CreditCardHistory";
+import AppointMentForm from "./Appointment/AppointMentForm";
+import AppointDetail from "./Appointment/AppointDetail";
+import AppointMentLetter from "./FinalInvoice/AppointMentLetter";
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -69,11 +72,13 @@ const App = () => {
           <Route path="/emp-create" element={<ProtectedRoute><EmpForm /></ProtectedRoute>} />
           <Route path="/wages-detail" element={<ProtectedRoute><CreateWages /></ProtectedRoute>} />
           <Route path="/credit-details" element={<ProtectedRoute><CreditDetail /></ProtectedRoute>} />
+          <Route path="/appointment-letter" element={<ProtectedRoute><AppointDetail /></ProtectedRoute>} />
           <Route path="/credit-card-history" element={<ProtectedRoute><CreditCardHistory /></ProtectedRoute>} />
           <Route path="/wages-form" element={<ProtectedRoute><WagesForm /></ProtectedRoute>} />
           <Route path="/wages-form/:id" element={<ProtectedRoute><WagesForm /></ProtectedRoute>} />
           <Route path="/credit-form/:id" element={<ProtectedRoute><CreditForm /></ProtectedRoute>} />
           <Route path="/credit-form" element={<ProtectedRoute><CreditForm /></ProtectedRoute>} />
+          <Route path="/appointment-form" element={<ProtectedRoute><AppointMentForm /></ProtectedRoute>} />
           <Route path="/emp-create/:id" element={<ProtectedRoute><EmpForm /></ProtectedRoute>} />
           <Route path="/add-data" element={<ProtectedRoute><Form /></ProtectedRoute>} />
           <Route path="/add-data/:id" element={<ProtectedRoute><Form /></ProtectedRoute>} />
@@ -84,6 +89,7 @@ const App = () => {
           <Route path="/" element={<ProtectedRoute><DashboardScreen /></ProtectedRoute>} />
           <Route path="/invoice-detail/:id" element={<ProtectedRoute><Invoice /></ProtectedRoute>} />
           <Route path="/final-wages/:id" element={<ProtectedRoute><FinalWages /></ProtectedRoute>} />
+          <Route path="/appointment-letter/:id" element={<ProtectedRoute><AppointMentLetter /></ProtectedRoute>} />
           <Route path="/company/:id" element={<ProtectedRoute><InvoiceDetailScreen /></ProtectedRoute>} />
           <Route path="listing" element={<ProtectedRoute><InvoiceListScreen /></ProtectedRoute>} exact />
           <Route path="company" element={<ProtectedRoute><InvoiceDetailScreen /></ProtectedRoute>} />
