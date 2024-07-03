@@ -21,7 +21,7 @@ const AppointMentForm = () => {
     };
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/get-appointmentLetter')
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-appointmentLetter`)
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.data && data.data.length > 0) {
@@ -39,7 +39,7 @@ const AppointMentForm = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointmentLetter`, formData);
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointment-data`, formData);
             console.log('Success:', response.data);
 
             setFormData({
