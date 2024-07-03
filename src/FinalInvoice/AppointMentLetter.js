@@ -24,6 +24,12 @@ const AppointMentLetter = () => {
         }
     }, [id]);
 
+    const formatDate = (dateString) => {
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('en-US', options).format(date);
+    };
+
     return (
         <div>
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
@@ -35,8 +41,8 @@ const AppointMentLetter = () => {
                 </div>
                 <div className='appoint_section_new'>
                     <div className="form-head">
-                        <span>Ref No.{data.refNo}</span>
-                        <span>Date {data.appointmentDate}</span>
+                        <span>Ref No. {data.refNo}</span>
+                        <span>Date:- {data.appointmentDate ? formatDate(data.appointmentDate) : ''}</span>
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: data.appointMentData }} />
                 </div>
