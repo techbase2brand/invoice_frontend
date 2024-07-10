@@ -354,7 +354,7 @@ const Invoice = () => {
                         </div>
                     </div>
                 </div>
-                <img src='/invoice_banner.png' className='w-full' />
+                <img src='/invoice_banner.png' className='w-full ph_none_banner' />
             </div>
         </div>
     )

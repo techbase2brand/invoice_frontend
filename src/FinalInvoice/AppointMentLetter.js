@@ -35,8 +35,8 @@ const AppointMentLetter = () => {
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
             <div className="invoice" id="PDF_Download" ref={targetRef}>
                 <img className='logo_invoice_overlap' src='/b2b-icon.png' />
-                <img src='/header_invoice.png' className='w-full header_invoice' />
-                <div className="logo text_invoice">
+                {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
+                <div className="appoinment_logo">
                     <img src="/logo-b2b.png" alt="Company Logo" style={{ width: 'unset' }} />
                 </div>
                 <div className='appoint_section_new'>
@@ -96,7 +96,7 @@ const AppointMentLetter = () => {
                         </div>
                     </div>
                 </div>
-                <img src='/invoice_banner.png' className='w-full' />
+                <img src='/invoice_banner.png' className='w-full ph_none_banner' />
             </div>
         </div>
     )
