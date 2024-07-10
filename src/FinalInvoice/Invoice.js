@@ -292,7 +292,7 @@ const Invoice = () => {
                                 <div>
                                     <label></label>
                                     <span>
-                                        <img className='sign_mam' src={`http://localhost:8000${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
+                                        <img className='sign_mam' src={`https://invoice-backend.base2brand.com${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
                                     </span>
                                 </div>
                                 <div>
