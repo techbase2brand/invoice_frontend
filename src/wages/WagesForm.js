@@ -18,7 +18,8 @@ const ProForm = () => {
   const [logo, setLogo] = useState('')
   const [state, setState] = useState('');
   const [client, setClient] = useState([]);
-  const [wages, setWages] = useState(null);
+  const [wages, setWages] = useState(null); 
+  const [grosssalary, setgrosssalary] = useState('');
   const [basic, setBasic] = useState('');
   const [med, setMed] = useState('');
   const [children, setChildren] = useState('');
@@ -47,11 +48,47 @@ const ProForm = () => {
 
 
   const totalAmount = parseInt(basic || "0") + parseInt(med || "0") + parseInt(children || "0") + parseInt(house || "0")
-    + parseInt(conveyance || "0") + parseInt(earning || "0") + parseInt(arrear || "0") + parseInt(reimbursement || "0") + parseInt(health || "0")
-    + parseInt(epf || "0") + parseInt(tds || "0");
+    + parseInt(conveyance || "0") + parseInt(earning || "0") + parseInt(arrear || "0") + parseInt(reimbursement || "0") - parseInt(health || "0")
+    - parseInt(epf || "0") - parseInt(tds || "0");
 
-  console.log("basic", totalAmount);
+  //   const totalAmounts = parseInt(grosssalary || "0") / parseInt(daysMonth || "0") * parseInt(causelLeave || "0") * parseInt(medicalLeave || "0")
+  //   * parseInt(absent || "0");
 
+  // console.log("totalAmounts>>>>--", absent );
+
+  //   const netSalary =  parseInt(totalAmount || "0") - parseInt(totalAmounts || "0") 
+  // console.log("basic>>>>--", netSalary );
+
+  const grossSalary = parseInt(grosssalary || "0");
+  const daysInMonth = parseInt(daysMonth || "0");
+  const causalLeave = parseInt(causelLeave || "0");
+  const medicalLeaveDays = parseInt(medicalLeave || "0");
+  const absentDays = parseInt(absent || "0");
+  
+  let totalAmounts  = grossSalary;
+  
+  if (daysInMonth) {
+      totalAmounts /= daysInMonth;
+  }
+  
+  if (causalLeave) {
+      totalAmounts *= causalLeave;
+  }
+  
+  if (medicalLeaveDays) {
+      totalAmounts *= medicalLeaveDays;
+  }
+  
+  if (absentDays) {
+      totalAmounts *= absentDays;
+  }
+  const netSalary =  parseInt(totalAmount || "0") - parseInt(totalAmounts || "0") 
+  
+  console.log(totalAmount,'netSalary>>>>');
+  
+   
+  
+  
   useEffect(() => {
     if (id) {
       fetchInvoiceDetail(id);
@@ -118,6 +155,7 @@ const ProForm = () => {
       setSelectedLogo(wages.companylogo)
       setState(wages.empName);
       setBasic(wages.basic)
+      setgrosssalary(wages.grosssalary)
       setMed(wages.med)
       setChildren(wages.children)
       setHouse(wages.house)
@@ -175,6 +213,7 @@ const ProForm = () => {
       companyName: companyName,
       employeeName: selectedEmpName,
       basic: basic,
+      grosssalary:grosssalary,
       med: med,
       children: children,
       house: house,
@@ -374,6 +413,18 @@ const ProForm = () => {
               </div>
               <div className="flex flex-row mb-2">
                 <div className="font-title font-bold">Rate of Baisc/wages</div>
+              </div>
+              <div className="text-sm mb-4"
+              >
+                <label className="block text-sm font-medium text-gray-700">Gross Salary</label>
+                <input
+                  type='number'
+                  placeholder="Gross Salary"
+                  name='grosssalary'
+                  value={grosssalary}
+                  className={defaultInputSmStyle}
+                  onChange={(event) => setgrosssalary(event.target.value)}
+                />
               </div>
               <div className="text-sm mb-4"
               >
@@ -596,14 +647,14 @@ const ProForm = () => {
                 </div>
                 <div className="text-sm mb-4"
                 >
-                  <label className="block text-sm font-medium text-gray-700">Total Rupess</label>
+                  <label className="block text-sm font-medium text-gray-700">Net Salary</label>
                   <input
                     type='text'
                     placeholder="Amount"
                     name='AdvanceAmount'
-                    value={totalAmount}
+                    value={netSalary}
                     className={defaultInputSmStyle}
-                    disabled={totalAmount || !totalAmount}
+                    disabled={netSalary || !netSalary}
                   />
                 </div>
                 <div className="text-sm mb-4">
