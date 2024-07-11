@@ -51,19 +51,13 @@ const ProForm = () => {
     + parseInt(conveyance || "0") + parseInt(earning || "0") + parseInt(arrear || "0") + parseInt(reimbursement || "0") - parseInt(health || "0")
     - parseInt(epf || "0") - parseInt(tds || "0");
 
-  //   const totalAmounts = parseInt(grosssalary || "0") / parseInt(daysMonth || "0") * parseInt(causelLeave || "0") * parseInt(medicalLeave || "0")
-  //   * parseInt(absent || "0");
-
-  // console.log("totalAmounts>>>>--", absent );
-
-  //   const netSalary =  parseInt(totalAmount || "0") - parseInt(totalAmounts || "0") 
-  // console.log("basic>>>>--", netSalary );
+    const TotalLeave = parseInt(causelLeave || "0") + parseInt(medicalLeave || "0") + parseInt(absent || "0");
 
   const grossSalary = parseInt(grosssalary || "0");
   const daysInMonth = parseInt(daysMonth || "0");
-  const causalLeave = parseInt(causelLeave || "0");
-  const medicalLeaveDays = parseInt(medicalLeave || "0");
-  const absentDays = parseInt(absent || "0");
+  // const causalLeave = parseInt(causelLeave || "0");
+  // const medicalLeaveDays = parseInt(medicalLeave || "0");
+  // const absentDays = parseInt(absent || "0");
   
   let totalAmounts  = grossSalary;
   
@@ -71,20 +65,20 @@ const ProForm = () => {
       totalAmounts /= daysInMonth;
   }
   
-  if (causalLeave) {
-      totalAmounts *= causalLeave;
+  if (TotalLeave) {
+      totalAmounts *= TotalLeave;
   }
   
-  if (medicalLeaveDays) {
-      totalAmounts *= medicalLeaveDays;
-  }
+  // if (medicalLeaveDays) {
+  //     totalAmounts *= medicalLeaveDays;
+  // }
   
-  if (absentDays) {
-      totalAmounts *= absentDays;
-  }
+  // if (absentDays) {
+  //     totalAmounts *= absentDays;
+  // }
   const netSalary =  parseInt(totalAmount || "0") - parseInt(totalAmounts || "0") 
   
-  console.log(totalAmount,'netSalary>>>>');
+  // console.log(totalAmount,'netSalary>>>>');
   
    
   
@@ -628,6 +622,18 @@ const ProForm = () => {
                     value={absent}
                     className={defaultInputSmStyle}
                     onChange={(event) => setAbsent(event.target.value)}
+                  />
+                </div>
+                <div className="text-sm mb-4"
+                >
+                  <label className="block text-sm font-medium text-gray-700">Total Leave</label>
+                  <input
+                    type='text'
+                    placeholder="Total Leave"
+                    name='TotalLeave'
+                    value={TotalLeave}
+                    className={defaultInputSmStyle}
+                    disabled={TotalLeave || !TotalLeave}
                   />
                 </div>
                 <div className="text-sm mb-4">
