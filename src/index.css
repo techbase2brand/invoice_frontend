@@ -69,8 +69,8 @@
   text-transform: capitalize;
 }
 .deta_combine p {
-  width: 41%;
-  font-size: 17px;
+  width: 40%;
+  font-size: 16px;
 }
 img.w-full.header_invoice {
   height: 180px;
@@ -278,7 +278,7 @@ img.logo_invoice_overlap {
   left: 50%;
 }
 .desc_data.PDF_Desc p {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   /* line-height: 2; */
 }
@@ -469,7 +469,7 @@ td {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 p {
@@ -504,7 +504,7 @@ p {
 
 .invoice-details_data span {
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
 }
 .status_ph p {
   /* background: #047dd652; */
@@ -524,26 +524,26 @@ p {
   font-size: 20px;
 }
 .invoice-details_data div label {
-  font-size: 18px;
+  font-size: 16px;
   
 }
 
 .invoice-detail p {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
 .description-data p {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .text-right p { 
-  font-size: 17px;
+  font-size: 16px;
     font-weight: 500;
 }
 
 .bank_data div label {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .flexer {
@@ -738,6 +738,10 @@ tbody.table-body {
   padding-top: 15px;
   padding-bottom: 17px; 
 }
+.flex_date_tenure{
+  display: flex;
+  gap:10px;
+}
 @media screen and (max-width: 1550px) {
   .invoice {
     width: 80%;
@@ -762,7 +766,7 @@ tbody.table-body {
     font-size: 12px;
   }
   .deta_combine p {
-    width: 41%;
+    width: 40%;
     font-size: 12px;
     line-height: 1.4;
 }

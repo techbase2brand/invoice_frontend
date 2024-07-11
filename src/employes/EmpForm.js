@@ -7,11 +7,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 const EmpForm = () => {
   const [selectedDate, setSelectedDate] = useState(null);
+ 
+ 
+
   const [formData, setFormData] = useState({
     empName: '',
+    email:'',
+    mobileNo:'',
     familyMember: '',
     joinDate: '',
-    department: '',
+    tenure:'',
+    department: '', 
     designation: '',
     empCode: '',
     companyName: '',
@@ -42,6 +48,7 @@ const EmpForm = () => {
   const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (name === 'joinDate') {
       setFormData({ ...formData, [name]: selectedDate });
     } else {
@@ -130,6 +137,31 @@ const EmpForm = () => {
               />
 
             </div>
+            <div
+              className="text-sm mb-4"
+            >
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                name="email"
+                value={formData.email}
+                placeholder="Email"
+                className={`${defaultInputSmStyle} ${error.email && validError}`}
+                onChange={handleChange}
+              />
+
+            </div>
+            <div className="text-sm mb-4"
+                        >
+              <label className="block text-sm font-medium text-gray-700">Mobile No</label>
+              <input
+                  type='number'
+                  placeholder="mobile no"
+                  name='mobileNo'
+                  value={formData.mobileNo}
+                  className={defaultInputSmStyle}
+                  onChange={handleChange}
+              />
+                        </div>
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">F/H Name</label>
               <input
@@ -154,13 +186,9 @@ const EmpForm = () => {
 
             </div>
             <div className="text-sm mb-4">
-              <label className="block text-sm font-medium text-gray-700">Date of Joining</label>
-              {/* <DatePicker
-                selected={selectedDate}
-                placeholderText='Date of Joining'
-                onChange={handleDateChange}
-                className={defaultInputSmStyle}
-              /> */}
+              <div className='flex_date_tenure'>
+              <div className='DateOf'>
+              <label className="block text-sm font-medium text-gray-700">Date of Joining</label> 
                <DatePicker
                 selected={selectedDate}
                 placeholderText='Date of Joining'
@@ -172,16 +200,36 @@ const EmpForm = () => {
                 yearDropdownItemNumber={15}
                 scrollableYearDropdown
               />
+              </div>
+              <div className='tenure'>
+              <label className="block text-sm font-medium text-gray-700">Tenure</label>
+              <input
+                name="tenure"
+                value={formData.tenure}
+                placeholder="tenure" 
+                className={`${defaultInputSmStyle} ${error.tenure && validError}`}
+                onChange={handleChange}
+              />
+              </div>
+              </div>
             </div>
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Dept.</label>
-              <input
+              <select name="department" value={formData.department}  className={`${defaultInputSmStyle} ${error.department && validError}`} onChange={handleChange} >
+                <option selected disabled>Select Department</option>
+                <option value='web-development & Design'>Web Development & Design</option>
+                <option value='graphic-design'>Graphic Design</option>
+                <option value='digital-marketing'>Digital Marketing</option>
+                <option value='business-development'>Business Development</option>
+                <option value='HR & Admin'>HR & Admin</option>
+              </select>
+              {/* <input
                 name="department"
                 value={formData.department}
                 placeholder="Department"
                 className={`${defaultInputSmStyle} ${error.department && validError}`}
                 onChange={handleChange}
-              />
+              /> */}
             </div>
 
             <div className="text-sm mb-4"
