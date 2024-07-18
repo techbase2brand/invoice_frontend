@@ -20,6 +20,7 @@ const ProForm = () => {
   const [client, setClient] = useState([]);
   const [wages, setWages] = useState(null); 
   const [grosssalary, setgrosssalary] = useState('');
+  const [netsalary, setnetSalary] = useState('');
   const [basic, setBasic] = useState('');
   const [med, setMed] = useState('');
   const [children, setChildren] = useState('');
@@ -45,30 +46,47 @@ const ProForm = () => {
   const [selectedLogo, setSelectedLogo] = useState('');
   // const [signatures, setSignatures] = useState([]);
   // const signaturePayload = signatures.map(signature => signature.signature);
-
-
-  const totalAmount = parseInt(basic || "0") + parseInt(med || "0") + parseInt(children || "0") + parseInt(house || "0")
-    + parseInt(conveyance || "0") + parseInt(earning || "0") + parseInt(arrear || "0") + parseInt(reimbursement || "0") - parseInt(health || "0")
-    - parseInt(epf || "0") - parseInt(tds || "0");
-
-    const TotalLeave = parseInt(causelLeave || "0") + parseInt(medicalLeave || "0") + parseInt(absent || "0");
-
   const grossSalary = parseInt(grosssalary || "0");
-  const daysInMonth = parseInt(daysMonth || "0");
-  // const causalLeave = parseInt(causelLeave || "0");
-  // const medicalLeaveDays = parseInt(medicalLeave || "0");
-  // const absentDays = parseInt(absent || "0");
+
+
+  const totalAmount = parseInt(grosssalary || "0") - parseInt(health || "0") - parseInt(epf || "0") - parseInt(tds || "0");
+  const Devide = parseInt(grossSalary || "0") / parseInt(daysMonth || "0");
+  console.log(Devide,'DevideDevide')
+
+  const TotalLeave = parseInt(causelLeave || "0") + parseInt(medicalLeave || "0") + parseInt(absent || "0");
   
-  let totalAmounts  = grossSalary;
+  const NetAmount = parseInt(Devide || '0') * parseInt(TotalLeave || '0')
+  const LeaveAmount = parseInt (grossSalary || '0') - parseInt(NetAmount || '0')
+
+
+  const netSalary = parseInt ( totalAmount || '0') - parseInt(NetAmount || '0')
+
+
+     console.log(netSalary,'netSalarynetSalary')
+    console.log(NetAmount,'NetAmount')
+    console.log(LeaveAmount,'LeaveAmountLeaveAmount')
+  // let totalAmount =  parseInt(grosssalary || "0") - parseInt(health || "0") - parseInt(epf || "0") - parseInt(tds || "0");
+
+
+   console.log(totalAmount,'totalAmounttotalAmount')
+
+
+
+  // const daysInMonth = parseInt(daysMonth || "0");
+  // // const causalLeave = parseInt(causelLeave || "0");
+  // // const medicalLeaveDays = parseInt(medicalLeave || "0");
+  // // const absentDays = parseInt(absent || "0");
   
-  if (daysInMonth) {
-      totalAmounts /= daysInMonth;
-  }
+  //   let totalAmounts  = totalAmount;
   
-  if (TotalLeave) {
-      totalAmounts *= TotalLeave;
-  }
+  // if (daysInMonth) {
+  //   totalAmounts /= daysInMonth;
+  // }
   
+  // if (TotalLeave) {
+  //   totalAmounts *= TotalLeave;
+  // }
+  // console.log(totalAmounts,'TotalLeaveTotalLeaveTotalLeave')
   // if (medicalLeaveDays) {
   //     totalAmounts *= medicalLeaveDays;
   // }
@@ -76,11 +94,15 @@ const ProForm = () => {
   // if (absentDays) {
   //     totalAmounts *= absentDays;
   // }
-  const netSalary =  parseInt(totalAmount || "0") - parseInt(totalAmounts || "0") 
+  // const netSalary =  parseInt(totalAmount || "0") - parseInt(totalAmounts || "0") 
   
-  // console.log(totalAmount,'netSalary>>>>');
+  // console.log(netSalary,'netSalary>>>>');
+
+  const shouldShowNetSalaryInput = () => {  
+    return parseFloat(health) > 0 || parseFloat(epf) > 0 || parseFloat(tds) > 0;
+  };
+
   
-   
   
   
   useEffect(() => {
@@ -150,6 +172,7 @@ const ProForm = () => {
       setState(wages.empName);
       setBasic(wages.basic)
       setgrosssalary(wages.grosssalary)
+      setnetSalary(wages.netsalary)
       setMed(wages.med)
       setChildren(wages.children)
       setHouse(wages.house)
@@ -208,6 +231,7 @@ const ProForm = () => {
       employeeName: selectedEmpName,
       basic: basic,
       grosssalary:grosssalary,
+      netsalary:netsalary,
       med: med,
       children: children,
       house: house,
@@ -654,14 +678,30 @@ const ProForm = () => {
                 <div className="text-sm mb-4"
                 >
                   <label className="block text-sm font-medium text-gray-700">Net Salary</label>
+                 
+               {!shouldShowNetSalaryInput() && (
                   <input
                     type='text'
                     placeholder="Amount"
                     name='AdvanceAmount'
+                    value={grossSalary}
+                    className={defaultInputSmStyle}
+                    disabled={grossSalary || !grossSalary}
+                  />
+                )} 
+                
+
+               {shouldShowNetSalaryInput() && (
+                  <input
+                    type='text'
+                    placeholder="Amount"
+                    name='netSalary'
                     value={netSalary}
                     className={defaultInputSmStyle}
                     disabled={netSalary || !netSalary}
                   />
+                )} 
+                  
                 </div>
                 <div className="text-sm mb-4">
                   <select
