@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Pagination from "../Pagination/Pagination";
 import { Link, useNavigate } from "react-router-dom";
+import moment from 'moment';
 import InvoiceIcon from "../components/Icons/InvoiceIcon";
 import WagesList from "../wages/WagesList";
 function DashboardScreen() {
@@ -24,7 +25,8 @@ function DashboardScreen() {
   const currentItems = invoices.slice(indexOfFirstItem, indexOfLastItem);
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortColumn, setSortColumn] = useState('');
-  const [step, setStep] = useState("")
+  const [living, setLiving] = useState([]);
+  console.log("living", living)
   const navigate = useNavigate();
 
   const goToNewInvoice = (step) => {
@@ -180,6 +182,33 @@ function DashboardScreen() {
   const handleGo = () => {
     fetchInvoices();
   };
+
+  useEffect(() => {
+    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-empData`;
+    axios.get(apiUrl)
+      .then((response) => {
+        setLiving(response.data.data.reverse())
+      })
+      .catch((error) => {
+        console.error('Error fetching invoices:', error);
+      });
+  }, []);
+
+  const calculateDaysLeft = (leavingDate) => {
+    const today = moment();
+    const leaveDate = moment(leavingDate);
+    return leaveDate.diff(today, 'days');
+  };
+
+  useEffect(() => {
+    living.forEach(item => {
+      const daysLeft = calculateDaysLeft(item.leavingDate);
+      if (daysLeft < 60) {
+        alert(`Alert: 60 days left for employee ${item.empName}`);
+      }
+    });
+  }, [living]);
+
   return (
     <div>
       <div className="p-4">
@@ -238,7 +267,7 @@ function DashboardScreen() {
         </div>
         <button type="button" onClick={handleSearch} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go</button>
       </div>
-      <div className="flex flex-wrap" style={{ gap: '5rem' }}>
+      <div className="flex flex-wrap" style={{ gap: '5rem', marginBottom: '3rem' }}>
         <div class=" max-w-md p-2 bg-white border border-red-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
           <div class="flex items-center justify-between mb-4">
             <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Payment Status</h5>
@@ -360,52 +389,71 @@ function DashboardScreen() {
           </div>
 
         </div>
-        <div class=" border border-gray-200 rounded-lg shadow-sm dark:border-gray-700  bg-white dark:bg-gray-800">
-
-          <figure class="flex flex-col items-center justify-center p-8 text-center bg-white border-gray-200 rounded-t-lg md:rounded-t-none md:rounded-ss-lg md:border-e dark:bg-gray-800 dark:border-gray-700">
-            <blockquote class=" mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400">
-              <div className="flex-1">
-                <Button onClick={() => goToNewInvoice("step4")} block={1} size="sm" style={{
-                  width: 'fit-content',
-                  float: 'right'
-                }}>
-                  <InvoiceIcon />
-                  <span className="inline-block ml-2"> Create Invoice </span>
-                </Button>
-              </div>
-            </blockquote>
-            <blockquote class=" mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400">
-              <Button onClick={() => goToNewInvoice("step1")} block={1} size="sm" style={{
-                width: 'fit-content',
-                float: 'right'
-              }}>
-                <InvoiceIcon />
-                <span className="inline-block ml-2">Company Detail</span>
-              </Button>
-            </blockquote>
-            <blockquote class=" mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400">
-              <Button onClick={() => goToNewInvoice("step2")} block={1} size="sm" style={{
-                width: 'fit-content',
-                float: 'right'
-              }}>
-                <InvoiceIcon />
-                <span className="inline-block ml-2">Bank Detail</span>
-              </Button>
-            </blockquote>
-            <blockquote class=" mx-auto mb-4 text-gray-500 lg:mb-8 dark:text-gray-400">
-              <Button onClick={() => goToNewInvoice("step3")} block={1} size="sm" style={{
-                width: 'fit-content',
-                float: 'right'
-              }}>
-                <InvoiceIcon />
-                <span className="inline-block ml-2">Client Detail</span>
-              </Button>
-            </blockquote>
-          </figure>
-        </div>
       </div>
-      <h2 className="font-title text-2xl ">Wages List</h2>
-      <WagesList/>
+      <h2 className="font-title text-2xl ">Employee list</h2>
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Emp. Name
+            </th>
+            <th scope="col" class="px-6 py-3">
+              F/H Name
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Date of Joining
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Date of Living
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Dept.
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Designation
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Emp. Code
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {living?.map((item) => {
+            const daysLeft = calculateDaysLeft(item.leavingDate);
+            console.log(`Days left for ${item.empName}: ${daysLeft}`); // Log days left for debugging
+
+            return (
+              <tr
+                className={`bg-white border-b dark:bg-gray-800 dark:border-gray-700 ${daysLeft + 1 == 60 ? 'bg-red-200' : ''}`}
+                key={item._id}
+              >
+                <td className="px-6 py-4">
+                  {item.empName || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {item.familyMember || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {item?.joinDate?.split("T")[0] || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {item?.leavingDate?.split("T")[0] || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {item.department || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {item.designation || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {item.empCode || "N/A"}
+                </td>
+              </tr>
+            )
+          })}
+
+        </tbody>
+      </table>
     </div>
   );
 }

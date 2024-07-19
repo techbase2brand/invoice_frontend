@@ -12,10 +12,10 @@ const FinalWages = () => {
         + parseInt(formData.house || "0") + parseInt(formData.conveyance || "0") + parseInt(formData.earning || "0")
         + parseInt(formData.arrear || "0") + parseInt(formData.reimbursement || "0")
 
-    const deduction = parseInt(formData.health || "0") + parseInt(formData.epf || "0") + parseInt(formData.tds || "0");
+    const deduction = parseInt(formData.health || "0") + parseInt(formData.epf || "0") + parseInt(formData.tds || "0") + parseInt(formData.proftax || "0");
 
     //salary-deduction
-    const finalAmount = Math.abs(totalRateAmount - deduction);
+    const finalAmount = Math.abs(parseInt(formData.netsalary || "0"));
 
     //Net Salary in words................
     const amountInWords = numberToWords.toWords(finalAmount).charAt(0).toUpperCase() + numberToWords.toWords(finalAmount).slice(1);
@@ -118,12 +118,12 @@ const FinalWages = () => {
                                 </tr>
                                 <tr>
                                     <td>Children education Allowance<span className='table-row'>{formData.children}</span></td>
-                                    <td></td>
+                                    <td >Prof. Tax<span className='table-row'>{formData.proftax}</span></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td>Conveyance Allowance<span className='table-row'>{formData.conveyance}</span></td>
-                                    <td></td>
+                                    <td >TDS<span className='table-row'>{formData.tds}</span></td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -145,7 +145,7 @@ const FinalWages = () => {
                                 </tr>
                                 <tr style={{ borderBottom: '2px solid' }}>
                                     <td>Reimbursement<span className='table-row'>{formData.reimbursement}</span></td>
-                                    <td >TDS<span className='table-row'>{formData.tds}</span></td>
+                                    <td></td>
                                     <td >Absent<span className='table-row'>{formData.absent}</span></td>
 
                                 </tr>
