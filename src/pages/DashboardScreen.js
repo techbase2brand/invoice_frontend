@@ -200,14 +200,14 @@ function DashboardScreen() {
     return leaveDate.diff(today, 'days');
   };
 
-  useEffect(() => {
-    living.forEach(item => {
-      const daysLeft = calculateDaysLeft(item.leavingDate);
-      if (daysLeft < 60) {
-        alert(`Alert: 60 days left for employee ${item.empName}`);
-      }
-    });
-  }, [living]);
+  // useEffect(() => {
+  //   living.forEach(item => {
+  //     const daysLeft = calculateDaysLeft(item.leavingDate);
+  //     if (daysLeft < 60) {
+  //       alert(`Alert: 60 days left for employee ${item.empName}`);
+  //     }
+  //   });
+  // }, [living]);
 
   return (
     <div>
