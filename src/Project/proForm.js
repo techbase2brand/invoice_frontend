@@ -41,6 +41,8 @@ const ProForm = () => {
     const [payoneerId, setPayoneerId] = useState('');
     const [amount, setAmount] = useState('');
     const [advanceAmount, setAdvanceAmount] = useState('');
+    const [cgst, setCgst] = useState('');
+    const [sgst, setSgst] = useState('');
     const [invoicelist, setInvoiceList] = useState(null);
     const [enableGST, setEnableGST] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -177,7 +179,9 @@ const ProForm = () => {
             setGstNo(invoicelist.gstNo);
             setGstIn(invoicelist.gstin);
             setAmount(invoicelist.amount);
-            setAdvanceAmount(invoicelist.AdvanceAmount)
+            setAdvanceAmount(invoicelist.AdvanceAmount);
+            setCgst(invoicelist.cgst)
+            setSgst(invoicelist.sgst)
             setPayStatus(invoicelist.paymentStatus);
             setCurrency(invoicelist.currency);
             setSelectCompany(invoicelist.trade);
@@ -386,7 +390,9 @@ const ProForm = () => {
             bankNamed: selectedBankName,
             AdvanceAmount: advanceAmount || totalAmount,
             amounts: amounts,
-            companylogo: selectedLogo
+            companylogo: selectedLogo,
+            sgst: sgst,
+            cgst: cgst
         };
 
         if (id) {
@@ -1044,6 +1050,34 @@ const ProForm = () => {
                                     <option value="GBP">GBP</option>
                                 </select>
                             </div>
+
+
+                            <div className="text-sm mb-4"
+                            >
+                                <label className="block text-sm font-medium text-gray-700">CGST</label>
+                                <input
+                                    type='text'
+                                    placeholder="CGST"
+                                    name='cgst'
+                                    value={cgst}
+                                    className={defaultInputSmStyle}
+                                    onChange={(event) => setCgst(event.target.value)}
+                                />
+                            </div>
+                            <div className="text-sm mb-4"
+                            >
+                                <label className="block text-sm font-medium text-gray-700">SGST</label>
+                                <input
+                                    type='text'
+                                    placeholder="SGST"
+                                    name='sgst'
+                                    value={sgst}
+                                    className={defaultInputSmStyle}
+                                    onChange={(event) => setSgst(event.target.value)}
+                                />
+                            </div>
+
+
                             {
                                 !amount &&
                                 <div className="text-sm mb-4"

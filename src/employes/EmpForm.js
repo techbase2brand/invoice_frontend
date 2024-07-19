@@ -8,18 +8,18 @@ import moment from 'moment';
 const EmpForm = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedleavingDate, setSelectedLeavingDate] = useState(null);
- console.log("selectedleavingDate",selectedleavingDate);
- 
+  console.log("selectedleavingDate", selectedleavingDate);
+
 
   const [formData, setFormData] = useState({
     empName: '',
-    email:'',
-    mobileNo:'',
+    email: '',
+    mobileNo: '',
     familyMember: '',
     joinDate: '',
-    leavingDate : '',
-    tenure:'',
-    department: '', 
+    leavingDate: '',
+    tenure: '',
+    department: '',
     designation: '',
     empCode: '',
     companyName: '',
@@ -66,23 +66,23 @@ const EmpForm = () => {
     const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     const localDate = moment(date).startOf('day').toDate();
     setSelectedDate(localDate);
-    setFormData({ ...formData, joinDate: adjustedDate }); 
+    setFormData({ ...formData, joinDate: adjustedDate });
   };
-  const handleLeaveDateChange =(date) =>{
+  const handleLeaveDateChange = (date) => {
     const adjustDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     const localDates = moment(date).startOf('day').toDate();
-    setSelectedLeavingDate(localDates); 
+    setSelectedLeavingDate(localDates);
     setFormData({ ...formData, leavingDate: adjustDate });
   }
 
 
-// Date based get days
+  // Date based get days
   useEffect(() => {
     if (selectedDate && selectedleavingDate) {
       const date1 = new Date(selectedDate);
       const date2 = new Date(selectedleavingDate);
       const timeDifference = Math.abs(date2.getTime() - date1.getTime());
-      const dayDifference = Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+      const dayDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
       setFormData((prevFormData) => ({
         ...prevFormData,
         tenure: dayDifference,
@@ -177,17 +177,17 @@ const EmpForm = () => {
 
             </div>
             <div className="text-sm mb-4"
-                        >
+            >
               <label className="block text-sm font-medium text-gray-700">Mobile No</label>
               <input
-                  type='number'
-                  placeholder="mobile no"
-                  name='mobileNo'
-                  value={formData.mobileNo}
-                  className={defaultInputSmStyle}
-                  onChange={handleChange}
+                type='number'
+                placeholder="mobile no"
+                name='mobileNo'
+                value={formData.mobileNo}
+                className={defaultInputSmStyle}
+                onChange={handleChange}
               />
-                        </div>
+            </div>
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">F/H Name</label>
               <input
@@ -213,51 +213,51 @@ const EmpForm = () => {
             </div>
             <div className="text-sm mb-4">
               <div className='flex_date_tenure'>
-              <div className='DateOf'>
-              <label className="block text-sm font-medium text-gray-700">Date of Joining</label> 
-               <DatePicker
-                selected={selectedDate}
-                placeholderText='Date of Joining'
-                onChange={handleDateChange}
-                className={defaultInputSmStyle}
-                showYearDropdown
-                showMonthDropdown
-                dateFormat="yyyy-MM-dd"
-                yearDropdownItemNumber={15}
-                scrollableYearDropdown
-              />
-              </div>
-              <div className='DateOf'>
-              <label className="block text-sm font-medium text-gray-700">Leaving Date</label> 
-               <DatePicker
-                selected={selectedleavingDate}
-                placeholderText='Leaving Date'
-                onChange={handleLeaveDateChange}
-                className={defaultInputSmStyle}
-                showYearDropdown
-                showMonthDropdown
-                dateFormat="yyyy-MM-dd"
-                yearDropdownItemNumber={15}
-                scrollableYearDropdown
-              />
-              </div>
-              
-              <div className='tenure'>
-              <label className="block text-sm font-medium text-gray-700">Tenure</label>
-              <input
-                name="tenure"
-                value={formData.tenure}
-                placeholder="tenure" 
-                className={`${defaultInputSmStyle} ${error.tenure && validError}`}
-                onChange={handleChange}
-                disabled
-              />
-              </div>
+                <div className='DateOf'>
+                  <label className="block text-sm font-medium text-gray-700">Date of Joining</label>
+                  <DatePicker
+                    selected={selectedDate}
+                    placeholderText='Date of Joining'
+                    onChange={handleDateChange}
+                    className={defaultInputSmStyle}
+                    showYearDropdown
+                    showMonthDropdown
+                    dateFormat="yyyy-MM-dd"
+                    yearDropdownItemNumber={15}
+                    scrollableYearDropdown
+                  />
+                </div>
+                <div className='DateOf'>
+                  <label className="block text-sm font-medium text-gray-700">Leaving Date</label>
+                  <DatePicker
+                    selected={selectedleavingDate}
+                    placeholderText='Leaving Date'
+                    onChange={handleLeaveDateChange}
+                    className={defaultInputSmStyle}
+                    showYearDropdown
+                    showMonthDropdown
+                    dateFormat="yyyy-MM-dd"
+                    yearDropdownItemNumber={15}
+                    scrollableYearDropdown
+                  />
+                </div>
+
+                <div className='tenure'>
+                  <label className="block text-sm font-medium text-gray-700">Tenure</label>
+                  <input
+                    name="tenure"
+                    value={formData.tenure}
+                    placeholder="tenure"
+                    className={`${defaultInputSmStyle} ${error.tenure && validError}`}
+                    onChange={handleChange}
+                    disabled
+                  />
+                </div>
               </div>
             </div>
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Dept.</label>
-              <select name="department" value={formData.department}  className={`${defaultInputSmStyle} ${error.department && validError}`} onChange={handleChange} >
+              <select name="department" value={formData.department} className={`${defaultInputSmStyle} ${error.department && validError}`} onChange={handleChange} >
                 <option selected disabled>Select Department</option>
                 <option value='web-development & Design'>Web Development & Design</option>
                 <option value='graphic-design'>Graphic Design</option>
@@ -265,13 +265,6 @@ const EmpForm = () => {
                 <option value='business-development'>Business Development</option>
                 <option value='HR & Admin'>HR & Admin</option>
               </select>
-              {/* <input
-                name="department"
-                value={formData.department}
-                placeholder="Department"
-                className={`${defaultInputSmStyle} ${error.department && validError}`}
-                onChange={handleChange}
-              /> */}
             </div>
 
             <div className="text-sm mb-4"

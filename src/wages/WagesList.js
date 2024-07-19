@@ -70,7 +70,6 @@ const WagesList = () => {
     })
     .slice(indexOfFirstItem, indexOfLastItem);
 
-
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -131,10 +130,10 @@ const WagesList = () => {
       console.error('Error deleting bank detail:', error);
     }
   };
-  const calculateSum = (item) => {
-    const fields = ['basic', 'med', 'children', 'house', 'conveyance', 'earning', 'arrear', 'reimbursement', 'health', 'epf', 'tds'];
-    return fields.reduce((sum, field) => sum + parseFloat(item[field] || 0), 0);
-  };
+  // const calculateSum = (item) => {
+  //   const fields = ['basic', 'med', 'children', 'house', 'conveyance', 'earning', 'arrear', 'reimbursement', 'health', 'epf', 'tds'];
+  //   return fields.reduce((sum, field) => sum + parseFloat(item[field] || 0), 0);
+  // };
   return (
     <div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -236,7 +235,7 @@ const WagesList = () => {
                   {item.companyName || "N/A"}
                 </td>
                 <td className="px-6 py-4">
-                  {calculateSum(item)}
+                  {item?.netsalary || "N/A"}
                 </td>
                 <td style={{ display: 'flex', gap: '20px' }}>
                   <Link to={`/wages-form/${item._id}`}>

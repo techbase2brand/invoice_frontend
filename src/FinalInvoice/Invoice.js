@@ -23,7 +23,6 @@ const Invoice = () => {
     // Usage:
     const totalAmount = `${!formData.amount ? calculateTotalAmount() : formData.amount}`;
     const { id } = useParams();
-    const pdfContentRef = useRef(null);
     // const downloadPdf = async () => {
     //     const element = pdfContentRef.current;
     //     if (element) {
@@ -56,9 +55,26 @@ const Invoice = () => {
     // const printPDF = () => {
     //     window.print();
     // };
+
+    // For Hiding Name.............................
+    const checkboxes = document.querySelectorAll('.hide-checkbox');
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                e.target.parentNode.parentNode.style.display = 'none';
+            } else {
+                e.target.parentNode.parentNode.style.display = 'block';
+            }
+        });
+    });
+
+    const handlePdfDownload = () => {
+        document.getElementById('chatbutton').style.display = "none";
+        generatePDF(targetRef, { filename: 'page.pdf' });
+    }
     return (
         <div>
-            <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
+            <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={handlePdfDownload}>Pdf Download</button>
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
                 <img className='logo_invoice_overlap' src='/b2b-icon.png' />
@@ -71,14 +87,13 @@ const Invoice = () => {
 
                 </div>
                 <div className='invoice_section_new'>
-
                     <div className="form-head">
                         <span className="bill-head">Bill To</span>
                         <span className="bill-head">Original For Recipient</span>
                     </div>
                     <div className="invoice-body">
                         <div className="invoice-detail">
-                            <b>{formData.client}  </b>
+                            <b>{formData.client} <span><input type='checkbox' class='hide-checkbox' id='chatbutton' /></span> </b>
                             <p>{formData.company} </p>
                             <p> {formData.email} </p>
                             <p>{formData.mobileNo} </p>
