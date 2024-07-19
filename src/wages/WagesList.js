@@ -89,24 +89,40 @@ const WagesList = () => {
 
   useEffect(() => {
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-wages`;
+  
     axios.get(apiUrl)
       .then((response) => {
+  
         const wagesData = response.data.data.map((item) => {
-          const formattedChooseDate = new Date(item.chooseDate).toISOString().split('T')[0];
-          const formattedJoinDate = new Date(item.joinDate).toISOString().split('T')[0];
+          // Date formatting
+          let formattedChooseDate = "Invalid Date";
+          let formattedJoinDate = "Invalid Date";
+  
+          if (item.chooseDate && item.chooseDate !== "Invalid date") {
+            formattedChooseDate = new Date(item.chooseDate).toISOString().split('T')[0];
+          }
+  
+          if (item.joinDate && item.joinDate !== "Invalid date") {
+            formattedJoinDate = new Date(item.joinDate).toISOString().split('T')[0];
+          }
+  
+          // Constructing full URL for companylogo
+          const companyLogoUrl = item.companylogo ? `${process.env.REACT_APP_API_BASE_URL}${item.companylogo}` : "";
+  
           return {
             ...item,
             chooseDate: formattedChooseDate,
             joinDate: formattedJoinDate,
-            signature: `${process.env.REACT_APP_API_BASE_URL}/api/${item.signature}`
-          }
+            companylogo: companyLogoUrl
+          };
         });
-        setData(wagesData.reverse())
+        setData(wagesData.reverse()); // Reverse if needed
       })
       .catch((error) => {
-        console.error('Error fetching invoices:', error);
+        console.error('Error fetching data:', error);
       });
   }, []);
+  
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delted-wages/${id}`);

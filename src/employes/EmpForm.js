@@ -7,7 +7,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 const EmpForm = () => {
   const [selectedDate, setSelectedDate] = useState(null);
- 
+  const [selectedleavingDate, setSelectedLeavingDate] = useState(null);
+ console.log("selectedleavingDate",selectedleavingDate);
  
 
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const EmpForm = () => {
     mobileNo:'',
     familyMember: '',
     joinDate: '',
+    leavingDate : '',
     tenure:'',
     department: '', 
     designation: '',
@@ -38,8 +40,10 @@ const EmpForm = () => {
       const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-emp-data/${id}`);
       const bankDetailData = response.data.data;
       bankDetailData.joinDate = bankDetailData.joinDate ? new Date(bankDetailData.joinDate) : null;
+      bankDetailData.leavingDate = bankDetailData.leavingDate ? new Date(bankDetailData.leavingDate) : null;
       setFormData(bankDetailData);
       setSelectedDate(bankDetailData.joinDate);
+      setSelectedLeavingDate(bankDetailData.leavingDate)
     } catch (error) {
       console.error('Error fetching bank detail:', error);
     }
@@ -62,8 +66,29 @@ const EmpForm = () => {
     const adjustedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     const localDate = moment(date).startOf('day').toDate();
     setSelectedDate(localDate);
-    setFormData({ ...formData, joinDate: adjustedDate });
+    setFormData({ ...formData, joinDate: adjustedDate }); 
   };
+  const handleLeaveDateChange =(date) =>{
+    const adjustDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    const localDates = moment(date).startOf('day').toDate();
+    setSelectedLeavingDate(localDates); 
+    setFormData({ ...formData, leavingDate: adjustDate });
+  }
+
+
+// Date based get days
+  useEffect(() => {
+    if (selectedDate && selectedleavingDate) {
+      const date1 = new Date(selectedDate);
+      const date2 = new Date(selectedleavingDate);
+      const timeDifference = Math.abs(date2.getTime() - date1.getTime());
+      const dayDifference = Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        tenure: dayDifference,
+      }));
+    }
+  }, [selectedDate, selectedleavingDate]);
 
 
   const handleSubmit = async (e) => {
@@ -84,7 +109,8 @@ const EmpForm = () => {
         let response;
         // const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : '';
         const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
-        const updatedFormData = { ...formData, joinDate: formattedDate };
+        const livingDate = moment(selectedleavingDate).format('YYYY-MM-DD');
+        const updatedFormData = { ...formData, joinDate: formattedDate, leavingDate: livingDate };
 
         if (id) {
           response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-emp-data/${id}`, updatedFormData);
@@ -201,6 +227,21 @@ const EmpForm = () => {
                 scrollableYearDropdown
               />
               </div>
+              <div className='DateOf'>
+              <label className="block text-sm font-medium text-gray-700">Leaving Date</label> 
+               <DatePicker
+                selected={selectedleavingDate}
+                placeholderText='Leaving Date'
+                onChange={handleLeaveDateChange}
+                className={defaultInputSmStyle}
+                showYearDropdown
+                showMonthDropdown
+                dateFormat="yyyy-MM-dd"
+                yearDropdownItemNumber={15}
+                scrollableYearDropdown
+              />
+              </div>
+              
               <div className='tenure'>
               <label className="block text-sm font-medium text-gray-700">Tenure</label>
               <input
@@ -209,6 +250,7 @@ const EmpForm = () => {
                 placeholder="tenure" 
                 className={`${defaultInputSmStyle} ${error.tenure && validError}`}
                 onChange={handleChange}
+                disabled
               />
               </div>
               </div>
