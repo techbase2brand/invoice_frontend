@@ -8,7 +8,7 @@ import moment from 'moment';
 const EmpForm = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedleavingDate, setSelectedLeavingDate] = useState(null);
- 
+ console.log("selectedleavingDate",selectedleavingDate);
  
 
   const [formData, setFormData] = useState({
@@ -43,7 +43,7 @@ const EmpForm = () => {
       bankDetailData.leavingDate = bankDetailData.leavingDate ? new Date(bankDetailData.leavingDate) : null;
       setFormData(bankDetailData);
       setSelectedDate(bankDetailData.joinDate);
-      selectedleavingDate(bankDetailData.leavingDate)
+      setSelectedLeavingDate(bankDetailData.leavingDate)
     } catch (error) {
       console.error('Error fetching bank detail:', error);
     }
@@ -82,7 +82,7 @@ const EmpForm = () => {
       const date1 = new Date(selectedDate);
       const date2 = new Date(selectedleavingDate);
       const timeDifference = Math.abs(date2.getTime() - date1.getTime());
-      const dayDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+      const dayDifference = Math.ceil(timeDifference / (1000 * 3600 * 24)) + 1;
       setFormData((prevFormData) => ({
         ...prevFormData,
         tenure: dayDifference,
@@ -109,7 +109,8 @@ const EmpForm = () => {
         let response;
         // const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : '';
         const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
-        const updatedFormData = { ...formData, joinDate: formattedDate, leavingDate: formattedDate };
+        const livingDate = moment(selectedleavingDate).format('YYYY-MM-DD');
+        const updatedFormData = { ...formData, joinDate: formattedDate, leavingDate: livingDate };
 
         if (id) {
           response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-emp-data/${id}`, updatedFormData);

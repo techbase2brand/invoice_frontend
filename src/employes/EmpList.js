@@ -48,6 +48,9 @@ const EmpList = () => {
                 Date of Joining
               </th>
               <th scope="col" class="px-6 py-3">
+                Date of Living
+              </th>
+              <th scope="col" class="px-6 py-3">
                 Dept.
               </th>
               <th scope="col" class="px-6 py-3">
@@ -75,6 +78,9 @@ const EmpList = () => {
                 </td>
                 <td className="px-6 py-4">
                   {item?.joinDate?.split("T")[0] || "N/A"}
+                </td>
+                <td className="px-6 py-4">
+                  {item?.leavingDate?.split("T")[0] || "N/A"}
                 </td>
                 <td className="px-6 py-4">
                   {item.department || "N/A"}

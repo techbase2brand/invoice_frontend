@@ -39,7 +39,7 @@ const AppointMentForm = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointment-data`, formData);
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointmentLetter`, formData);
             console.log('Success:', response.data);
 
             setFormData({
