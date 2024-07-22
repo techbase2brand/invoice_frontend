@@ -39,11 +39,11 @@ const EmpForm = () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-emp-data/${id}`);
       const bankDetailData = response.data.data;
-      bankDetailData.joinDate = bankDetailData.joinDate ? new Date(bankDetailData.joinDate) : null;
-      bankDetailData.leavingDate = bankDetailData.leavingDate ? new Date(bankDetailData.leavingDate) : null;
+      bankDetailData.joinDate = bankDetailData.joinDate && moment(bankDetailData.joinDate).isValid() ? moment(bankDetailData.joinDate).toDate() : null;
+      bankDetailData.leavingDate = bankDetailData.leavingDate && moment(bankDetailData.leavingDate).isValid() ? moment(bankDetailData.leavingDate).toDate() : null;
       setFormData(bankDetailData);
       setSelectedDate(bankDetailData.joinDate);
-      setSelectedLeavingDate(bankDetailData.leavingDate)
+      setSelectedLeavingDate(bankDetailData.leavingDate);
     } catch (error) {
       console.error('Error fetching bank detail:', error);
     }
