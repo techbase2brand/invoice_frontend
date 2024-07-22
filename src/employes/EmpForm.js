@@ -258,7 +258,7 @@ const EmpForm = () => {
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Dept.</label>
               <select name="department" value={formData.department} className={`${defaultInputSmStyle} ${error.department && validError}`} onChange={handleChange} >
-                <option selected disabled>Select Department</option>
+                <option selected>Select Department</option>
                 <option value='web-development & Design'>Web Development & Design</option>
                 <option value='graphic-design'>Graphic Design</option>
                 <option value='digital-marketing'>Digital Marketing</option>
