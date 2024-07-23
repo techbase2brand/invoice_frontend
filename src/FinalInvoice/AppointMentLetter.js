@@ -42,7 +42,7 @@ const AppointMentLetter = () => {
                 <div className='appoint_section_new'>
                     <div className="form-head">
                         <span>Ref No. {data.refNo}</span>
-                         <b>Appoinment Letter</b> 
+                         <b>Appointment letter</b> 
                         <span>Date:- {data.appointmentDate ? formatDate(data.appointmentDate) : ''}</span>
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: data.appointMentData }} />
