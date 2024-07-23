@@ -50,7 +50,9 @@
   height: 40px;
   right: 0px;
 }
-
+.appoinment_banner{
+  height: 200px;
+}
 .primary-self-text {
   color: rgb(0, 102, 255) !important;
 }
