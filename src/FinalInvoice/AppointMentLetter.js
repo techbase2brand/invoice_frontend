@@ -42,6 +42,7 @@ const AppointMentLetter = () => {
                 <div className='appoint_section_new'>
                     <div className="form-head">
                         <span>Ref No. {data.refNo}</span>
+                         <b>Appoinment Letter</b> 
                         <span>Date:- {data.appointmentDate ? formatDate(data.appointmentDate) : ''}</span>
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: data.appointMentData }} />
@@ -96,7 +97,7 @@ const AppointMentLetter = () => {
                         </div>
                     </div>
                 </div>
-                <img src='/invoice_banner.png' className='w-full ph_none_banner appoinment_banner' />
+                <img src='/invoice_banner_appoinment.png' className='w-full ph_none_banner appoinment_banner' />
             </div>
         </div>
     )

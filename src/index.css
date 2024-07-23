@@ -51,7 +51,8 @@
   right: 0px;
 }
 .appoinment_banner{
-  height: 200px;
+  height: 78px;
+    margin-top: 3rem;
 }
 .primary-self-text {
   color: rgb(0, 102, 255) !important;
@@ -412,7 +413,7 @@ td {
 .form-head {
   font-weight: bold;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-bottom: 15px;
 }
 
@@ -776,6 +777,9 @@ tbody.table-body {
   .invoice_section_new{
     height: auto;
   }
+  .form-head b {
+    display: block;
+}
   .bank_data span {
     font-size: 12px;
   }
