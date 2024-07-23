@@ -96,7 +96,7 @@ const AppointMentLetter = () => {
                         </div>
                     </div>
                 </div>
-                <img src='/invoice_banner.png' className='w-full ph_none_banner' />
+                <img src='/invoice_banner.png' className='w-full ph_none_banner appoinment_banner' />
             </div>
         </div>
     )
