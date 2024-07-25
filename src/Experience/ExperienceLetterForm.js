@@ -22,6 +22,12 @@ const ExperienceLetterForm = () => {
             [name]: value
         });
     };
+    const generateRefNo = () => {
+        const currentYear = new Date().getFullYear();
+        const nextYear = currentYear + 1;
+        const formattedRefNo = `B2B/${currentYear}-${nextYear.toString().slice(-2)}/${Math.floor(1000 + Math.random() * 9000)}`;
+        return formattedRefNo;
+    };
 
     const fetchCreditDetail = async (id) => {
         try {
@@ -31,7 +37,7 @@ const ExperienceLetterForm = () => {
                 const { userName, refNo, experienceDate, experienceData } = response.data.data;
                 setFormData({
                     userName: userName || '',
-                    refNo: refNo || '',
+                    refNo: refNo || generateRefNo(),
                     experienceDate: experienceDate || '',
                     experienceData: experienceData || ''
                 });
@@ -46,6 +52,13 @@ const ExperienceLetterForm = () => {
             fetchCreditDetail(id);
         } else {
             // Fetch initial data for new entry if needed
+            setFormData({
+                userName: '',
+                refNo: generateRefNo(),
+                experienceDate: '',
+                experienceData: ''
+            });
+
             fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-experienceLetter`)
                 .then(response => response.json())
                 .then(data => {
@@ -74,7 +87,7 @@ const ExperienceLetterForm = () => {
 
             setFormData({
                 userName: '',
-                refNo: '',
+                refNo: generateRefNo(),
                 experienceDate: '',
                 experienceData: ''
             });
@@ -110,6 +123,7 @@ const ExperienceLetterForm = () => {
                                 onChange={handleChange}
                                 placeholder="Ref. No"
                                 className={defaultInputSmStyle}
+                                readOnly
                             />
                         </div>
                         <div className="text-sm mb-4">

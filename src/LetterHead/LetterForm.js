@@ -5,14 +5,14 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const AppointMentForm = () => {
+const LetterForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         userName: '',
         refNo: '',
-        appointmentDate: '',
-        appointMentData: ''
+        letterHeadDate: '',
+        letterHeadData: ''
     });
 
     const handleChange = (e) => {
@@ -32,14 +32,14 @@ const AppointMentForm = () => {
 
     const fetchCreditDetail = async (id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-get/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/letter-get/${id}`);
             if (response.data.success) {
-                const { userName, refNo, appointmentDate, appointMentData } = response.data.data;
+                const { userName, refNo, letterHeadDate, letterHeadData } = response.data.data;
                 setFormData({
                     userName: userName || '',
                     refNo: refNo || generateRefNo(),
-                    appointmentDate: appointmentDate || '',
-                    appointMentData: appointMentData || ''
+                    letterHeadDate: letterHeadDate || '',
+                    letterHeadData: letterHeadData || ''
                 });
             }
         } catch (error) {
@@ -55,17 +55,17 @@ const AppointMentForm = () => {
             setFormData({
                 userName: '',
                 refNo: generateRefNo(),
-                appointmentDate: '',
-                appointMentData: ''
+                letterHeadDate: '',
+                letterHeadData: ''
             });
 
-            fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-appointmentLetter`)
+            fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-letter`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.data && data.data.length > 0) {
                         setFormData(prevFormData => ({
                             ...prevFormData,
-                            appointMentData: data.data[0].appointMentData,
+                            letterHeadData: data.data[0].letterHeadData,
                         }));
                     }
                 })
@@ -80,18 +80,18 @@ const AppointMentForm = () => {
 
         try {
             if (id) {
-                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-update/${id}`, formData);
+                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/letter-update/${id}`, formData);
             } else {
-                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointment-data`, formData);
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-letter-data`, formData);
             }
 
             setFormData({
                 userName: '',
                 refNo: generateRefNo(),
-                appointmentDate: '',
-                appointMentData: ''
+                letterHeadDate: '',
+                letterHeadData: ''
             });
-            navigate('/appointment-letter');
+            navigate('/letterHead-title');
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -130,8 +130,8 @@ const AppointMentForm = () => {
                             <label className="block text-sm font-medium text-gray-700">Date</label>
                             <input
                                 type='date'
-                                name="appointmentDate"
-                                value={formData.appointmentDate}
+                                name="letterHeadDate"
+                                value={formData.letterHeadDate}
                                 onChange={handleChange}
                                 className={defaultInputSmStyle}
                             />
@@ -140,12 +140,12 @@ const AppointMentForm = () => {
                             <label className="block text-sm font-medium text-gray-700">Appointment Letter</label>
                             <CKEditor
                                 editor={ClassicEditor}
-                                data={formData.appointMentData}
+                                data={formData.letterHeadData}
                                 onChange={(event, editor) => {
                                     const data = editor.getData();
                                     setFormData(prevFormData => ({
                                         ...prevFormData,
-                                        appointMentData: data
+                                        letterHeadData: data
                                     }));
                                 }}
                             />
@@ -165,4 +165,4 @@ const AppointMentForm = () => {
     );
 };
 
-export default AppointMentForm;
+export default LetterForm;
