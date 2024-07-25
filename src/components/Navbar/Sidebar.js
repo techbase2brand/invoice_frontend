@@ -59,6 +59,11 @@ const NAV_DATA = [
     title: "Appointment letter",
     link: "appointment-letter",
     Icon: ClientPlusIcon,
+  },
+  {
+    title: "Experience letter",
+    link: "experience-letter",
+    Icon: ClientPlusIcon,
   }
 ];
 

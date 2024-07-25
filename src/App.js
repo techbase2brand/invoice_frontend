@@ -36,6 +36,9 @@ import CreditCardHistory from "./Credit/CreditCardHistory";
 import AppointMentForm from "./Appointment/AppointMentForm";
 import AppointDetail from "./Appointment/AppointDetail";
 import AppointMentLetter from "./FinalInvoice/AppointMentLetter";
+import ExperienceDetail from "./Experience/ExperienceDetail";
+import ExperienceLetterForm from "./Experience/ExperienceLetterForm";
+import ExperienceLetter from "./FinalInvoice/ExperienceLetter";
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -94,6 +97,11 @@ const App = () => {
           <Route path="listing" element={<ProtectedRoute><InvoiceListScreen /></ProtectedRoute>} exact />
           <Route path="company" element={<ProtectedRoute><InvoiceDetailScreen /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/experience-letter" element={<ProtectedRoute><ExperienceDetail /></ProtectedRoute>} />
+          <Route path="/experience-letter/:id" element={<ProtectedRoute><ExperienceLetter /></ProtectedRoute>} />
+          <Route path="/experience-form/:id" element={<ProtectedRoute><ExperienceLetterForm /></ProtectedRoute>} />
+          <Route path="/appointment-form/:id" element={<ProtectedRoute><AppointMentForm /></ProtectedRoute>} />
+          <Route path="/experience-form" element={<ProtectedRoute><ExperienceLetterForm /></ProtectedRoute>} />
         </Routes>
       </Container>
       <ToastContainer />

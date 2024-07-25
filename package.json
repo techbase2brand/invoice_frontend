@@ -18,6 +18,7 @@
     "axios": "^1.6.8",
     "blob-to-base64": "^1.0.2",
     "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.12",
     "dom-to-image": "^2.6.0",
     "framer-motion": "^6.3.3",
     "html2canvas": "^1.4.1",

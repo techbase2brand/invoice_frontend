@@ -5,12 +5,10 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
+import dayjs from 'dayjs';
 const EmpForm = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedleavingDate, setSelectedLeavingDate] = useState(null);
-  console.log("selectedleavingDate", selectedleavingDate);
-
-
   const [formData, setFormData] = useState({
     empName: '',
     email: '',
@@ -25,9 +23,11 @@ const EmpForm = () => {
     companyName: '',
     companylogo: '',
   });
+  console.log("formDatra", formData);
   const [error, setError] = useState(false);
   const [img, setImg] = useState(false);
   const { id } = useParams();
+  const [tenure1, setTenure] = useState();
   useEffect(() => {
     if (id) {
       fetchBankDetail(id);
@@ -90,6 +90,16 @@ const EmpForm = () => {
     }
   }, [selectedDate, selectedleavingDate]);
 
+  useEffect(() => {
+    if (formData.leavingDate) {
+      const calculateTenure = () => {
+        const today = dayjs();
+        const leavingDate = dayjs(formData.leavingDate);
+        return leavingDate.diff(today, 'day');
+      };
+      setTenure(calculateTenure());
+    }
+  }, [formData.leavingDate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +120,7 @@ const EmpForm = () => {
         // const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : '';
         const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
         const livingDate = moment(selectedleavingDate).format('YYYY-MM-DD');
-        const updatedFormData = { ...formData, joinDate: formattedDate, leavingDate: livingDate };
+        const updatedFormData = { ...formData, joinDate: formattedDate, leavingDate: livingDate, tenure:tenure1 };
 
         if (id) {
           response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-emp-data/${id}`, updatedFormData);
@@ -143,6 +153,7 @@ const EmpForm = () => {
   //     console.error('Error uploading image:', error);
   //   }
   // };
+
 
   return (
     <div>
@@ -246,7 +257,7 @@ const EmpForm = () => {
                   <label className="block text-sm font-medium text-gray-700">Tenure</label>
                   <input
                     name="tenure"
-                    value={formData.tenure}
+                    value={tenure1}
                     placeholder="tenure"
                     className={`${defaultInputSmStyle} ${error.tenure && validError}`}
                     onChange={handleChange}
@@ -278,18 +289,18 @@ const EmpForm = () => {
                 onChange={handleChange}
               />
             </div>
-
-            <div className="text-sm mb-4"
-            >
+            <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Company Name</label>
-              <input
-                name="companyName"
-                value={formData.companyName}
-                placeholder="Company Name"
-                className={defaultInputSmStyle}
-                onChange={handleChange}
-              />
+              <select name="companyName" value={formData.companyName} className={`${defaultInputSmStyle} ${error.companyName && validError}`} onChange={handleChange} >
+                <option selected>Select Company Name</option>
+                <option value='KS NETWORKING SOLUTIONS'>KS NETWORKING SOLUTIONS</option>
+                <option value='SAI LEGAL ASSOCIATES'>SAI LEGAL ASSOCIATES</option>
+                <option value='Base2Brand Infotech Private Limited'>Base2Brand Infotech Private Limited</option>
+                <option value='B2B Campus'>B2B Campus</option>
+                <option value='AASHU ENTERPRISES'>AASHU ENTERPRISES</option>
+              </select>
             </div>
+
             {/* <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">Company logo</label>
               {formData && formData.companylogo && (
