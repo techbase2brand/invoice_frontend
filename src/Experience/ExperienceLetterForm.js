@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { defaultInputSmStyle } from '../constants/defaultStyles';
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
-import axios from 'axios';
+import axios from 'axios'; // Import Axios
 import { useNavigate, useParams } from 'react-router-dom';
 
-const AppointMentForm = () => {
+const ExperienceLetterForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         userName: '',
         refNo: '',
-        appointmentDate: '',
-        appointMentData: ''
+        experienceDate: '',
+        experienceData: ''
     });
 
     const handleChange = (e) => {
@@ -22,7 +22,6 @@ const AppointMentForm = () => {
             [name]: value
         });
     };
-
     const generateRefNo = () => {
         const currentYear = new Date().getFullYear();
         const nextYear = currentYear + 1;
@@ -32,14 +31,15 @@ const AppointMentForm = () => {
 
     const fetchCreditDetail = async (id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-get/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/experience-get/${id}`);
+            console.log("response", response);
             if (response.data.success) {
-                const { userName, refNo, appointmentDate, appointMentData } = response.data.data;
+                const { userName, refNo, experienceDate, experienceData } = response.data.data;
                 setFormData({
                     userName: userName || '',
                     refNo: refNo || generateRefNo(),
-                    appointmentDate: appointmentDate || '',
-                    appointMentData: appointMentData || ''
+                    experienceDate: experienceDate || '',
+                    experienceData: experienceData || ''
                 });
             }
         } catch (error) {
@@ -51,21 +51,21 @@ const AppointMentForm = () => {
         if (id) {
             fetchCreditDetail(id);
         } else {
-            // Set initial data for new entry
+            // Fetch initial data for new entry if needed
             setFormData({
                 userName: '',
                 refNo: generateRefNo(),
-                appointmentDate: '',
-                appointMentData: ''
+                experienceDate: '',
+                experienceData: ''
             });
 
-            fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-appointmentLetter`)
+            fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-experienceLetter`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.data && data.data.length > 0) {
                         setFormData(prevFormData => ({
                             ...prevFormData,
-                            appointMentData: data.data[0].appointMentData,
+                            experienceData: data.data[0].experienceData,
                         }));
                     }
                 })
@@ -80,18 +80,18 @@ const AppointMentForm = () => {
 
         try {
             if (id) {
-                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-update/${id}`, formData);
+                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/experience-update/${id}`, formData);
             } else {
-                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointment-data`, formData);
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-experience-data`, formData);
             }
 
             setFormData({
                 userName: '',
                 refNo: generateRefNo(),
-                appointmentDate: '',
-                appointMentData: ''
+                experienceDate: '',
+                experienceData: ''
             });
-            navigate('/appointment-letter');
+            navigate('/experience-letter');
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -130,22 +130,22 @@ const AppointMentForm = () => {
                             <label className="block text-sm font-medium text-gray-700">Date</label>
                             <input
                                 type='date'
-                                name="appointmentDate"
-                                value={formData.appointmentDate}
+                                name="experienceDate"
+                                value={formData.experienceDate}
                                 onChange={handleChange}
                                 className={defaultInputSmStyle}
                             />
                         </div>
                         <div className="">
-                            <label className="block text-sm font-medium text-gray-700">Appointment Letter</label>
+                            <label className="block text-sm font-medium text-gray-700">Experience Letter</label>
                             <CKEditor
                                 editor={ClassicEditor}
-                                data={formData.appointMentData}
+                                data={formData.experienceData}
                                 onChange={(event, editor) => {
                                     const data = editor.getData();
                                     setFormData(prevFormData => ({
                                         ...prevFormData,
-                                        appointMentData: data
+                                        experienceData: data
                                     }));
                                 }}
                             />
@@ -155,7 +155,7 @@ const AppointMentForm = () => {
                                 type="submit"
                                 className="primary-background-color w-full text-white hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                             >
-                                {id ? 'Update' : 'Submit'}
+                                Submit
                             </button>
                         </div>
                     </div>
@@ -165,4 +165,4 @@ const AppointMentForm = () => {
     );
 };
 
-export default AppointMentForm;
+export default ExperienceLetterForm;

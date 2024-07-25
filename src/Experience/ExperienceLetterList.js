@@ -5,18 +5,20 @@ import "react-datepicker/dist/react-datepicker.css";
 import { defaultInputSmBlack } from '../constants/defaultStyles';
 import { Link } from 'react-router-dom';
 
-const AppointMentList = () => {
+const ExperienceLetterList = () => {
   const [data, setData] = useState([]);
+  console.log("data", data)
   const [itemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(data.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  console.log("currentItems", currentItems)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-appointment`);
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-experience`);
         if (response.data.success) {
           setData(response.data.data.reverse());
         }
@@ -33,7 +35,7 @@ const AppointMentList = () => {
   };
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-appointment/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-experience/${id}`);
       setData(data.filter(item => item._id !== id));
     } catch (error) {
       console.error('Error deleting bank detail:', error);
@@ -74,10 +76,10 @@ const AppointMentList = () => {
                   {item.refNo}
                 </td>
                 <td className="px-6 py-4">
-                  {item.appointmentDate}
+                  {item.experienceDate}
                 </td>
                 <td style={{display:'flex',gap:'1rem'}}>
-                  <Link to={`/appointment-form/${item._id}`}>
+                  <Link to={`/experience-form/${item._id}`}>
                     <span>
                       <svg xmlns="http://www.w3.org/2000/svg" class="feather feather-edit" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
                     </span>
@@ -89,7 +91,7 @@ const AppointMentList = () => {
                   </span>
                 </td>
                 <td>
-                  <Link to={`/appointment-letter/${item._id}`}>
+                  <Link to={`/experience-letter/${item._id}`}>
                     <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">pdf</button>
                   </Link>
                 </td>
@@ -122,4 +124,4 @@ const AppointMentList = () => {
   );
 };
 
-export default AppointMentList;
+export default ExperienceLetterList;
