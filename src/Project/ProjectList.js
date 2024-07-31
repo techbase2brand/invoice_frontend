@@ -272,18 +272,18 @@ function ProjectList() {
             </div>
             <h1><span className="font-black">Duplicated:</span>{DuplicateData}</h1>
             <div style={{ display: 'flex', gap: '3px' }}>
-                <div className="client-form-wrapper" style={{ width: '12%' }}>
+                <div className="client-form-wrapper">
                     <input
                         type="text"
                         placeholder="Search"
-                        className={defaultInputSmBlack}
+                        className='inputStyle'
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
                 <div>
                     <select
-                        className={defaultInputSmBlack}
+                        className='inputStyle'
                         value={selectedDays === "" ? "" : `${selectedDays}`}
                         onChange={handleSelectChange}
                     >
@@ -297,7 +297,7 @@ function ProjectList() {
                 </div>
                 <div>
                     <select
-                        className={defaultInputSmBlack}
+                        className='inputStyle'
                         value={paymentStatus}
                         onChange={handlePaymentStatusChange}
                     >
@@ -308,7 +308,7 @@ function ProjectList() {
                     </select>
                 </div>
                 <div>
-                    <select value={duplicateFilter} onChange={handleDuplicateFilterChange} className={defaultInputSmBlack}>
+                    <select value={duplicateFilter} onChange={handleDuplicateFilterChange} className='inputStyle'>
                         <option value="">Filter by Duplicate Status</option>
                         <option value="Duplicated">Duplicated</option>
                         <option value="">Not Duplicated</option>
@@ -316,14 +316,14 @@ function ProjectList() {
                 </div>
                 <div className="date-range-picker" style={{ display: 'flex' }}>
                     <DatePicker
-                        className={defaultInputSmBlack}
+                        className='inputStyle'
                         selected={startDate}
                         onChange={handleStartDateChange}
                         placeholderText="Select start date"
                     />
-                    <span className=" text-gray-500">to</span>
+                    <span className="toRange">to</span>
                     <DatePicker
-                        className={defaultInputSmBlack}
+                        className='inputStyle'
                         selected={endDate}
                         onChange={handleEndDateChange}
                         placeholderText="Select end date"

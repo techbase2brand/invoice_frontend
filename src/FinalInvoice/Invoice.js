@@ -72,12 +72,15 @@ const Invoice = () => {
         document.getElementById('chatbutton').style.display = "none";
         generatePDF(targetRef, { filename: 'page.pdf' });
     }
+ 
+    const digitalMarketingAmounts = formData.amounts ? formData.amounts['Digital Marketing'] : undefined;
+
     return (
-        <div>
+        <div> 
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={handlePdfDownload}>Pdf Download</button>
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
-                <img className='logo_invoice_overlap' src='/b2b-icon.png' />
+                <img className='logo_invoice_overlap'  src={`https://invoice-backend.base2brand.com${formData.companylogo}`} />
                 <img src='/header_invoice.png' className='w-full header_invoice' />
                 <div className="logo text_invoice">
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
@@ -123,8 +126,8 @@ const Invoice = () => {
                             <b>Task</b>
                             <b className='space_desc'>Description</b>
 
+                            <b>Amount</b>
                             <b className='status_ph'>Status</b>
-                            <b className='text-right'>Amount</b>
                         </div>
 
                         <div className='Invoice_data'>
@@ -132,31 +135,35 @@ const Invoice = () => {
                             <p key={i}>{i + 1}</p>
                         ))}</b>
                         </div> */}
-                            <div className='combine_div'>
+                               <div className='combine_div'>
                                 {formData.description && Object.entries(formData.description).map(([key, value], index) => (
-                                    <div className='deta_combine'>
-                                        <p style={{ fontWeight: '600' }} key={index}>{index + 1}</p>
-                                        <div className='task_combine'>
-                                            <p style={{ fontWeight: '600' }} key={key}>{key}</p>
-                                            <div className='desc_data PDF_Desc'>
-                                                {value.map((val, index) => (
-                                                    <p key={index}>{val}</p>
-                                                ))}
-                                            </div>
+                                    <div className='deta_combine' key={index}>
+                                    <p style={{ fontWeight: '600' }}>{index + 1}</p>
+                                    <div className='task_combine'>
+                                        <p style={{ fontWeight: '600' }}>{key}</p>
+                                        <div className='desc_data PDF_Desc'>
+                                        <div className='task_name'>
+                                            {value.map((val, valIndex) => (
+                                            <section className='amount_task'>
+                                                <p>{val}</p>
+                                                {digitalMarketingAmounts[valIndex] && (
+                                                <b>{digitalMarketingAmounts[valIndex]}</b>
+                                                )}
+                                            </section>
+                                            ))}
+                                        </div>
                                         </div>
                                     </div>
+                                    </div>
                                 ))}
+                                </div>
+                            {/* <div className=' '>
 
-                            </div>
-                            <div className='status_ph'><p>{formData.amount === "" ? "Advance" : "Full"}</p></div>
-                            {/* <div className='text-right'>
-                            <p>{formData.currency} {totalAmount}</p>
-                            <p>1</p>
-                            <p>2</p>
-                        </div> */}
-                            <div className='text-right'>
+                          
+
                                 {formData.amount === "" ? <>
-                                    {formData.amounts && Object.entries(formData.amounts).map(([key, amountObj]) => {
+                                    {formData.amounts  && Object.entries(formData.amounts).map(([key, amountObj]) => {
+
                                         const descriptionArr = formData?.description[key] || [];
                                         return (
                                             <div className='task_desc right_amount' key={key}>
@@ -174,13 +181,21 @@ const Invoice = () => {
                                     :
                                     <p>{formData.currency} {totalAmount}</p>
                                 }
-                            </div>
+                            </div> */}
+                            <div className='status_ph'><p>{formData.amount === "" ? "Advance" : "Full"}</p></div>
+
+
 
                         </div>
 
                         <div className='total_amount flex_ph'>
-                            <div className='blank_ph'></div>
-                            <div className='blank_ph'></div>
+                            <div className='blank_ph'>
+                               <p>SGST : {formData.sgst}</p> 
+                            </div>
+                            <div className='blank_ph'>
+                               <p>CGST : {formData.cgst}</p> 
+
+                            </div>
                             <div className='ph_view'>
                                 <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
                             </div>
@@ -307,7 +322,7 @@ const Invoice = () => {
                                 <div>
                                     <label></label>
                                     <span>
-                                        <img className='sign_mam' src={`https://invoice-backend.base2brand.com${formData.signature}`} alt="signature" style={{ width: '30%', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
+                                        <img className='sign_mam' src={`https://invoice-backend.base2brand.com${formData.signature}`} alt="signature" style={{ width: '80px', height: "45px", objectFit: 'cover', marginTop: '5px' }} />
                                     </span>
                                 </div>
                                 <div>
