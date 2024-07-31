@@ -14,6 +14,8 @@ const ProForm = () => {
     const [selectedProject, setSelectedProject] = useState([]);
     const [projectDescriptions, setProjectDescriptions] = useState({});
     const [companyName, setCompanyName] = useState('');
+    const [clientAddress, setClientAddress] = useState('');
+    
     const [email, setEmail] = useState('');
     const [mobileNo, setMobileNo] = useState('');
     const [data, setData] = useState([]);
@@ -52,6 +54,7 @@ const ProForm = () => {
     const [amounts, setAmounts] = useState({});
     const [comGst, setComGst] = useState('');
     const [comIfsc, setComIfsc] = useState('');
+    const [companyAddress, setCompanyAddress] = useState(''); 
     const [comPanNo, setComPanNo] = useState('');
     const [signature, setSignature] = useState('');
     const [logo, setLogo] = useState('');
@@ -158,6 +161,8 @@ const ProForm = () => {
             setSelectedClient(invoicelist?.clientName);
             setState(invoicelist?.clientName);
             setCompanyName(invoicelist.company);
+            setClientAddress(invoicelist?.clientAddress);
+            
             setEmail(invoicelist.email);
             setMobileNo(invoicelist.mobileNo);
             setSelectedProject(invoicelist.project);
@@ -186,6 +191,7 @@ const ProForm = () => {
             setCurrency(invoicelist.currency);
             setSelectCompany(invoicelist.trade);
             setComIfsc(invoicelist.ifsc);
+            setCompanyAddress(invoicelist.companyAddress);
             setComPanNo(invoicelist.panNo);
             setSignature(invoicelist.signature);
             setLogo(invoicelist.companylogo)
@@ -240,6 +246,7 @@ const ProForm = () => {
     const handleClientChange = (event) => {
         if (!event.target.value) {
             setCompanyName("");
+            setClientAddress("");
             setEmail("");
             setMobileNo("");
         }
@@ -249,6 +256,7 @@ const ProForm = () => {
         const selectedClient = client.find(client => client._id === selectedClientId);
         if (selectedClient) {
             setCompanyName(selectedClient.company);
+            setClientAddress(selectedClient.clientAddress);
             setEmail(selectedClient.email);
             setMobileNo(selectedClient.mobileNo);
         }
@@ -302,6 +310,7 @@ const ProForm = () => {
         if (selectedCompany) {
             setComGst(selectedCompany.gstNo);
             setComIfsc(selectedCompany.ifsc);
+            setCompanyAddress(selectedCompany.companyAddress);  
             setComPanNo(selectedCompany.panNo);
             setSignature(selectedCompany.signature);
             setLogo(selectedCompany.companylogo)
@@ -354,6 +363,7 @@ const ProForm = () => {
             company: companyName,
             email: email,
             mobileNo: mobileNo,
+            clientAddress:clientAddress,
             project: selectedProject,
             bankName: bank,
             accNo: accNo,
@@ -379,6 +389,7 @@ const ProForm = () => {
             description: projectDescriptions,
             trade: selectedTradeName,
             ifsc: comIfsc,
+            companyAddress:companyAddress,
             panNo: comPanNo,
             CompanygstNo: comGst,
             signature: signaturePayload[0],
@@ -536,6 +547,17 @@ const ProForm = () => {
                                                 value={email}
                                                 className={defaultInputSmStyle}
                                                 onChange={(event) => setEmail(event.target.value)}
+                                            />
+                                        </div>
+                                        <div className="text-sm mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Address</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Address"
+                                                name='clientAddress'
+                                                value={clientAddress}
+                                                className={defaultInputSmStyle}
+                                                onChange={(event) => setClientAddress(event.target.value)}
                                             />
                                         </div>
                                         <div className="text-sm mb-4"
@@ -757,6 +779,16 @@ const ProForm = () => {
                                         ))}
                                     </select>
                                 </div>
+                                <div className="text-sm mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Company Address</label>
+                                            <input
+                                                name="companyAddress"
+                                                placeholder="Company Address"
+                                                value={companyAddress}
+                                                className={defaultInputSmStyle}
+                                                onChange={(event) => setCompanyAddress(event.target.value)}
+                                            />
+                                        </div>
                                 {trade &&
                                     <>
                                         <div className="text-sm mb-4">

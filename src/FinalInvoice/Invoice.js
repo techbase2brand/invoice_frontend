@@ -98,6 +98,7 @@ const Invoice = () => {
                         <div className="invoice-detail">
                             <b>{formData.client} <span><input type='checkbox' class='hide-checkbox' id='chatbutton' /></span> </b>
                             <p>{formData.company} </p>
+                            <p> {formData.clientAddress} </p> 
                             <p> {formData.email} </p>
                             <p>{formData.mobileNo} </p>
                             {/* <p>{formData.project} </p> */}
@@ -322,6 +323,12 @@ const Invoice = () => {
                                         <span>{formData.panNo}</span>
                                     </div>
                                 }
+
+                                        <div>
+                                        <label>Address</label>
+                                        <span><input type="text" className='transprent_gst' value={formData.companyAddress} /></span>
+                                    </div>
+
                                 <div>
                                     <label></label>
                                     <span>

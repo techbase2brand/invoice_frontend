@@ -7,6 +7,7 @@ const FormCli = () => {
     const [formData, setFormData] = useState({
         clientName: '',
         company: '',
+        clientAddress:'',
         email: '',
         mobileNo: '',
         project: [''],
@@ -127,6 +128,18 @@ const FormCli = () => {
                                 className={defaultInputSmStyle}
                                 onChange={handleChange}
                             />
+                        </div>
+                        <div className="text-sm mb-4">
+                            <label className="block text-sm font-medium text-gray-700">Address</label>
+                            <input
+                                type='text'
+                                placeholder="Address"
+                                name='clientAddress'
+                                value={formData.clientAddress}
+                                className={defaultInputSmStyle}
+                                onChange={handleChange}
+                            />
+
                         </div>
                         <div className="text-sm mb-4"
                         >

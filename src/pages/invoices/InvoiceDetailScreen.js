@@ -6,6 +6,7 @@ import { defaultInputSmStyle, validError } from '../../constants/defaultStyles';
 const FormCli = () => {
   const [formData, setFormData] = useState({
     trade: '',
+    companyAddress:'',
     ifsc: '',
     panNo: '',
     gstNo: '',
@@ -167,6 +168,20 @@ const FormCli = () => {
                 onChange={handleChange}
               />
             </div>
+            <div
+              className="text-sm mb-4"
+            >
+              <label className="block text-sm font-medium text-gray-700">Company Address</label>
+              <input
+                type='text'
+                placeholder="Company Address"
+                name='companyAddress'
+                value={formData.companyAddress}
+                className={`${defaultInputSmStyle} ${error.companyAddress && validError}`}
+                onChange={handleChange}
+              />
+            </div>
+
             <div className="text-sm mb-4">
               <label className="block text-sm font-medium text-gray-700">IFSC</label>
               <input
