@@ -146,8 +146,11 @@ const Invoice = () => {
                                             {value.map((val, valIndex) => (
                                             <section className='amount_task'>
                                                 <p>{val}</p>
-                                                {digitalMarketingAmounts[valIndex] && (
+                                                {/* {digitalMarketingAmounts[valIndex] && (
                                                 <b>{digitalMarketingAmounts[valIndex]}</b>
+                                                )} */}
+                                                 {digitalMarketingAmounts && digitalMarketingAmounts[valIndex] !== undefined && (
+                                                    <b>{digitalMarketingAmounts[valIndex]}</b>
                                                 )}
                                             </section>
                                             ))}
