@@ -210,23 +210,23 @@ function DashboardScreen() {
   // }, [living]);
 
   return (
-    <div>
-      <div className="p-4">
+    <div className="mb-4">
+      <div className="pt-4">
         <PageTitle title="Dashboard" />
       </div>
-      <div style={{ display: 'flex', gap: '3px' }}>
-        <div className="client-form-wrapper" style={{ width: '12%' }}>
+      <div style={{ display: 'flex', gap: '5px', marginBottom:'10px' }}>
+        <div className="client-form-wrapper">
           <input
             type="text"
             placeholder="Search"
-            className={defaultInputSmBlack}
+            className='inputStyle'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div>
           <select
-            className={defaultInputSmBlack}
+            className='inputStyle'
             value={selectedDays === "" ? "" : `${selectedDays}`}
             onChange={handleSelectChange}
           >
@@ -240,7 +240,7 @@ function DashboardScreen() {
         </div>
         <div>
           <select
-            className={defaultInputSmBlack}
+            className='inputStyle'
             value={paymentStatus}
             onChange={handlePaymentStatusChange}
           >
@@ -252,14 +252,14 @@ function DashboardScreen() {
         </div>
         <div className="date-range-picker">
           <DatePicker
-            className={defaultInputSmBlack}
+            className='inputStyle'
             selected={startDate}
             onChange={handleStartDateChange}
             placeholderText="Select start date"
           />
-          <span className=" text-gray-500">to</span>
+          <span className="toRange">To</span>
           <DatePicker
-            className={defaultInputSmBlack}
+            className='inputStyle'
             selected={endDate}
             onChange={handleEndDateChange}
             placeholderText="Select end date"
@@ -267,60 +267,61 @@ function DashboardScreen() {
         </div>
         <button type="button" onClick={handleSearch} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go</button>
       </div>
-      <div className="flex flex-wrap" style={{ gap: '5rem', marginBottom: '3rem' }}>
-        <div class=" max-w-md p-2 bg-white border border-red-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <div class="flex items-center justify-between mb-4">
-            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Payment Status</h5>
-          </div>
-          <div class="flow-root">
-            <ul role="list" class="divide-y divide-red-200 dark:divide-gray-700">
+      <div style={{ display: 'flex', gap: '10px', justifyContent:'space-between', marginBottom:'10px' }}>
+      <div class="shadowPayments">
+      <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mb-3">Payment Status</h5>
+      <div class="shadowPayment">
+
               {['Paid', 'Unpaid', 'Draft'].map((status, index) => (
-                <li key={index} >
+                <div className="shadow_data" >
                   <div class="flex items-center">
-                    <div class="flex-1 min-w-0 ms-4">
-                      <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                    <div class="flex-1 min-w-0">
+                      <p class="text-lg font-medium text-gray-900 truncate dark:text-white">
                         {status}
                       </p>
                     </div>
-                    <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                    <div class="inline-flex items-center text-base text-lg text-gray-900 dark:text-white">
                       {status === 'Paid' ? paidInvoicesLength : status === 'Unpaid' ? unpaidInvoicesLength : draftInvoicesLength}
                     </div>
                   </div>
-                </li>
+                </div>
               ))}
-            </ul>
-            <div class="flex items-center justify-between mb-4">
-              <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">Total Amount</h5>
             </div>
-            <div class="flow-root">
-              <ul role="list" class="divide-y divide-red-200 dark:divide-gray-700">
+            </div>
+           
+            <div class="shadowPayments">
+            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mb-3"> Total Amount</h5>
+   
+            <div class="shadowPayment">
+
                 {[
                   { currency: 'INR', total: totalINR, totalCr: totalINRCr },
                   { currency: 'AUD', total: totalAUD, totalCr: totalAUDCr },
                   { currency: 'USD', total: totalUSD, totalCr: totalUSDCr },
                   { currency: 'CAD', total: totalCAD, totalCr: totalCADCr }
                 ].map((item, index) => (
-                  <li key={index}>
-                    <div class="flex items-center">
-                      <div class="flex-1 min-w-0 ms-4">
-                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                  <div className="shadow_data"  key={index}>
+                    <div class="flex">
+                      <div class="flex-1 min-w-0">
+                        <p class="text-lg font-medium text-gray-900 truncate dark:text-white">
                           {item.currency}
                         </p>
-                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                        <p class="text-lg text-gray-500 truncate dark:text-gray-400">
                           {item.total}
                         </p>
                       </div>
-                      <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                      <div class="inline-flex   text-lg font-semibold text-gray-900 dark:text-white">
                         {item.totalCr}
                       </div>
                     </div>
-                  </li>
+                  </div>
                 ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class=" mb-8 border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 md:mb-12 md:grid-cols-2 bg-white dark:bg-gray-800">
+              </div>
+              </div>
+              </div>
+
+      <div className="data_table" style={{ gap: '5rem', marginBottom: '3rem' }}> 
+        <div class=" mb-8 border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 md:mb-12 md:grid-cols-2 bg-white dark:bg-gray-800 pb-4">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
