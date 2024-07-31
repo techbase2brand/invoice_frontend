@@ -145,7 +145,7 @@ const Invoice = () => {
                                         <div className='task_name'>
                                             {value.map((val, valIndex) => (
                                             <section className='amount_task'>
-                                                <p>{val}</p>
+                                                <p>{val}</p> 
                                                 {/* {digitalMarketingAmounts[valIndex] && (
                                                 <b>{digitalMarketingAmounts[valIndex]}</b>
                                                 )} */}
