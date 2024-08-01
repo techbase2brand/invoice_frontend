@@ -14,8 +14,9 @@ const ProForm = () => {
     const [selectedProject, setSelectedProject] = useState([]);
     const [projectDescriptions, setProjectDescriptions] = useState({});
     const [companyName, setCompanyName] = useState('');
-    const [clientAddress, setClientAddress] = useState('');
-    
+    const [clientAddress, setClientAddress] = useState(''); 
+    const [clientAddress1, setClientAddress1] = useState(''); 
+    const [clientAddress2, setClientAddress2] = useState(''); 
     const [email, setEmail] = useState('');
     const [mobileNo, setMobileNo] = useState('');
     const [data, setData] = useState([]);
@@ -162,7 +163,8 @@ const ProForm = () => {
             setState(invoicelist?.clientName);
             setCompanyName(invoicelist.company);
             setClientAddress(invoicelist?.clientAddress);
-            
+            setClientAddress1(invoicelist?.clientAddress1);
+            setClientAddress2(invoicelist?.clientAddress2); 
             setEmail(invoicelist.email);
             setMobileNo(invoicelist.mobileNo);
             setSelectedProject(invoicelist.project);
@@ -247,6 +249,8 @@ const ProForm = () => {
         if (!event.target.value) {
             setCompanyName("");
             setClientAddress("");
+            setClientAddress1("");
+            setClientAddress2("");
             setEmail("");
             setMobileNo("");
         }
@@ -257,6 +261,8 @@ const ProForm = () => {
         if (selectedClient) {
             setCompanyName(selectedClient.company);
             setClientAddress(selectedClient.clientAddress);
+            setClientAddress1(selectedClient.clientAddress1);
+            setClientAddress2(selectedClient.clientAddress2);
             setEmail(selectedClient.email);
             setMobileNo(selectedClient.mobileNo);
         }
@@ -364,6 +370,8 @@ const ProForm = () => {
             email: email,
             mobileNo: mobileNo,
             clientAddress:clientAddress,
+            clientAddress1:clientAddress1,
+            clientAddress2:clientAddress2,
             project: selectedProject,
             bankName: bank,
             accNo: accNo,
@@ -558,6 +566,28 @@ const ProForm = () => {
                                                 value={clientAddress}
                                                 className={defaultInputSmStyle}
                                                 onChange={(event) => setClientAddress(event.target.value)}
+                                            />
+                                        </div>
+                                        <div className="text-sm mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Address 1</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Address 1"
+                                                name='clientAddress1'
+                                                value={clientAddress1}
+                                                className={defaultInputSmStyle}
+                                                onChange={(event) => setClientAddress1(event.target.value)}
+                                            />
+                                        </div>
+                                        <div className="text-sm mb-4">
+                                            <label className="block text-sm font-medium text-gray-700">Address 2</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Address 2"
+                                                name='clientAddress2'
+                                                value={clientAddress2}
+                                                className={defaultInputSmStyle}
+                                                onChange={(event) => setClientAddress2(event.target.value)}
                                             />
                                         </div>
                                         <div className="text-sm mb-4"
