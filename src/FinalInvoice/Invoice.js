@@ -99,6 +99,8 @@ const Invoice = () => {
                             <b>{formData.client} <span><input type='checkbox' class='hide-checkbox' id='chatbutton' /></span> </b>
                             <p>{formData.company} </p>
                             <p> {formData.clientAddress} </p> 
+                            <p> {formData.clientAddress1} </p> 
+                            <p> {formData.clientAddress2} </p> 
                             <p> {formData.email} </p>
                             <p>{formData.mobileNo} </p>
                             {/* <p>{formData.project} </p> */}

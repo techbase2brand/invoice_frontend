@@ -8,6 +8,8 @@ const FormCli = () => {
         clientName: '',
         company: '',
         clientAddress:'',
+        clientAddress1:'',
+        clientAddress2:'',
         email: '',
         mobileNo: '',
         project: [''],
@@ -136,6 +138,30 @@ const FormCli = () => {
                                 placeholder="Address"
                                 name='clientAddress'
                                 value={formData.clientAddress}
+                                className={defaultInputSmStyle}
+                                onChange={handleChange}
+                            />
+
+                        </div>
+                        <div className="text-sm mb-4">
+                            <label className="block text-sm font-medium text-gray-700">Address 1</label>
+                            <input
+                                type='text'
+                                placeholder="Address 1"
+                                name='clientAddress1'
+                                value={formData.clientAddress1}
+                                className={defaultInputSmStyle}
+                                onChange={handleChange}
+                            />
+
+                        </div>
+                        <div className="text-sm mb-4">
+                            <label className="block text-sm font-medium text-gray-700">Address 2</label>
+                            <input
+                                type='text'
+                                placeholder="Address 2"
+                                name='clientAddress2'
+                                value={formData.clientAddress2}
                                 className={defaultInputSmStyle}
                                 onChange={handleChange}
                             />
