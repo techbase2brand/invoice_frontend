@@ -409,7 +409,7 @@ b.space_desc {
 .Invoice_data {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #ccc;
+  /* border-bottom: 1px solid #ccc; */
 }
 
 .border_total_amount.text-right {
@@ -433,7 +433,7 @@ h3.word_amount {
 
 .bank_data span {
   font-weight: 700;
-  min-width: 275px;
+  min-width: 320px;
 }
 
 .invoice-details_data span {
