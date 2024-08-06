@@ -82,7 +82,7 @@ const Invoice = () => {
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
                 <img className='logo_invoice_overlap'  src={`https://invoice-backend.base2brand.com${formData.companylogo}`} />
                 <img src='/header_invoice.png' className='w-full header_invoice' />
-                <div className="logo text_invoice">
+                <div className="logo text_invoice"> 
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
                     <img src={`https://invoice-backend.base2brand.com${formData.companylogo}`} alt="Company Logo" />
                     {/* <p className="form-num">{formData.invoice}</p> */}
