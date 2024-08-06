@@ -193,14 +193,17 @@ const Invoice = () => {
 
 
                         </div>
-
+                        <div className='sgst_per'>
+                        {formData.sgst &&
+                               <p>SGST : <b>{formData.sgst}</b></p> } 
+                        {formData.cgst && 
+                               <p>CGST : <b>{formData.cgst}</b></p> 
+                        }
+                               </div>
                         <div className='total_amount flex_ph'>
                             <div className='blank_ph'>
-                               <p>SGST : {formData.sgst}</p> 
                             </div>
-                            <div className='blank_ph'>
-                               <p>CGST : {formData.cgst}</p> 
-
+                            <div className='blank_ph'> 
                             </div>
                             <div className='ph_view'>
                                 <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
