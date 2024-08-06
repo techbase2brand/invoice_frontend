@@ -29,9 +29,19 @@
   src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhLw.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
-
-
+.appoint_section_new{
+  margin-top: 25px;
+}
+.appoint_section_new p {
+  font-size: 20px !important; 
+}
+.appoint_section_new .form-head {
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+.sgst_per p {
+  text-align: right;
+}
 /* dashboard css */
 .inputStyle {
   border: 1px solid #ccc !important;
@@ -386,8 +396,8 @@ b.space_desc {
   display: inline-block;
 }
 
-.total_amount {
-  margin-top: 2rem;
+.total_amount, .sgst_per {
+  margin-top: 1rem;
 }
 
 .table_invoce .thead {
@@ -586,7 +596,7 @@ p {
 }
 .border_total_amount.text-right.ph_view b {
   font-style: italic;
-  font-size: 20px;
+  font-size: 18px;
 }
 .invoice-details_data div label {
   font-size: 16px;
