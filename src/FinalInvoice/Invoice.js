@@ -318,7 +318,10 @@ const Invoice = () => {
                                 <>
                                     <div>
                                         <label>GSTIN</label>
-                                        <span><input type="text" className='transprent_gst' value={formData.CompanygstNo} /></span>
+                                        <span>
+                                        {formData.CompanygstNo}
+                                            {/* <input type="text" className='transprent_gst' value={formData.CompanygstNo} /> */}
+                                            </span>
                                     </div>
 
                                 </>
@@ -331,7 +334,10 @@ const Invoice = () => {
 
                                         <div>
                                         <label>Address</label>
-                                        <span><input type="text" className='transprent_gst' value={formData.companyAddress} /></span>
+                                        <span>
+                                        {formData.companyAddress}
+                                            {/* <input type="text" className='transprent_gst' value={formData.companyAddress} /> */}
+                                            </span>
                                     </div>
 
                                 <div>
