@@ -231,8 +231,8 @@ const Invoice = () => {
                         <div className='total_amount flex_ph'>
                             <div className='blank_ph'>
                             </div>
-                            <div className='blank_ph'>
-                            </div>
+                            {/* <div className='blank_ph'>
+                            </div> */}
                             <div className='ph_view'>
                                 <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
                             </div>

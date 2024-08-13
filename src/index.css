@@ -40,7 +40,14 @@
   margin-bottom: 25px;
 }
 .sgst_per p {
-  text-align: right;
+  text-align: left;
+}
+.border_total_amount.text-right.ph_view {
+  min-width: 28%;
+}
+.sgst_per {
+  width: 39%;
+  margin-left: auto;
 }
 /* dashboard css */
 .inputStyle {
@@ -397,7 +404,7 @@ b.space_desc {
 }
 
 .total_amount, .sgst_per {
-  margin-top: 1rem;
+  margin-top: 0rem;
 }
 
 .table_invoce .thead {
@@ -414,8 +421,8 @@ b.space_desc {
 
 .border_total_amount.text-right {
   border-top: 1px solid;
-  border-bottom: 1px solid;
-  padding-bottom: 10px;
+  /* border-bottom: 1px solid; */
+  margin-top: 10px;
 }
 
 h3.word_amount {
