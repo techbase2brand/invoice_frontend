@@ -43,10 +43,10 @@
   text-align: left;
 }
 .border_total_amount.text-right.ph_view {
-  min-width: 28%;
+  min-width: 34.5%;
 }
 .sgst_per {
-  width: 39%;
+  width: 32.5%;
   margin-left: auto;
 }
 /* dashboard css */
@@ -146,7 +146,7 @@ input#chatbutton {
   text-transform: capitalize;
 }
 .deta_combine p {
-  width: 35%;
+  width: 43%;
   font-size: 16px;
 }
 img.w-full.header_invoice {
@@ -387,9 +387,9 @@ b.space_desc {
 }
 
 .thead b {
-  min-width: 20%;
-  width: 19%;
-  max-width: 20%;
+  min-width: 23%;
+  width: 13%;
+  max-width: 23%;
   display: inline-block;
   color: #042da0;
   font-size: 18px;

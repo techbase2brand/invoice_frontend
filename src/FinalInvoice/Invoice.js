@@ -158,7 +158,7 @@ const Invoice = () => {
                             <b className='space_desc'>Description</b>
 
                             <b>Amount</b>
-                            <b className='status_ph'>Status</b>
+                            {/* <b className='status_ph'>Status</b> */}
                         </div>
 
                         <div className='Invoice_data'>
@@ -216,7 +216,7 @@ const Invoice = () => {
                                     <p>{formData.currency} {totalAmount}</p>
                                 }
                             </div> */}
-                            <div className='status_ph'><p>{formData.amount === "" ? "Advance" : "Full"}</p></div>
+                            {/* <div className='status_ph'><p>{formData.amount === "" ? "Advance" : "Full"}</p></div> */}
 
 
 
