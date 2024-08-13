@@ -72,17 +72,45 @@ const Invoice = () => {
         document.getElementById('chatbutton').style.display = "none";
         generatePDF(targetRef, { filename: 'page.pdf' });
     }
- 
-    const digitalMarketingAmounts = formData.amounts ? formData.amounts['Digital Marketing'] : undefined;
+
+    const digitalMarketingAmounts = formData.amounts ? formData.amounts['ORM ShabadGuru'] : undefined;
+    // const dataKey = Object.keys(formData.amounts).map((key) => key)
+    // console.log("dataKey ::::", dataKey)
+
+    const amounts = formData.amounts;
+    let priceValues = [];
+    if (amounts) {
+        Object.keys(amounts).forEach((key) => {
+            console.log(`Key: ${key}`);
+            Object.values(amounts[key]).forEach((value, index) => {
+                priceValues.push(value);
+                // console.log(`Value ${index}: ${value}`);
+                console.log('priceValues',priceValues)
+            });
+        });
+    } else {
+        console.log("No amounts data available");
+    }
+
+    let finalTotalAmount = parseFloat(totalAmount) || 0;
+
+    if (formData.sgst) {
+        finalTotalAmount += parseFloat(formData.sgst) || 0;
+    }
+    
+    if (formData.cgst) {
+        finalTotalAmount += parseFloat(formData.cgst) || 0;
+    }
+
 
     return (
-        <div> 
+        <div>
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={handlePdfDownload}>Pdf Download</button>
             {/* <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onClick={printPDF}>Print</button> */}
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
-                <img className='logo_invoice_overlap'  src={`https://invoice-backend.base2brand.com${formData.companylogo}`} />
+                <img className='logo_invoice_overlap' src={`https://invoice-backend.base2brand.com${formData.companylogo}`} />
                 <img src='/header_invoice.png' className='w-full header_invoice' />
-                <div className="logo text_invoice"> 
+                <div className="logo text_invoice">
                     {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
                     <img src={`https://invoice-backend.base2brand.com${formData.companylogo}`} alt="Company Logo" />
                     {/* <p className="form-num">{formData.invoice}</p> */}
@@ -98,9 +126,9 @@ const Invoice = () => {
                         <div className="invoice-detail">
                             <b>{formData.client} <span><input type='checkbox' class='hide-checkbox' id='chatbutton' /></span> </b>
                             <p>{formData.company} </p>
-                            <p> {formData.clientAddress} </p> 
-                            <p> {formData.clientAddress1} </p> 
-                            <p> {formData.clientAddress2} </p> 
+                            <p> {formData.clientAddress} </p>
+                            <p> {formData.clientAddress1} </p>
+                            <p> {formData.clientAddress2} </p>
                             <p> {formData.email} </p>
                             <p>{formData.mobileNo} </p>
                             {/* <p>{formData.project} </p> */}
@@ -138,31 +166,31 @@ const Invoice = () => {
                             <p key={i}>{i + 1}</p>
                         ))}</b>
                         </div> */}
-                               <div className='combine_div'>
+                            <div className='combine_div'>
                                 {formData.description && Object.entries(formData.description).map(([key, value], index) => (
                                     <div className='deta_combine' key={index}>
-                                    <p style={{ fontWeight: '600' }}>{index + 1}</p>
-                                    <div className='task_combine'>
-                                        <p style={{ fontWeight: '600' }}>{key}</p>
-                                        <div className='desc_data PDF_Desc'>
-                                        <div className='task_name'>
-                                            {value.map((val, valIndex) => (
-                                            <section className='amount_task'>
-                                                <p>{val}</p> 
-                                                {/* {digitalMarketingAmounts[valIndex] && (
+                                        <p style={{ fontWeight: '600' }}>{index + 1}</p>
+                                        <div className='task_combine'>
+                                            <p style={{ fontWeight: '600' }}>{key}</p>
+                                            <div className='desc_data PDF_Desc'>
+                                                <div className='task_name'>
+                                                    {value.map((val, valIndex) => (
+                                                        <section className='amount_task'>
+                                                            <p>{val}</p>
+                                                            {/* {digitalMarketingAmounts[valIndex] && (
                                                 <b>{digitalMarketingAmounts[valIndex]}</b>
                                                 )} */}
-                                                 {digitalMarketingAmounts && digitalMarketingAmounts[valIndex] !== undefined && (
-                                                    <b>{digitalMarketingAmounts[valIndex]}</b>
-                                                )}
-                                            </section>
-                                            ))}
+                                                        {priceValues[valIndex] && priceValues[valIndex] !== "" && (
+                                                            <b>{priceValues[valIndex]}</b>
+                                                        )}
+                                                        </section>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
-                                        </div>
-                                    </div>
                                     </div>
                                 ))}
-                                </div>
+                            </div>
                             {/* <div className=' '>
 
                           
@@ -194,22 +222,23 @@ const Invoice = () => {
 
                         </div>
                         <div className='sgst_per'>
-                        {formData.sgst &&
-                               <p>SGST : <b>{formData.sgst}</b></p> } 
-                        {formData.cgst && 
-                               <p>CGST : <b>{formData.cgst}</b></p> 
-                        }
-                               </div>
+                            {formData.sgst &&
+                                <p>SGST ({formData.sgstper}%) : <b>{formData.sgst}</b></p>}
+                            {formData.cgst &&
+                                <p>CGST ({formData.cgstper}%) : <b>{formData.cgst}</b></p>
+                            }
+                        </div>
                         <div className='total_amount flex_ph'>
                             <div className='blank_ph'>
                             </div>
-                            <div className='blank_ph'> 
+                            <div className='blank_ph'>
                             </div>
                             <div className='ph_view'>
                                 <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
                             </div>
                             <div className='border_total_amount text-right ph_view'>
-                                <b>{formData.currency} {totalAmount}</b>
+                            <b>{formData.currency} {finalTotalAmount.toFixed(2)}</b>
+                                {/* <b>{formData.currency} {totalAmount}</b> */}
                             </div>
                         </div>
                     </div>
@@ -319,9 +348,9 @@ const Invoice = () => {
                                     <div>
                                         <label>GSTIN</label>
                                         <span>
-                                        {formData.CompanygstNo}
+                                            {formData.CompanygstNo}
                                             {/* <input type="text" className='transprent_gst' value={formData.CompanygstNo} /> */}
-                                            </span>
+                                        </span>
                                     </div>
 
                                 </>
@@ -332,13 +361,13 @@ const Invoice = () => {
                                     </div>
                                 }
 
-                                        <div>
-                                        <label>Address</label>
-                                        <span>
+                                <div>
+                                    <label>Address</label>
+                                    <span>
                                         {formData.companyAddress}
-                                            {/* <input type="text" className='transprent_gst' value={formData.companyAddress} /> */}
-                                            </span>
-                                    </div>
+                                        {/* <input type="text" className='transprent_gst' value={formData.companyAddress} /> */}
+                                    </span>
+                                </div>
 
                                 <div>
                                     <label></label>

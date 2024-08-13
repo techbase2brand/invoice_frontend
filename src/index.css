@@ -81,7 +81,7 @@ span.toRange {
 .logo.text_invoice img, .com_logo {
   width: 200px; 
   object-fit: contain !important;
-  padding: 15px;
+  padding: 25px;
 }
 .app-wraper {
   background-color: #fafafa;

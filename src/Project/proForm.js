@@ -46,6 +46,9 @@ const ProForm = () => {
     const [advanceAmount, setAdvanceAmount] = useState('');
     const [cgst, setCgst] = useState('');
     const [sgst, setSgst] = useState('');
+    const [cgstper, setCgstper] = useState('');
+    const [sgstper, setSgstper] = useState('');
+     
     const [invoicelist, setInvoiceList] = useState(null);
     const [enableGST, setEnableGST] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -136,6 +139,8 @@ const ProForm = () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/invoice-get/${id}`);
             const bankDetailData = response.data.data;
+            console.log("bankDetailData",bankDetailData);
+            
             setInvoiceList(bankDetailData);
         } catch (error) {
             console.error('Error fetching bank detail:', error);
@@ -189,6 +194,9 @@ const ProForm = () => {
             setAdvanceAmount(invoicelist.AdvanceAmount);
             setCgst(invoicelist.cgst)
             setSgst(invoicelist.sgst)
+            setCgstper(invoicelist.cgstper)
+            setSgstper(invoicelist.sgstper)
+            
             setPayStatus(invoicelist.paymentStatus);
             setCurrency(invoicelist.currency);
             setSelectCompany(invoicelist.trade);
@@ -411,7 +419,9 @@ const ProForm = () => {
             amounts: amounts,
             companylogo: selectedLogo,
             sgst: sgst,
-            cgst: cgst
+            cgst: cgst,
+            sgstper: sgstper,
+            cgstper: cgstper
         };
 
         if (id) {
@@ -1114,8 +1124,9 @@ const ProForm = () => {
                             </div>
 
 
-                            <div className="text-sm mb-4"
+                            <div className="text-sm mb-4" style={{display:'flex', gap:'10px'}}
                             >
+                                <div>
                                 <label className="block text-sm font-medium text-gray-700">CGST</label>
                                 <input
                                     type='text'
@@ -1125,9 +1136,23 @@ const ProForm = () => {
                                     className={defaultInputSmStyle}
                                     onChange={(event) => setCgst(event.target.value)}
                                 />
+                                </div>
+                                <div>
+                                <label className="block text-sm font-medium text-gray-700">CGST%</label>
+                                <input
+                                    type='text'
+                                    placeholder="CGST%"
+                                    name='cgstper'
+                                    value={cgstper}
+                                    className={defaultInputSmStyle}
+                                    onChange={(event) => setCgstper(event.target.value)}
+                                />
+                                </div>
+                               
                             </div>
-                            <div className="text-sm mb-4"
+                            <div className="text-sm mb-4" style={{display:'flex', gap:'10px'}}
                             >
+                                <div>
                                 <label className="block text-sm font-medium text-gray-700">SGST</label>
                                 <input
                                     type='text'
@@ -1137,6 +1162,18 @@ const ProForm = () => {
                                     className={defaultInputSmStyle}
                                     onChange={(event) => setSgst(event.target.value)}
                                 />
+                                </div>
+                                <div>
+                                <label className="block text-sm font-medium text-gray-700">SGST%</label>
+                                <input
+                                    type='text'
+                                    placeholder="SGST%"
+                                    name='sgstper'
+                                    value={sgstper}
+                                    className={defaultInputSmStyle}
+                                    onChange={(event) => setSgstper(event.target.value)}
+                                />
+                                </div>
                             </div>
 
 
