@@ -12,7 +12,10 @@ const ProForm = () => {
     const [selectedClient, setSelectedClient] = useState('');
     const [state, setState] = useState('');
     const [selectedProject, setSelectedProject] = useState([]);
+    console.log("selectedProject",selectedProject)
     const [projectDescriptions, setProjectDescriptions] = useState({});
+    console.log("projectDescriptions",projectDescriptions);
+    
     const [companyName, setCompanyName] = useState('');
     const [clientAddress, setClientAddress] = useState(''); 
     const [clientAddress1, setClientAddress1] = useState(''); 
@@ -56,6 +59,8 @@ const ProForm = () => {
     const [company, setCompanyData] = useState([]);
     const [selectCompany, setSelectCompany] = useState('');
     const [amounts, setAmounts] = useState({});
+    console.log("amounts",amounts);
+    
     const [comGst, setComGst] = useState('');
     const [comIfsc, setComIfsc] = useState('');
     const [companyAddress, setCompanyAddress] = useState(''); 
@@ -147,16 +152,35 @@ const ProForm = () => {
         }
     };
 
+    // const handleAmountChange = (value, index, projectName) => {
+    //     console.log("value",projectName);
+       
+        
+    //     setAmounts(prevAmounts => ({
+    //         ...prevAmounts,
+    //         [projectName]: {
+    //             ...(prevAmounts[projectName] || []),
+    //             [index]: value
+    //         }
+    //     }));
+    // };
     const handleAmountChange = (value, index, projectName) => {
-        setAmounts(prevAmounts => ({
-            ...prevAmounts,
-            [projectName]: {
-                ...(prevAmounts[projectName] || []),
-                [index]: value
-            }
-        }));
+        console.log("value", projectName);
+    
+        // Only update amounts if the project name matches the selected project
+        if (projectName === selectedProject) {
+            setAmounts(prevAmounts => ({
+                ...prevAmounts,
+                [projectName]: {
+                    ...prevAmounts[projectName],
+                    [index]: value
+                }
+            }));
+        } else {
+            console.log("Project not selected for update:", projectName);
+        }
     };
-
+    
     const handleDateChange = (date) => {
         const localDate = moment(date).startOf('day').toDate();
         setSelectedDate(localDate);
@@ -164,6 +188,8 @@ const ProForm = () => {
 
     useEffect(() => {
         if (invoicelist) {
+            console.log("invoicelist",invoicelist);
+            
             setSelectedClient(invoicelist?.clientName);
             setState(invoicelist?.clientName);
             setCompanyName(invoicelist.company);
@@ -277,6 +303,7 @@ const ProForm = () => {
     };
     const handleProjectChange = (event) => {
         const { value, checked } = event.target;
+        console.log("value",value,checked)
         if (checked) {
             setSelectedProject((prevProjects) => [...prevProjects, value]);
         } else {
@@ -367,7 +394,21 @@ const ProForm = () => {
             });
             return;
         }
+        const cleanedAmounts = {};
+        Object.keys(amounts).forEach((key) => {
+            const isNonEmpty = Object.values(amounts[key]).some(value => value.trim() !== '');
+            if (isNonEmpty) {
+                cleanedAmounts[key] = amounts[key];
+            }
+        });
 
+        const cleanedProjectDescriptions = {};
+        Object.keys(projectDescriptions).forEach((key) => {
+            const descriptions = projectDescriptions[key];
+            if (descriptions.some(desc => desc.trim() !== '')) {
+                cleanedProjectDescriptions[key] = descriptions;
+            }
+        });
         const selectedClientName = client.find(item => item._id === selectedClient)?.clientName || '';
         const selectedBankName = data.find(item => item._id === selectBank)?.bankName || '';
         const selectedTradeName = company.find(item => item._id === trade)?.trade || '';
@@ -402,7 +443,7 @@ const ProForm = () => {
             amount: amount,
             selectDate: formattedDate,
             currency: currency,
-            description: projectDescriptions,
+            description: cleanedProjectDescriptions,
             trade: selectedTradeName,
             ifsc: comIfsc,
             companyAddress:companyAddress,
@@ -416,7 +457,7 @@ const ProForm = () => {
             tradde: trade,
             bankNamed: selectedBankName,
             AdvanceAmount: advanceAmount || totalAmount,
-            amounts: amounts,
+            amounts: cleanedAmounts,
             companylogo: selectedLogo,
             sgst: sgst,
             cgst: cgst,
