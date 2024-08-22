@@ -152,34 +152,33 @@ const ProForm = () => {
         }
     };
 
-    // const handleAmountChange = (value, index, projectName) => {
-    //     console.log("value",projectName);
-       
-        
-    //     setAmounts(prevAmounts => ({
-    //         ...prevAmounts,
-    //         [projectName]: {
-    //             ...(prevAmounts[projectName] || []),
-    //             [index]: value
-    //         }
-    //     }));
-    // };
     const handleAmountChange = (value, index, projectName) => {
-        console.log("value", projectName);
-    
-        // Only update amounts if the project name matches the selected project
-        if (projectName === selectedProject) {
-            setAmounts(prevAmounts => ({
-                ...prevAmounts,
-                [projectName]: {
-                    ...prevAmounts[projectName],
-                    [index]: value
-                }
-            }));
-        } else {
-            console.log("Project not selected for update:", projectName);
-        }
+        setAmounts(prevAmounts => ({
+            ...prevAmounts,
+            [projectName]: {
+                ...prevAmounts[projectName],
+                [index]: value
+            }
+        }));
+        console.log("error");
     };
+    
+    // const handleAmountChange = (value, index, projectName) => {
+    //     console.log("value", projectName);
+    
+    //     // Only update amounts if the project name matches the selected project
+    //     if (projectName === selectedProject) {
+    //         setAmounts(prevAmounts => ({
+    //             ...prevAmounts,
+    //             [projectName]: {
+    //                 ...prevAmounts[projectName],
+    //                 [index]: value
+    //             }
+    //         }));
+    //     } else {
+    //         console.log("Project not selected for update:", projectName);
+    //     }
+    // };
     
     const handleDateChange = (date) => {
         const localDate = moment(date).startOf('day').toDate();
