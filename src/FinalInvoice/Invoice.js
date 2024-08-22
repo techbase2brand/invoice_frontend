@@ -7,7 +7,6 @@ import generatePDF from "react-to-pdf";
 import numberToWords from 'number-to-words';
 const Invoice = () => {
     const [formData, setFormData] = useState({});
-    console.log("formData", formData)
     // const totalAmount = parseInt(formData.amount || "0") + parseInt(formData.AdvanceAmount || "0");
     const calculateTotalAmount = () => {
         let total = 0;
@@ -20,7 +19,27 @@ const Invoice = () => {
         return total;
     };
 
+    const calculateTotalAmountText = () => {
+        let total = 0;
+    
+        // Sum up all amounts in formData.amounts
+        for (const task in formData.amounts) {
+            const amounts = formData.amounts[task];
+            for (const key in amounts) {
+                total += parseInt(amounts[key]) || 0; // Ensure that values are properly parsed and added
+            }
+        }
+    
+        // Add SGST if it exists (only once)
+        const sgstValue = parseFloat(formData.sgst) || 0;
+        const cgstValue = parseFloat(formData.cgst) || 0;
+    
+        total += sgstValue + cgstValue; // Add SGST and CGST once
+    
+        return total;
+    };
     // Usage:
+    const totalAmountText = `${!formData.amount ? calculateTotalAmountText() : formData.amount}`;
     const totalAmount = `${!formData.amount ? calculateTotalAmount() : formData.amount}`;
     const { id } = useParams();
     // const downloadPdf = async () => {
@@ -49,8 +68,8 @@ const Invoice = () => {
     }, [id]);
 
     const targetRef = useRef();
-    const amount = totalAmount || 0;
-    const amountInWords = numberToWords.toWords(amount).charAt(0).toUpperCase() + numberToWords.toWords(amount).slice(1);
+    const amountText = totalAmountText || 0
+    const amountInWords = numberToWords.toWords(amountText).charAt(0).toUpperCase() + numberToWords.toWords(amountText).slice(1);
 
     // const printPDF = () => {
     //     window.print();
