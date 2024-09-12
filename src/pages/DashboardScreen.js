@@ -94,6 +94,11 @@ function DashboardScreen() {
   };
 
   const fetchInvoices = () => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-invoices`;
     let fromDate;
     if (selectedDays) {
@@ -129,7 +134,7 @@ function DashboardScreen() {
       apiUrl += apiUrl.includes('?') ? `&startDate=${formattedStartDate}&endDate=${formattedEndDate}` : `?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
     }
 
-    axios.get(apiUrl)
+    axios.get(apiUrl, { headers })
       .then((response) => {
         const filteredData = response?.data?.data?.filter(item => {
           const invoiceDate = new Date(item.selectDate);
@@ -184,8 +189,13 @@ function DashboardScreen() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-empData`;
-    axios.get(apiUrl)
+    axios.get(apiUrl,{headers})
       .then((response) => {
         setLiving(response.data.data.reverse())
       })
@@ -214,7 +224,7 @@ function DashboardScreen() {
       <div className="pt-4">
         <PageTitle title="Dashboard" />
       </div>
-      <div style={{ display: 'flex', gap: '5px', marginBottom:'10px' }}>
+      <div style={{ display: 'flex', gap: '5px', marginBottom: '10px' }}>
         <div className="client-form-wrapper">
           <input
             type="text"
@@ -267,60 +277,60 @@ function DashboardScreen() {
         </div>
         <button type="button" onClick={handleSearch} className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Go</button>
       </div>
-      <div style={{ display: 'flex', gap: '10px', justifyContent:'space-between', marginBottom:'10px' }}>
-      <div class="shadowPayments">
-      <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mb-3">Payment Status</h5>
-      <div class="shadowPayment">
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between', marginBottom: '10px' }}>
+        <div class="shadowPayments">
+          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mb-3">Payment Status</h5>
+          <div class="shadowPayment">
 
-              {['Paid', 'Unpaid', 'Draft'].map((status, index) => (
-                <div className="shadow_data" >
-                  <div class="flex items-center">
-                    <div class="flex-1 min-w-0">
-                      <p class="text-lg font-medium text-gray-900 truncate dark:text-white">
-                        {status}
-                      </p>
-                    </div>
-                    <div class="inline-flex items-center text-base text-lg text-gray-900 dark:text-white">
-                      {status === 'Paid' ? paidInvoicesLength : status === 'Unpaid' ? unpaidInvoicesLength : draftInvoicesLength}
-                    </div>
+            {['Paid', 'Unpaid', 'Draft'].map((status, index) => (
+              <div className="shadow_data" >
+                <div class="flex items-center">
+                  <div class="flex-1 min-w-0">
+                    <p class="text-lg font-medium text-gray-900 truncate dark:text-white">
+                      {status}
+                    </p>
+                  </div>
+                  <div class="inline-flex items-center text-base text-lg text-gray-900 dark:text-white">
+                    {status === 'Paid' ? paidInvoicesLength : status === 'Unpaid' ? unpaidInvoicesLength : draftInvoicesLength}
                   </div>
                 </div>
-              ))}
-            </div>
-            </div>
-           
-            <div class="shadowPayments">
-            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mb-3"> Total Amount</h5>
-   
-            <div class="shadowPayment">
+              </div>
+            ))}
+          </div>
+        </div>
 
-                {[
-                  { currency: 'INR', total: totalINR, totalCr: totalINRCr },
-                  { currency: 'AUD', total: totalAUD, totalCr: totalAUDCr },
-                  { currency: 'USD', total: totalUSD, totalCr: totalUSDCr },
-                  { currency: 'CAD', total: totalCAD, totalCr: totalCADCr }
-                ].map((item, index) => (
-                  <div className="shadow_data"  key={index}>
-                    <div class="flex">
-                      <div class="flex-1 min-w-0">
-                        <p class="text-lg font-medium text-gray-900 truncate dark:text-white">
-                          {item.currency}
-                        </p>
-                        <p class="text-lg text-gray-500 truncate dark:text-gray-400">
-                          {item.total}
-                        </p>
-                      </div>
-                      <div class="inline-flex   text-lg font-semibold text-gray-900 dark:text-white">
-                        {item.totalCr}
-                      </div>
-                    </div>
+        <div class="shadowPayments">
+          <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mb-3"> Total Amount</h5>
+
+          <div class="shadowPayment">
+
+            {[
+              { currency: 'INR', total: totalINR, totalCr: totalINRCr },
+              { currency: 'AUD', total: totalAUD, totalCr: totalAUDCr },
+              { currency: 'USD', total: totalUSD, totalCr: totalUSDCr },
+              { currency: 'CAD', total: totalCAD, totalCr: totalCADCr }
+            ].map((item, index) => (
+              <div className="shadow_data" key={index}>
+                <div class="flex">
+                  <div class="flex-1 min-w-0">
+                    <p class="text-lg font-medium text-gray-900 truncate dark:text-white">
+                      {item.currency}
+                    </p>
+                    <p class="text-lg text-gray-500 truncate dark:text-gray-400">
+                      {item.total}
+                    </p>
                   </div>
-                ))}
+                  <div class="inline-flex   text-lg font-semibold text-gray-900 dark:text-white">
+                    {item.totalCr}
+                  </div>
+                </div>
               </div>
-              </div>
-              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-      <div className="data_table" style={{ gap: '5rem', marginBottom: '3rem' }}> 
+      <div className="data_table" style={{ gap: '5rem', marginBottom: '3rem' }}>
         <div class=" mb-8 border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 md:mb-12 md:grid-cols-2 bg-white dark:bg-gray-800 pb-4">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

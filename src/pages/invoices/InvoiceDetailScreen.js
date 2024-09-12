@@ -6,7 +6,7 @@ import { defaultInputSmStyle, validError } from '../../constants/defaultStyles';
 const FormCli = () => {
   const [formData, setFormData] = useState({
     trade: '',
-    companyAddress:'',
+    companyAddress: '',
     ifsc: '',
     panNo: '',
     gstNo: '',
@@ -31,8 +31,13 @@ const FormCli = () => {
   }, [id]);
 
   const fetchCompanyDetail = async (id) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-company/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-company/${id}`, { headers });
       const bankDetailData = response.data.data;
       setFormData(bankDetailData);
     } catch (error) {
@@ -120,6 +125,11 @@ const FormCli = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     const formErrors = {};
     const fieldsToValidate = ["trade"];
     fieldsToValidate.forEach((field) => {
@@ -135,9 +145,9 @@ const FormCli = () => {
       try {
         let response;
         if (id) {
-          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`, formData);
+          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`, formData, { headers });
         } else {
-          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-companyData`, formData);
+          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-companyData`, formData, { headers });
         }
         if (response.status === 201 || response.status === 200) {
           navigate("/listing");

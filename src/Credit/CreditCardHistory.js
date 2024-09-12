@@ -49,8 +49,13 @@ const CreditCardHistory = () => {
 
     const fetchData = async () => {
         try {
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+            const headers = {
+              'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+              'Content-Type': 'application/json',  // Add any other headers if needed
+            };
             const response = await axios.get(
-                `${process.env.REACT_APP_API_BASE_URL}/api/credit-history`
+                `${process.env.REACT_APP_API_BASE_URL}/api/credit-history`,{headers}
             );
             if (response.data.success) {
                 const fetchedData = response.data.data.reverse();

@@ -7,9 +7,9 @@ const FormCli = () => {
     const [formData, setFormData] = useState({
         clientName: '',
         company: '',
-        clientAddress:'',
-        clientAddress1:'',
-        clientAddress2:'',
+        clientAddress: '',
+        clientAddress1: '',
+        clientAddress2: '',
         email: '',
         mobileNo: '',
         project: [''],
@@ -27,7 +27,12 @@ const FormCli = () => {
 
     const fetchClientDetail = async (id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-client-data/${id}`);
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+            const headers = {
+                'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                'Content-Type': 'application/json',  // Add any other headers if needed
+            };
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-client-data/${id}`, { headers });
             const bankDetailData = response.data.data;
             setFormData(bankDetailData);
         } catch (error) {
@@ -58,11 +63,16 @@ const FormCli = () => {
             setError(formErrors);
         } else {
             try {
+                const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+                const headers = {
+                    'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                    'Content-Type': 'application/json',  // Add any other headers if needed
+                };
                 let response;
                 if (id) {
-                    response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-client/${id}`, formData);
+                    response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-client/${id}`, formData, { headers });
                 } else {
-                    response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/client-detail`, formData);
+                    response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/client-detail`, formData, { headers });
                 }
                 if (response.status === 201 || response.status === 200) {
                     navigate("/client-Detail")

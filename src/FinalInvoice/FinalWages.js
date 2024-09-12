@@ -21,9 +21,14 @@ const FinalWages = () => {
     const amountInWords = numberToWords.toWords(finalAmount).charAt(0).toUpperCase() + numberToWords.toWords(finalAmount).slice(1);
 
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         if (id) {
             const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/wages-get/${id}`;
-            axios.get(apiUrl)
+            axios.get(apiUrl, { headers })
                 .then((response) => {
                     const invoiceData = response.data.data;
                     setFormData(invoiceData);
@@ -60,24 +65,24 @@ const FinalWages = () => {
         <div>
             <button type="button" className="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
             <div className="invoice" id="PDF_Download" ref={targetRef}  >
-            <div className='wages_header'>
-            <img src={`https://invoice-backend.base2brand.com${formData.companylogo}`} className='com_logo' alt="Company Logo" />
-            {/* <img className='com_logo' src='/b2b-icon.png' /> */}
+                <div className='wages_header'>
+                    <img src={`https://invoice-backend.base2brand.com${formData.companylogo}`} className='com_logo' alt="Company Logo" />
+                    {/* <img className='com_logo' src='/b2b-icon.png' /> */}
 
                     <h3>Salary Slip</h3>
                 </div>
                 <div className="p-5 w-full">
-                {/* <img className='logo_invoice_overlap width_add' src='/b2b-icon.png' /> */}
-                
-                    
+                    {/* <img className='logo_invoice_overlap width_add' src='/b2b-icon.png' /> */}
+
+
                     <div className="salary-slip">
                         <h2 className='company-name'>
-                        {/* <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" /> */}
+                            {/* <img src={`http://localhost:8000${formData.companylogo}`} className='com_logo' alt="Company Logo" /> */}
 
                             {/* {formData.companyName} */}
-                            </h2>
+                        </h2>
                         <table style={{ width: '100%' }}>
-                            <tbody className='table-body'> 
+                            <tbody className='table-body'>
                                 <tr>
                                     <td className='sal-advice'>Salary Advice for The Month</td>
                                     <td className='sal-advice bold_data'>{formatChoose(formData?.chooseDate)}</td>

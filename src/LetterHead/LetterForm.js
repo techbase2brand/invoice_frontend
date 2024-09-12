@@ -31,8 +31,13 @@ const LetterForm = () => {
     };
 
     const fetchCreditDetail = async (id) => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        }
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/letter-get/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/letter-get/${id}`, { headers });
             if (response.data.success) {
                 const { userName, refNo, letterHeadDate, letterHeadData } = response.data.data;
                 setFormData({
@@ -48,6 +53,11 @@ const LetterForm = () => {
     };
 
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        }
         if (id) {
             fetchCreditDetail(id);
         } else {
@@ -59,7 +69,7 @@ const LetterForm = () => {
                 letterHeadData: ''
             });
 
-            fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-letter`)
+            fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-letter`, { headers })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.data && data.data.length > 0) {
@@ -77,12 +87,16 @@ const LetterForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        }
         try {
             if (id) {
-                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/letter-update/${id}`, formData);
+                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/letter-update/${id}`, formData, { headers });
             } else {
-                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-letter-data`, formData);
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-letter-data`, formData, { headers });
             }
 
             setFormData({

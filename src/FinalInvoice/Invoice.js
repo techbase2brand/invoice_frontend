@@ -21,7 +21,7 @@ const Invoice = () => {
 
     const calculateTotalAmountText = () => {
         let total = 0;
-    
+
         // Sum up all amounts in formData.amounts
         for (const task in formData.amounts) {
             const amounts = formData.amounts[task];
@@ -29,13 +29,13 @@ const Invoice = () => {
                 total += parseInt(amounts[key]) || 0; // Ensure that values are properly parsed and added
             }
         }
-    
+
         // Add SGST if it exists (only once)
         const sgstValue = parseFloat(formData.sgst) || 0;
         const cgstValue = parseFloat(formData.cgst) || 0;
-    
+
         total += sgstValue + cgstValue; // Add SGST and CGST once
-    
+
         return total;
     };
     // Usage:
@@ -54,9 +54,14 @@ const Invoice = () => {
     // };
 
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         if (id) {
             const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/invoice-get/${id}`;
-            axios.get(apiUrl)
+            axios.get(apiUrl, { headers })
                 .then((response) => {
                     const invoiceData = response.data.data;
                     setFormData(invoiceData);
@@ -104,7 +109,6 @@ const Invoice = () => {
             Object.values(amounts[key]).forEach((value, index) => {
                 priceValues.push(value);
                 // console.log(`Value ${index}: ${value}`);
-                console.log('priceValues',priceValues)
             });
         });
     } else {
@@ -116,7 +120,7 @@ const Invoice = () => {
     if (formData.sgst) {
         finalTotalAmount += parseFloat(formData.sgst) || 0;
     }
-    
+
     if (formData.cgst) {
         finalTotalAmount += parseFloat(formData.cgst) || 0;
     }
@@ -199,9 +203,9 @@ const Invoice = () => {
                                                             {/* {digitalMarketingAmounts[valIndex] && (
                                                 <b>{digitalMarketingAmounts[valIndex]}</b>
                                                 )} */}
-                                                        {priceValues[valIndex] && priceValues[valIndex] !== "" && (
-                                                            <b>{priceValues[valIndex]}</b>
-                                                        )}
+                                                            {priceValues[valIndex] && priceValues[valIndex] !== "" && (
+                                                                <b>{priceValues[valIndex]}</b>
+                                                            )}
                                                         </section>
                                                     ))}
                                                 </div>
@@ -256,7 +260,7 @@ const Invoice = () => {
                                 <p style={{ fontSize: '18px', fontWeight: '700' }}>Total Value</p>
                             </div>
                             <div className='border_total_amount text-right ph_view'>
-                            <b>{formData.currency} {finalTotalAmount.toFixed(2)}</b>
+                                <b>{formData.currency} {finalTotalAmount.toFixed(2)}</b>
                                 {/* <b>{formData.currency} {totalAmount}</b> */}
                             </div>
                         </div>

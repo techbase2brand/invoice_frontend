@@ -29,7 +29,12 @@ const Form = () => {
 
     const fetchBankDetail = async (id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-bank-data/${id}`);
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+            const headers = {
+                'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                'Content-Type': 'application/json',  // Add any other headers if needed
+            };
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-bank-data/${id}`, { headers });
             const bankDetailData = response.data.data;
             setFormData(bankDetailData);
         } catch (error) {
@@ -79,11 +84,16 @@ const Form = () => {
             setError(formErrors);
         } else {
             try {
+                const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+                const headers = {
+                    'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                    'Content-Type': 'application/json',  // Add any other headers if needed
+                };
                 let response;
                 if (id) {
-                    response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-bank-data/${id}`, formData);
+                    response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-bank-data/${id}`, formData, { headers });
                 } else {
-                    response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/bank-detail`, formData);
+                    response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/bank-detail`, formData, { headers });
                 }
 
                 if (response.status === 201 || response.status === 200) {

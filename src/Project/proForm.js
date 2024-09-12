@@ -12,14 +12,12 @@ const ProForm = () => {
     const [selectedClient, setSelectedClient] = useState('');
     const [state, setState] = useState('');
     const [selectedProject, setSelectedProject] = useState([]);
-    console.log("selectedProject",selectedProject)
     const [projectDescriptions, setProjectDescriptions] = useState({});
-    console.log("projectDescriptions",projectDescriptions);
-    
+
     const [companyName, setCompanyName] = useState('');
-    const [clientAddress, setClientAddress] = useState(''); 
-    const [clientAddress1, setClientAddress1] = useState(''); 
-    const [clientAddress2, setClientAddress2] = useState(''); 
+    const [clientAddress, setClientAddress] = useState('');
+    const [clientAddress1, setClientAddress1] = useState('');
+    const [clientAddress2, setClientAddress2] = useState('');
     const [email, setEmail] = useState('');
     const [mobileNo, setMobileNo] = useState('');
     const [data, setData] = useState([]);
@@ -51,7 +49,7 @@ const ProForm = () => {
     const [sgst, setSgst] = useState('');
     const [cgstper, setCgstper] = useState('');
     const [sgstper, setSgstper] = useState('');
-     
+
     const [invoicelist, setInvoiceList] = useState(null);
     const [enableGST, setEnableGST] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -59,11 +57,10 @@ const ProForm = () => {
     const [company, setCompanyData] = useState([]);
     const [selectCompany, setSelectCompany] = useState('');
     const [amounts, setAmounts] = useState({});
-    console.log("amounts",amounts);
-    
+
     const [comGst, setComGst] = useState('');
     const [comIfsc, setComIfsc] = useState('');
-    const [companyAddress, setCompanyAddress] = useState(''); 
+    const [companyAddress, setCompanyAddress] = useState('');
     const [comPanNo, setComPanNo] = useState('');
     const [signature, setSignature] = useState('');
     const [logo, setLogo] = useState('');
@@ -121,8 +118,13 @@ const ProForm = () => {
 
     const totalAmount = calculateTotalAmount(amounts);
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-companyData`;
-        axios.get(apiUrl)
+        axios.get(apiUrl, { headers })
             .then((response) => {
                 setCompanyData(response.data.data)
             })
@@ -142,10 +144,15 @@ const ProForm = () => {
     };
     const fetchInvoiceDetail = async (id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/invoice-get/${id}`);
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+            const headers = {
+                'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                'Content-Type': 'application/json',  // Add any other headers if needed
+            };
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/invoice-get/${id}`, { headers });
             const bankDetailData = response.data.data;
-            console.log("bankDetailData",bankDetailData);
-            
+            console.log("bankDetailData", bankDetailData);
+
             setInvoiceList(bankDetailData);
         } catch (error) {
             console.error('Error fetching bank detail:', error);
@@ -162,10 +169,10 @@ const ProForm = () => {
         }));
         console.log("error");
     };
-    
+
     // const handleAmountChange = (value, index, projectName) => {
     //     console.log("value", projectName);
-    
+
     //     // Only update amounts if the project name matches the selected project
     //     if (projectName === selectedProject) {
     //         setAmounts(prevAmounts => ({
@@ -179,7 +186,7 @@ const ProForm = () => {
     //         console.log("Project not selected for update:", projectName);
     //     }
     // };
-    
+
     const handleDateChange = (date) => {
         const localDate = moment(date).startOf('day').toDate();
         setSelectedDate(localDate);
@@ -187,14 +194,13 @@ const ProForm = () => {
 
     useEffect(() => {
         if (invoicelist) {
-            console.log("invoicelist",invoicelist);
-            
+
             setSelectedClient(invoicelist?.clientName);
             setState(invoicelist?.clientName);
             setCompanyName(invoicelist.company);
             setClientAddress(invoicelist?.clientAddress);
             setClientAddress1(invoicelist?.clientAddress1);
-            setClientAddress2(invoicelist?.clientAddress2); 
+            setClientAddress2(invoicelist?.clientAddress2);
             setEmail(invoicelist.email);
             setMobileNo(invoicelist.mobileNo);
             setSelectedProject(invoicelist.project);
@@ -221,7 +227,7 @@ const ProForm = () => {
             setSgst(invoicelist.sgst)
             setCgstper(invoicelist.cgstper)
             setSgstper(invoicelist.sgstper)
-            
+
             setPayStatus(invoicelist.paymentStatus);
             setCurrency(invoicelist.currency);
             setSelectCompany(invoicelist.trade);
@@ -257,8 +263,13 @@ const ProForm = () => {
 
 
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-clients`;
-        axios.get(apiUrl)
+        axios.get(apiUrl, { headers })
             .then((response) => {
                 setClient(response.data.data)
             })
@@ -302,7 +313,6 @@ const ProForm = () => {
     };
     const handleProjectChange = (event) => {
         const { value, checked } = event.target;
-        console.log("value",value,checked)
         if (checked) {
             setSelectedProject((prevProjects) => [...prevProjects, value]);
         } else {
@@ -350,7 +360,7 @@ const ProForm = () => {
         if (selectedCompany) {
             setComGst(selectedCompany.gstNo);
             setComIfsc(selectedCompany.ifsc);
-            setCompanyAddress(selectedCompany.companyAddress);  
+            setCompanyAddress(selectedCompany.companyAddress);
             setComPanNo(selectedCompany.panNo);
             setSignature(selectedCompany.signature);
             setLogo(selectedCompany.companylogo)
@@ -417,9 +427,9 @@ const ProForm = () => {
             company: companyName,
             email: email,
             mobileNo: mobileNo,
-            clientAddress:clientAddress,
-            clientAddress1:clientAddress1,
-            clientAddress2:clientAddress2,
+            clientAddress: clientAddress,
+            clientAddress1: clientAddress1,
+            clientAddress2: clientAddress2,
             project: selectedProject,
             bankName: bank,
             accNo: accNo,
@@ -445,7 +455,7 @@ const ProForm = () => {
             description: cleanedProjectDescriptions,
             trade: selectedTradeName,
             ifsc: comIfsc,
-            companyAddress:companyAddress,
+            companyAddress: companyAddress,
             panNo: comPanNo,
             CompanygstNo: comGst,
             signature: signaturePayload[0],
@@ -463,9 +473,13 @@ const ProForm = () => {
             sgstper: sgstper,
             cgstper: cgstper
         };
-
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         if (id) {
-            axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-invoice/${id}`, formData)
+            axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-invoice/${id}`, formData, { headers })
                 .then(response => {
                     navigate("/project-Detail")
                 })
@@ -473,7 +487,7 @@ const ProForm = () => {
                     console.error('Error updating form data:', error);
                 });
         } else {
-            axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`, formData)
+            axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`, formData, { headers })
                 .then(response => {
                     navigate("/project-Detail")
                 })
@@ -860,15 +874,15 @@ const ProForm = () => {
                                     </select>
                                 </div>
                                 <div className="text-sm mb-4">
-                                            <label className="block text-sm font-medium text-gray-700">Company Address</label>
-                                            <input
-                                                name="companyAddress"
-                                                placeholder="Company Address"
-                                                value={companyAddress}
-                                                className={defaultInputSmStyle}
-                                                onChange={(event) => setCompanyAddress(event.target.value)}
-                                            />
-                                        </div>
+                                    <label className="block text-sm font-medium text-gray-700">Company Address</label>
+                                    <input
+                                        name="companyAddress"
+                                        placeholder="Company Address"
+                                        value={companyAddress}
+                                        className={defaultInputSmStyle}
+                                        onChange={(event) => setCompanyAddress(event.target.value)}
+                                    />
+                                </div>
                                 {trade &&
                                     <>
                                         <div className="text-sm mb-4">
@@ -1164,55 +1178,55 @@ const ProForm = () => {
                             </div>
 
 
-                            <div className="text-sm mb-4" style={{display:'flex', gap:'10px'}}
+                            <div className="text-sm mb-4" style={{ display: 'flex', gap: '10px' }}
                             >
                                 <div>
-                                <label className="block text-sm font-medium text-gray-700">CGST</label>
-                                <input
-                                    type='text'
-                                    placeholder="CGST"
-                                    name='cgst'
-                                    value={cgst}
-                                    className={defaultInputSmStyle}
-                                    onChange={(event) => setCgst(event.target.value)}
-                                />
+                                    <label className="block text-sm font-medium text-gray-700">CGST</label>
+                                    <input
+                                        type='text'
+                                        placeholder="CGST"
+                                        name='cgst'
+                                        value={cgst}
+                                        className={defaultInputSmStyle}
+                                        onChange={(event) => setCgst(event.target.value)}
+                                    />
                                 </div>
                                 <div>
-                                <label className="block text-sm font-medium text-gray-700">CGST%</label>
-                                <input
-                                    type='text'
-                                    placeholder="CGST%"
-                                    name='cgstper'
-                                    value={cgstper}
-                                    className={defaultInputSmStyle}
-                                    onChange={(event) => setCgstper(event.target.value)}
-                                />
+                                    <label className="block text-sm font-medium text-gray-700">CGST%</label>
+                                    <input
+                                        type='text'
+                                        placeholder="CGST%"
+                                        name='cgstper'
+                                        value={cgstper}
+                                        className={defaultInputSmStyle}
+                                        onChange={(event) => setCgstper(event.target.value)}
+                                    />
                                 </div>
-                               
+
                             </div>
-                            <div className="text-sm mb-4" style={{display:'flex', gap:'10px'}}
+                            <div className="text-sm mb-4" style={{ display: 'flex', gap: '10px' }}
                             >
                                 <div>
-                                <label className="block text-sm font-medium text-gray-700">SGST</label>
-                                <input
-                                    type='text'
-                                    placeholder="SGST"
-                                    name='sgst'
-                                    value={sgst}
-                                    className={defaultInputSmStyle}
-                                    onChange={(event) => setSgst(event.target.value)}
-                                />
+                                    <label className="block text-sm font-medium text-gray-700">SGST</label>
+                                    <input
+                                        type='text'
+                                        placeholder="SGST"
+                                        name='sgst'
+                                        value={sgst}
+                                        className={defaultInputSmStyle}
+                                        onChange={(event) => setSgst(event.target.value)}
+                                    />
                                 </div>
                                 <div>
-                                <label className="block text-sm font-medium text-gray-700">SGST%</label>
-                                <input
-                                    type='text'
-                                    placeholder="SGST%"
-                                    name='sgstper'
-                                    value={sgstper}
-                                    className={defaultInputSmStyle}
-                                    onChange={(event) => setSgstper(event.target.value)}
-                                />
+                                    <label className="block text-sm font-medium text-gray-700">SGST%</label>
+                                    <input
+                                        type='text'
+                                        placeholder="SGST%"
+                                        name='sgstper'
+                                        value={sgstper}
+                                        className={defaultInputSmStyle}
+                                        onChange={(event) => setSgstper(event.target.value)}
+                                    />
                                 </div>
                             </div>
 

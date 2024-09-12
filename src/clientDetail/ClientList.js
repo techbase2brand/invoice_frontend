@@ -18,8 +18,13 @@ const ClientList = () => {
     };
     const navigate = useNavigate();
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-clients`;
-        axios.get(apiUrl)
+        axios.get(apiUrl, { headers })
             .then((response) => {
                 setData(response.data.data.reverse())
             })
@@ -29,7 +34,12 @@ const ClientList = () => {
     }, []);
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-client/${id}`);
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+            const headers = {
+                'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                'Content-Type': 'application/json',  // Add any other headers if needed
+            };
+            await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-client/${id}`,{headers});
             setData(data.filter(item => item._id !== id));
         } catch (error) {
             console.error('Error deleting client detail:', error);
