@@ -31,8 +31,13 @@ const AppointMentForm = () => {
     };
 
     const fetchCreditDetail = async (id) => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-get/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-get/${id}`, { headers });
             if (response.data.success) {
                 const { userName, refNo, appointmentDate, appointMentData } = response.data.data;
                 setFormData({
@@ -77,12 +82,16 @@ const AppointMentForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         try {
             if (id) {
-                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-update/${id}`, formData);
+                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/appointment-update/${id}`, formData, { headers });
             } else {
-                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointment-data`, formData);
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-appointment-data`, formData, { headers });
             }
 
             setFormData({

@@ -22,7 +22,12 @@ const FormCli = () => {
 
     const fetchClientDetail = async (id) => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-client-data/${id}`);
+            const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+            const headers = {
+                'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                'Content-Type': 'application/json',  // Add any other headers if needed
+            };
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-client-data/${id}`,{headers});
             const bankDetailData = response.data.data;
             setFormData(bankDetailData);
         } catch (error) {

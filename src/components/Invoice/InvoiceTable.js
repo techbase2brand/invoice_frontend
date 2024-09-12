@@ -27,8 +27,13 @@ function InvoiceTable() {
   // }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-companyData`;
-    axios.get(apiUrl)
+    axios.get(apiUrl, { headers })
       .then((response) => {
         const updatedCompanyData = response.data.data.map(item => {
           // Prepend base URL to signature field
@@ -45,8 +50,13 @@ function InvoiceTable() {
   }, []);
 
   const handleDelete = async (id) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delte-companyData/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delte-companyData/${id}`, { headers });
       setCompanyData(company.filter(item => item._id !== id));
     } catch (error) {
       console.error('Error deleting company detail:', error);

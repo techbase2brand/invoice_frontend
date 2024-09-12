@@ -7,9 +7,14 @@ const ExperienceLetter = () => {
     const targetRef = useRef();
     const [data, setData] = useState({});
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        }
         if (id) {
             const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/experience-get/${id}`;
-            axios.get(apiUrl)
+            axios.get(apiUrl, { headers })
                 .then((response) => {
                     const invoiceData = response.data.data;
                     setData(invoiceData);
@@ -35,7 +40,7 @@ const ExperienceLetter = () => {
                 <div className="appoinment_logo">
                     <img src="/logo-b2b.png" alt="Company Logo" style={{ width: 'unset' }} />
                 </div>
-                <div className='appoint_section_new'>
+                <div className='appoint_section_new-rs'>
                     <div className="form-head">
                         <span>Ref No. {data.refNo}</span>
                         <b>Experience letter</b>
@@ -43,7 +48,7 @@ const ExperienceLetter = () => {
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: data.experienceData }} />
                 </div>
-                <div className="main-footer">
+                <div className="main-footer-rs">
                     <div className="footer">
                         <div className="middle">
                             <div className="icon-text">
@@ -93,7 +98,7 @@ const ExperienceLetter = () => {
                         </div>
                     </div>
                 </div>
-                <img src='/invoice_banner_appoinment.png' className='w-full ph_none_banner appoinment_banner' />
+                {/* <img src='/invoice_banner_appoinment.png' className='w-full ph_none_banner appoinment_banner' /> */}
             </div>
         </div>
     )

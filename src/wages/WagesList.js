@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { defaultInputSmBlack } from '../constants/defaultStyles';
 const WagesList = () => {
   const [data, setData] = useState([]);
+
   const [itemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -87,27 +88,32 @@ const WagesList = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-wages`;
-  
-    axios.get(apiUrl)
+
+    axios.get(apiUrl, { headers })
       .then((response) => {
-  
-        const wagesData = response.data.data.map((item) => {
+
+        const wagesData = response?.data?.data.map((item) => {
           // Date formatting
           let formattedChooseDate = "Invalid Date";
           let formattedJoinDate = "Invalid Date";
-  
-          if (item.chooseDate && item.chooseDate !== "Invalid date") {
-            formattedChooseDate = new Date(item.chooseDate).toISOString().split('T')[0];
+
+          if (item?.chooseDate && item?.chooseDate !== "Invalid date") {
+            formattedChooseDate = new Date(item?.chooseDate).toISOString().split('T')[0];
           }
-  
-          if (item.joinDate && item.joinDate !== "Invalid date") {
-            formattedJoinDate = new Date(item.joinDate).toISOString().split('T')[0];
+
+          if (item?.joinDate && item?.joinDate !== "Invalid date") {
+            formattedJoinDate = new Date(item?.joinDate).toISOString().split('T')[0];
           }
-  
+
           // Constructing full URL for companylogo
-          const companyLogoUrl = item.companylogo ? `${process.env.REACT_APP_API_BASE_URL}${item.companylogo}` : "";
-  
+          const companyLogoUrl = item?.companylogo ? `${process.env.REACT_APP_API_BASE_URL}${item?.companylogo}` : "";
+
           return {
             ...item,
             chooseDate: formattedChooseDate,
@@ -121,10 +127,15 @@ const WagesList = () => {
         console.error('Error fetching data:', error);
       });
   }, []);
-  
+
   const handleDelete = async (id) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delted-wages/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delted-wages/${id}`, { headers });
       setData(data.filter(item => item._id !== id));
     } catch (error) {
       console.error('Error deleting bank detail:', error);

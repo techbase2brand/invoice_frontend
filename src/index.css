@@ -29,26 +29,46 @@
   src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhLw.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-.appoint_section_new{
+
+.appoint_section_new {
   margin-top: 25px;
 }
-.appoint_section_new p {
-  font-size: 20px !important; 
+
+.appoint_section_new-rs {
+  margin-top: 25px;
 }
+
+.appoint_section_new p {
+  font-size: 20px !important;
+}
+
+.appoint_section_new-rs p {
+  font-size: 20px !important;
+}
+
 .appoint_section_new .form-head {
   font-size: 20px;
   margin-bottom: 25px;
 }
+
+.appoint_section_new-rs .form-head {
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+
 .sgst_per p {
   text-align: left;
 }
+
 .border_total_amount.text-right.ph_view {
   min-width: 34.5%;
 }
+
 .sgst_per {
   width: 32.5%;
   margin-left: auto;
 }
+
 /* dashboard css */
 .inputStyle {
   border: 1px solid #ccc !important;
@@ -57,10 +77,12 @@
   border-radius: 8px;
   color: #a5a5a5;
 }
+
 span.toRange {
   padding: 8px;
   font-weight: 500;
 }
+
 .shadow_data {
   width: 33%;
   padding: 2rem;
@@ -68,16 +90,18 @@ span.toRange {
   border-radius: 10px;
   background: #fff;
 }
+
 .shadowPayments {
-  box-shadow: 1px 3px 4px #ccc; 
+  box-shadow: 1px 3px 4px #ccc;
   width: 49%;
-  padding: 10px;  
+  padding: 10px;
   margin-bottom: 2rem;
   background: #fff;
   border-radius: 10px;
 }
-.shadowPayment { 
-  display: flex; 
+
+.shadowPayment {
+  display: flex;
   padding: 10px;
   gap: 10px;
 }
@@ -85,11 +109,13 @@ span.toRange {
 
 
 
-.logo.text_invoice img, .com_logo {
-  width: 200px; 
+.logo.text_invoice img,
+.com_logo {
+  width: 200px;
   object-fit: contain !important;
   padding: 25px;
 }
+
 .app-wraper {
   background-color: #fafafa;
   overflow-x: hidden;
@@ -100,34 +126,42 @@ span.toRange {
   position: relative;
   left: 8px;
 }
+
 .desc_data.PDF_Desc {
   display: flex;
 }
+
 section.amount_task {
-  display: flex; 
+  display: flex;
   justify-content: space-between;
 }
+
 section.amount_task p {
   width: 100% !important;
 }
+
 input#chatbutton {
   position: relative;
   top: 5px;
 }
+
 .task_name {
   width: 310px !important;
   max-width: 310px !important;
   min-width: 310px !important;
 }
+
 .nav-loading-right {
   width: 64px;
   height: 40px;
   right: 0px;
 }
-.appoinment_banner{
+
+.appoinment_banner {
   height: 78px;
-    margin-top: 10rem;
+  margin-top: 10rem;
 }
+
 .primary-self-text {
   color: rgb(0, 102, 255) !important;
 }
@@ -145,45 +179,54 @@ input#chatbutton {
   align-items: center;
   text-transform: capitalize;
 }
+
 .deta_combine p {
   width: 43%;
   font-size: 16px;
 }
+
 img.w-full.header_invoice {
   height: 180px;
   object-fit: cover;
   margin-bottom: 5px;
 }
+
 .right_amount {
   width: 100% !important;
   max-width: 100% !important;
   padding-bottom: 5px;
 }
+
 .desc_data.PDF_Desc p {
   width: 100% !important;
 
 }
+
 .task_desc p {
   width: 100%;
 }
-.blank_ph p{
+
+.blank_ph p {
   font-weight: 500;
 }
+
 .task_combine {
   width: 100% !important;
   max-width: 100% !important;
   display: flex !important;
 }
+
 .combine_div .deta_combine {
   width: 100% !important;
   max-width: 100% !important;
   display: flex !important;
   /* border-bottom: 1px solid #ccc; */
   padding: 1px 0px;
-   line-height: 2;
+  line-height: 2;
 }
+
 .combine_div {
-  min-width: 78% !important; 
+  min-width: 78% !important;
 }
 
 .text-default-color {
@@ -316,6 +359,7 @@ br {
   /* text-align: center; */
   /* text-align: -webkit-center; */
 }
+
 .logo.text_invoice {
   display: flex;
   justify-content: center;
@@ -324,6 +368,7 @@ br {
   transform: translate(-50%, -50%);
   margin-top: -4rem;
 }
+
 .form-num {
   margin-left: 26rem;
 }
@@ -337,38 +382,44 @@ br {
 
 .invoice {
   width: 62%;
-  margin: 0 auto; 
-  background: #fff; 
+  margin: 0 auto;
+  background: #fff;
   border-radius: 5px;
   position: relative;
 }
-.invoice_section_new{
+
+.invoice_section_new {
   padding: 20px;
   padding-bottom: 0px !important;
   padding-top: 0px !important;
   background: #ffffffe8;
-    z-index: 99;
-    position: relative;
-    height: 920px;
+  z-index: 99;
+  position: relative;
+  height: 920px;
 }
+
 img.logo_invoice_overlap {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
   left: 50%;
 }
+
 .desc_data.PDF_Desc p {
   font-size: 16px;
   font-weight: 500;
   /* line-height: 2; */
 }
+
 .status_ph {
   min-width: 10% !important;
   max-width: 10% !important;
 }
+
 b.space_desc {
   min-width: 30% !important;
 }
+
 .invoice-body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -403,7 +454,8 @@ b.space_desc {
   display: inline-block;
 }
 
-.total_amount, .sgst_per {
+.total_amount,
+.sgst_per {
   margin-top: 0rem;
 }
 
@@ -504,9 +556,11 @@ td {
   font-size: 18px;
   /* text-align: center; */
 }
+
 .desc_data {
   min-width: 50% !important;
 }
+
 .tax-in {
   text-align: center;
   font-weight: 700;
@@ -523,6 +577,19 @@ td {
   bottom: 0;
   width: 100%;
 }
+
+.main-footer-rs {
+  position: relative;
+  bottom: 0;
+  top: 0px;
+  width: 100%;
+  /* background: #042da0; */
+  background-image: url("../public/invoice_banner_appoinment.png");
+  background-size:cover;
+  background-repeat: no-repeat;
+  background-position:0 0;
+}
+
 .footer {
   display: flex;
   /* background: #6866ed; */
@@ -530,7 +597,7 @@ td {
   font-size: 14px;
   width: auto;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
 }
 
 .middle {
@@ -588,6 +655,7 @@ p {
   font-weight: 500;
   font-size: 16px;
 }
+
 .status_ph p {
   /* background: #047dd652; */
   /* width: fit-content; */
@@ -601,13 +669,15 @@ p {
   /* height: 28px; */
   font-size: 16px;
 }
+
 .border_total_amount.text-right.ph_view b {
   font-style: italic;
   font-size: 18px;
 }
+
 .invoice-details_data div label {
   font-size: 16px;
-  
+
 }
 
 .invoice-detail p {
@@ -619,9 +689,9 @@ p {
   font-size: 16px;
 }
 
-.text-right p { 
+.text-right p {
   font-size: 16px;
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .bank_data div label {
@@ -667,7 +737,7 @@ p {
 .salary-slip td {
   padding: 5px;
   border-right: 1px solid #ccc !important;
-  border-left: 1px solid #ccc; 
+  border-left: 1px solid #ccc;
 }
 
 .salary-slip th {
@@ -683,33 +753,49 @@ p {
   font-weight: bold;
   border-bottom: 2px solid;
 }
-.hide-checkbox:checked + b {
+
+.hide-checkbox:checked+b {
   display: none;
 }
 
-.appoint_section_new{
+.appoint_section_new {
   padding: 20px;
-    padding-bottom: 0px !important;
-    padding-top: 0px !important;
-    background: #ffffffe8;
-    z-index: 99;
-    position: relative;
-    height: auto;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+  background: #ffffffe8;
+  z-index: 99;
+  position: relative;
+  height: auto;
 }
+
+.appoint_section_new-rs {
+  padding: 20px;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+  background: #ffffffe8;
+  z-index: 99;
+  position: relative;
+  width: 100%;
+  min-height: 1035px;
+  overflow: auto;
+}
+
 .salary-slip .net-salary {
   font-size: 1.2em;
   font-weight: bold;
   text-align: right;
   border-bottom: 2px solid;
 }
+
 .ck-editor__editable_inline {
   min-height: 300px;
 }
 
 
-.date-range-picker{
+.date-range-picker {
   display: flex;
 }
+
 .salary-slip .amount {
   text-align: right;
 }
@@ -727,16 +813,18 @@ p {
   color: #004681;
 }
 
-.width_add{
+.width_add {
   width: 40%;
 }
+
 .table-row {
   float: right;
   font-weight: 700;
   position: relative;
-    right: 8px;
+  right: 8px;
 }
-.bold_data{
+
+.bold_data {
   font-weight: 700 !important;
 
 }
@@ -769,21 +857,26 @@ p {
 .bot-border {
   border-bottom: 1px solid #ccc;
 }
+
 td.sal-advice {
   border-top: 1px solid #ccc;
 }
+
 tbody.table-body {
   box-shadow: 0px 9px 20px #cccccc85;
 }
+
 .sal-advice span {
   display: flex;
   justify-content: space-evenly;
 }
+
 .wages_header h3 {
   font-size: 30px;
   font-weight: 700;
   color: #fd7c50;
 }
+
 .wages_header {
   display: flex;
   justify-content: space-between;
@@ -793,6 +886,7 @@ tbody.table-body {
   border-bottom: 5px solid #004681;
   box-shadow: 0px 5px 10px #cccccc6b;
 }
+
 .company-name {
   /* border: 1px solid #ccc;  */
   display: flex;
@@ -815,108 +909,159 @@ tbody.table-body {
 .desc_hide {
   display: none;
 }
+
 .appoint_section_new p {
   font-size: 14px;
 }
+
+.appoint_section_new-rs p {
+  font-size: 14px;
+}
+
 .appoinment_logo img {
   display: block;
   margin: auto;
   padding-top: 15px;
-  padding-bottom: 17px; 
+  padding-bottom: 17px;
 }
-.flex_date_tenure{
+
+.flex_date_tenure {
   display: flex;
-  gap:10px;
+  gap: 10px;
 }
+
 .appoinment_logo {
   border-bottom: 1px solid #4c4c4c;
   margin-bottom: 15px;
   box-shadow: 1px 3px 4px #ccc;
 }
+
 .appoint_section_new h3 {
   text-align: center;
 }
+
+.appoint_section_new-rs h3 {
+  text-align: center;
+}
+
 @media screen and (max-width: 1550px) {
   .invoice {
     width: 80%;
   }
 }
+
 @media screen and (max-width: 1300px) {
-.invoice {
-  width: 100%;
+  .invoice {
+    width: 100%;
+  }
+
+  .bank_data div label {
+    font-size: 14px;
+  }
+
+  .bank_data span {
+    font-size: 14px;
+  }
 }
-.bank_data div label {
-  font-size: 14px;
-}
-.bank_data span {
-  font-size: 14px;
-}
-}
+
 @media screen and (max-width: 767px) {
-  .invoice_section_new{
+  .invoice_section_new {
     height: auto;
   }
+
   .form-head b {
     display: block;
-}
+  }
+
   .bank_data span {
     font-size: 12px;
   }
+
   .deta_combine p {
     width: 40%;
     font-size: 12px;
     line-height: 1.4;
-}
-.desc_data.PDF_Desc p {
-  font-size: 12px;
-}
-.status_ph p{
-  font-size: 12px;
-  margin-top: 2px;
-}
-.border_total_amount.text-right.ph_view b {
-  font-size: 14px;
-}
-.ph_view p {
-  font-size: 14px !important;
-}
+  }
+
+  .desc_data.PDF_Desc p {
+    font-size: 12px;
+  }
+
+  .status_ph p {
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .border_total_amount.text-right.ph_view b {
+    font-size: 14px;
+  }
+
+  .ph_view p {
+    font-size: 14px !important;
+  }
+
   .appoint_section_new p {
     font-size: 12px;
-}
-img.logo_invoice_overlap {
-  object-fit: contain;
-  height: 250px;
-}
-.main-footer {
-  position: relative;
-  bottom: 0;
-  top: 20px;
-  width: 100%;
-  background: #042da0;
-}
-.appoint_section_new {
-  padding: 10px;
-}
-.ph_none_banner{
-  display: none;
-}
-.footer {
-  display: block;
-}
-img.w-full.header_invoice {
-  display: none;
-}
-.logo.text_invoice {
-  display: flex;
-  justify-content: center;
-  position: inherit;
-  left: unset;
-  transform: unset;
-  margin-top: 0rem;
-}
+  }
+
+  .appoint_section_new-rs p {
+    font-size: 12px;
+  }
+
+  img.logo_invoice_overlap {
+    object-fit: contain;
+    height: 250px;
+  }
+
+  .main-footer {
+    position: relative;
+    bottom: 0;
+    top: 20px;
+    width: 100%;
+    background: #042da0;
+  }
+  .main-footer-rs {
+    position: relative;
+    bottom: 0;
+    top: 20px;
+    width: 100%;
+    background: #042da0;
+    height: 100%;
+  }
+
+  .appoint_section_new {
+    padding: 10px;
+  }
+
+  .appoint_section_new-rs {
+    padding: 10px;
+  }
+
+  .ph_none_banner {
+    display: none;
+  }
+
+  .footer {
+    display: block;
+  }
+
+  img.w-full.header_invoice {
+    display: none;
+  }
+
+  .logo.text_invoice {
+    display: flex;
+    justify-content: center;
+    position: inherit;
+    left: unset;
+    transform: unset;
+    margin-top: 0rem;
+  }
+
   .invoice_section_new {
     padding: 0px;
   }
+
   .invoice {
     width: 100%;
     padding: 12px;
@@ -968,9 +1113,11 @@ img.w-full.header_invoice {
   .invoice-details_data div label {
     font-size: 12px;
   }
+
   .footer div p {
     font-size: 12px;
-}
+  }
+
   .invoice-details_data label {
     display: block;
   }
@@ -992,9 +1139,11 @@ img.w-full.header_invoice {
     text-align: center;
     margin-top: 5px;
   }
-  .task_combine{
+
+  .task_combine {
     gap: 10px;
   }
+
   .bank_data div label {
     font-size: 14px;
   }
@@ -1037,6 +1186,11 @@ img.w-full.header_invoice {
   }
 
   .main-footer .footer {
+    display: block;
+    padding-left: 5px;
+    padding-top: 10px;
+  }
+  .main-footer-rs .footer {
     display: block;
     padding-left: 5px;
     padding-top: 10px;

@@ -15,6 +15,7 @@ export const AppCtx = React.createContext(initData);
 
 export const AppContextProvider = ({ children }) => {
   const [state, setState] = React.useState(initData);
+  
 
   const toggleNavbar = React.useCallback(() => {
     setState((prev) => {

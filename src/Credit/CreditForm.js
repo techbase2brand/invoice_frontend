@@ -20,8 +20,13 @@ const CreditForm = () => {
 
     //Getting data according to id
     const fetchCreditDetail = async (id) => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+          'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+          'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/update-credit-data/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/update-credit-data/${id}`,{headers});
             const bankDetailData = response.data.data;
             // Check if dates are valid before setting them
             if (bankDetailData.stateMentDate) {
@@ -72,6 +77,11 @@ const CreditForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         const newErrors = {};
         if (!formData.accNo) {
             newErrors.accNo = 'Acc. No is required';
@@ -87,9 +97,9 @@ const CreditForm = () => {
         }
         try {
             if (id) {
-                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-detail/${id}`, formData);
+                await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-detail/${id}`, formData, { headers });
             } else {
-                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-bank-data`, formData);
+                await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-bank-data`, formData, { headers });
             }
             navigate('/credit-details');
         } catch (error) {

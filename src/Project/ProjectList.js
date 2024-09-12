@@ -94,13 +94,18 @@ function ProjectList() {
     // };
 
     const handleDuplicate = (duplicateId) => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         const invoiceToDuplicate = invoices.find((item) => item._id === duplicateId);
         if (invoiceToDuplicate) {
             const duplicatedInvoice = { ...invoiceToDuplicate };
             delete duplicatedInvoice._id;
             duplicatedInvoice.selectDate = new Date().toISOString();
             duplicatedInvoice.duplicate = "Duplicated";
-            axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`, duplicatedInvoice)
+            axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`, duplicatedInvoice, { headers })
                 .then(response => {
                     fetchInvoices();
                 })
@@ -111,6 +116,11 @@ function ProjectList() {
     };
 
     const fetchInvoices = () => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-invoices`;
         let fromDate;
         if (selectedDays) {
@@ -169,7 +179,7 @@ function ProjectList() {
             apiUrl += apiUrl.includes('?') ? `&startDate=${formattedStartDate}&endDate=${formattedEndDate}` : `?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
         }
 
-        axios.get(apiUrl)
+        axios.get(apiUrl, { headers })
             .then((response) => {
                 const filteredData = response?.data?.data?.filter(item => {
                     const invoiceDate = new Date(item.selectDate);
@@ -196,8 +206,13 @@ function ProjectList() {
     };
 
     const handleDelete = (deleteId) => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/delete-invoice/${deleteId}`;
-        axios.delete(apiUrl);
+        axios.delete(apiUrl, { headers });
         setInvoices(invoices.filter((item) => item._id !== deleteId));
     };
 

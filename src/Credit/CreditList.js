@@ -17,8 +17,13 @@ const CreditList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+      const headers = {
+        'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+        'Content-Type': 'application/json',  // Add any other headers if needed
+      };
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/credit-history`);
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/credit-history`,{headers});
         if (response.data.success) {
           setData(response.data.data.reverse());
         }
@@ -44,8 +49,13 @@ const CreditList = () => {
     setCurrentPage(pageNumber);
   };
   const handleDelete = async (id) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-credit-data/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/delete-credit-data/${id}`,{headers});
       setData(data.filter(item => item._id !== id));
     } catch (error) {
       console.error('Error deleting bank detail:', error);

@@ -131,8 +131,13 @@ const ProForm = () => {
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-empData`;
-    axios.get(apiUrl)
+    axios.get(apiUrl, { headers })
       .then((response) => {
         setClient(response.data.data)
       })
@@ -142,8 +147,13 @@ const ProForm = () => {
   }, []);
 
   const fetchInvoiceDetail = async (id) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/wages-get/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/wages-get/${id}`, { headers });
       const bankDetailData = response.data.data;
       setWages(bankDetailData);
     } catch (error) {
@@ -211,6 +221,11 @@ const ProForm = () => {
   };
 
   const handleSubmit = () => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     const selectedEmpName = client.find(item => item._id === empName)?.empName || '';
     const formattedDate = moment(chooseDate).format('YYYY-MM-DD');
     const formData = {
@@ -248,7 +263,7 @@ const ProForm = () => {
     };
 
     if (id) {
-      axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-wages/${id}`, formData)
+      axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-wages/${id}`, formData, { headers })
         .then(response => {
           navigate("/wages-detail")
         })
@@ -256,7 +271,7 @@ const ProForm = () => {
           console.error('Error updating form data:', error);
         });
     } else {
-      axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/created-wages`, formData)
+      axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/created-wages`, formData, { headers })
         .then(response => {
           navigate("/wages-detail")
         })

@@ -36,8 +36,13 @@ const EmpForm = () => {
   }, [id]);
 
   const fetchBankDetail = async (id) => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-emp-data/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-emp-data/${id}`,{headers});
       const bankDetailData = response.data.data;
       bankDetailData.joinDate = bankDetailData.joinDate && moment(bankDetailData.joinDate).isValid() ? moment(bankDetailData.joinDate).toDate() : null;
       bankDetailData.leavingDate = bankDetailData.leavingDate && moment(bankDetailData.leavingDate).isValid() ? moment(bankDetailData.leavingDate).toDate() : null;
@@ -103,6 +108,11 @@ const EmpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = {
+      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+      'Content-Type': 'application/json',  // Add any other headers if needed
+    };
     const formErrors = {};
     const fieldsToValidate = ["empName", "empCode"];
 
@@ -120,12 +130,12 @@ const EmpForm = () => {
         // const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : '';
         const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
         const livingDate = moment(selectedleavingDate).format('YYYY-MM-DD');
-        const updatedFormData = { ...formData, joinDate: formattedDate, leavingDate: livingDate, tenure:tenure1 };
+        const updatedFormData = { ...formData, joinDate: formattedDate, leavingDate: livingDate, tenure: tenure1 };
 
         if (id) {
-          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-emp-data/${id}`, updatedFormData);
+          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-emp-data/${id}`, updatedFormData, { headers });
         } else {
-          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-emp-data`, updatedFormData);
+          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-emp-data`, updatedFormData, { headers });
         }
         if (response.status === 201 || response.status === 200) {
           navigate('/emp-data');

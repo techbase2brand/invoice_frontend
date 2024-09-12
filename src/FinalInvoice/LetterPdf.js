@@ -6,11 +6,15 @@ const LetterPdf = () => {
     const { id } = useParams();
     const targetRef = useRef();
     const [data, setData] = useState({});
-    console.log("id", id);
     useEffect(() => {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        }
         if (id) {
             const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/letter-get/${id}`;
-            axios.get(apiUrl)
+            axios.get(apiUrl, { headers })
                 .then((response) => {
                     const invoiceData = response.data.data;
                     setData(invoiceData);
@@ -39,7 +43,7 @@ const LetterPdf = () => {
                 <div className='appoint_section_new'>
                     <div className="form-head">
                         <span>Ref No. {data.refNo}</span>
-                         <b>Appointment letter</b> 
+                        <b>Appointment letter</b>
                         <span>Date:- {data.letterHeadDate ? formatDate(data.letterHeadDate) : ''}</span>
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: data.letterHeadData }} />
