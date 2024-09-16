@@ -21,6 +21,7 @@ const ProForm = () => {
     const [email, setEmail] = useState('');
     const [mobileNo, setMobileNo] = useState('');
     const [data, setData] = useState([]);
+    
     const [selectBank, setSelectBank] = useState('');
     const [bank, setBank] = useState('');
     const [accNo, setAccNo] = useState('');
@@ -279,9 +280,16 @@ const ProForm = () => {
     }, []);
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
+        const headers = {
+            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+            'Content-Type': 'application/json',  // Add any other headers if needed
+        };
         const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/bank-data`;
-        axios.get(apiUrl)
+        axios.get(apiUrl,{headers})
             .then((response) => {
+                console.log("res",response);
+                
                 setData(response.data.data)
             })
             .catch((error) => {

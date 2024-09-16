@@ -60,6 +60,11 @@
   text-align: left;
 }
 
+.appoinment_logo img {
+  width: 100%;
+  max-width: 175px;
+}
+
 .border_total_amount.text-right.ph_view {
   min-width: 34.5%;
 }
@@ -921,8 +926,8 @@ tbody.table-body {
 .appoinment_logo img {
   display: block;
   margin: auto;
-  padding-top: 15px;
-  padding-bottom: 17px;
+  /* padding-top: 15px; */
+  /* padding-bottom: 17px; */
 }
 
 .flex_date_tenure {

@@ -2,10 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import generatePDF from "react-to-pdf";
+import { defaultInputs, defaultInputSmBlack } from '../constants/defaultStyles';
 const LetterPdf = () => {
     const { id } = useParams();
     const targetRef = useRef();
     const [data, setData] = useState({});
+    const [companyLogos, setCompanyLogos] = useState([]);
+    const [selectedLogo, setSelectedLogo] = useState('');
+
     useEffect(() => {
         const token = localStorage.getItem('token'); // Retrieve the token from localStorage
         const headers = {
@@ -25,25 +29,55 @@ const LetterPdf = () => {
         }
     }, [id]);
 
+    useEffect(() => {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-companyLogo`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    setCompanyLogos(data.data);
+                } else {
+                    console.error('Failed to fetch company logos:', data.message);
+                }
+            })
+            .catch(error => console.error('Error fetching company logos:', error));
+    }, []);
+
     const formatDate = (dateString) => {
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
         const date = new Date(dateString);
         return new Intl.DateTimeFormat('en-US', options).format(date);
     };
 
+    const handleSelectChange = (event) => {
+        setSelectedLogo(event.target.value);
+    };
+
     return (
         <div>
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
+            <div style={{width:'30%'}}>
+            <select
+                className={defaultInputSmBlack}
+                value={selectedLogo}
+                onChange={handleSelectChange}
+            >
+                <option value="">Select Company Logo</option>
+                {companyLogos.map(logo => (
+                    <option key={logo._id} value={logo.companylogo}>{logo.name}</option>
+                ))}
+
+            </select>
+            </div>
             <div className="invoice" id="PDF_Download" ref={targetRef}>
                 {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
                 {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
                 <div className="appoinment_logo">
-                    <img src="/logo-b2b.png" alt="Company Logo" style={{ width: 'unset' }} />
+                    <img src={`https://invoice-backend.base2brand.com${selectedLogo}`} alt="Company Logo" />
                 </div>
                 <div className='appoint_section_new'>
                     <div className="form-head">
                         <span>Ref No. {data.refNo}</span>
-                        <b>Appointment letter</b>
+                        {/* <b>Appointment letter</b> */}
                         <span>Date:- {data.letterHeadDate ? formatDate(data.letterHeadDate) : ''}</span>
                     </div>
                     <p dangerouslySetInnerHTML={{ __html: data.letterHeadData }} />
@@ -76,8 +110,8 @@ const LetterPdf = () => {
                                     </svg>
                                 </span>
                                 <div>
-                                    <p>www.base2brand.com</p>
-                                    <p>hello@base2brand.com</p>
+                                    <p>www.sailegalassociates.com</p>
+                                    <p>hello@sailegalassociates.com</p>
                                 </div>
                             </div>
 
