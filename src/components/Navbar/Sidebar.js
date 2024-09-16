@@ -66,7 +66,7 @@ const NAV_DATA = [
     Icon: ClientPlusIcon,
   },
   {
-    title: "Letter Head Title",
+    title: "miscellaneous",
     link: "letterHead-title",
     Icon: ClientPlusIcon,
   }
