@@ -151,7 +151,7 @@ const LetterForm = () => {
                             />
                         </div>
                         <div className="">
-                            <label className="block text-sm font-medium text-gray-700">Appointment Letter</label>
+                            <label className="block text-sm font-medium text-gray-700">Miscellaneous Letter</label>
                             <CKEditor
                                 editor={ClassicEditor}
                                 data={formData.letterHeadData}
