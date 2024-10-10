@@ -359,13 +359,16 @@ function ProjectList() {
                                 <span>{sortOrder === 'asc' ? '▲' : '▼'}</span>
                             </th>
                             <th scope="col" className="px-6 py-3">
+                                Status
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 Bank Name
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Acc. No
                             </th>
                             <th>
-                                Status
+                                Original
                             </th>
                             {/* <th scope="col" className="px-6 py-3">
                                 Advance Amount
@@ -390,6 +393,7 @@ function ProjectList() {
                             <tr className={`bg-white border-b dark:bg-gray-800 dark:border-gray-700 ${getStatusColor(item?.paymentStatus)}`} key={item._id}>
                                 <td className="px-6 py-4">{item.client || "N/A"}</td>
                                 <td className="px-6 py-4">{item.company || "N/A"}</td>
+                                <td className="px-6 py-4">{item.paymentStatus || "N/A"}</td>
                                 <td className="px-6 py-4">{item.bankNamed || "N/A"}</td>
                                 <td className="px-6 py-4">{item.accNo || "N/A"}</td>
                                 <td>
