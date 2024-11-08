@@ -79,16 +79,31 @@ const ProForm = () => {
         }
     }, [id]);
 
+    // const calculateTotalAmount = (amounts) => {
+    //     let total = 0;
+    //     for (const task in amounts) {
+    //         const values = amounts[task];
+    //         for (const key in values) {
+    //             total += parseInt(values[key]);
+    //         }
+    //     }
+    //     return total;
+    // };
+
     const calculateTotalAmount = (amounts) => {
         let total = 0;
         for (const task in amounts) {
             const values = amounts[task];
             for (const key in values) {
-                total += parseInt(values[key]);
+                const value = parseInt(values[key], 10);
+                if (!isNaN(value)) {
+                    total += value;
+                }
             }
         }
         return total;
     };
+    
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-signature`)
@@ -327,6 +342,21 @@ const ProForm = () => {
             setSelectedProject((prevProjects) =>
                 prevProjects.filter((project) => project !== value)
             );
+            setProjectDescriptions((prevDescriptions) => {
+                const updatedDescriptions = { ...prevDescriptions };
+                if (updatedDescriptions[value]) {
+                    delete updatedDescriptions[value];
+                }
+                return updatedDescriptions;
+            });
+    
+            setAmounts((prevAmounts) => {
+                const updatedAmounts = { ...prevAmounts };
+                if (updatedAmounts[value]) {
+                    delete updatedAmounts[value];
+                }
+                return updatedAmounts;
+            });
         }
     };
 
@@ -473,7 +503,7 @@ const ProForm = () => {
             client: selectedClientName,
             tradde: trade,
             bankNamed: selectedBankName,
-            AdvanceAmount: advanceAmount || totalAmount,
+            AdvanceAmount:totalAmount,
             amounts: cleanedAmounts,
             companylogo: selectedLogo,
             sgst: sgst,
@@ -481,6 +511,7 @@ const ProForm = () => {
             sgstper: sgstper,
             cgstper: cgstper
         };
+        
         const token = localStorage.getItem('token'); // Retrieve the token from localStorage
         const headers = {
             'Authorization': `Bearer ${token}`,  // Use the token from localStorage
@@ -564,13 +595,42 @@ const ProForm = () => {
         }));
     };
 
+    // const handleRemoveDescription = (index, project) => {
+    //     setProjectDescriptions((prevDescriptions) => ({
+    //         ...prevDescriptions,
+    //         [project]: prevDescriptions[project].filter((_, i) => i !== index),
+    //     }));
+    // };
     const handleRemoveDescription = (index, project) => {
-        setProjectDescriptions((prevDescriptions) => ({
-            ...prevDescriptions,
-            [project]: prevDescriptions[project].filter((_, i) => i !== index),
-        }));
+        setProjectDescriptions((prevDescriptions) => {
+            const updatedDescriptions = { ...prevDescriptions };
+            updatedDescriptions[project] = updatedDescriptions[project].filter((_, i) => i !== index);
+    
+            // Remove the project from the state if it has no descriptions left
+            if (updatedDescriptions[project].length === 0) {
+                delete updatedDescriptions[project];
+            }
+    
+            return updatedDescriptions;
+        });
+    
+        setAmounts((prevAmounts) => {
+            const updatedAmounts = { ...prevAmounts };
+            if (updatedAmounts[project]) {
+                updatedAmounts[project] = Object.fromEntries(
+                    Object.entries(updatedAmounts[project]).filter(([key]) => parseInt(key) !== index)
+                );
+    
+                // Remove the project from the state if it has no amounts left
+                if (Object.keys(updatedAmounts[project]).length === 0) {
+                    delete updatedAmounts[project];
+                }
+            }
+    
+            return updatedAmounts;
+        });
     };
-
+    
     const handleDescriptionChange = (value, index, project) => {
         setProjectDescriptions((prevDescriptions) => ({
             ...prevDescriptions,
@@ -1248,7 +1308,7 @@ const ProForm = () => {
                                         type='text'
                                         placeholder="Amount"
                                         name='AdvanceAmount'
-                                        value={totalAmount || advanceAmount}
+                                        value={totalAmount}
                                         className={defaultInputSmStyle}
                                         onChange={(event) => setAdvanceAmount(event.target.value)}
                                         disabled={!advanceAmount || advanceAmount}
