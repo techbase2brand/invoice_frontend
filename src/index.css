@@ -584,15 +584,16 @@ td {
 }
 
 .main-footer-rs {
-  position: relative;
+  position: absolute;
   bottom: 0;
-  top: 0px;
+  /* top: 0px; */
   width: 100%;
   /* background: #042da0; */
   background-image: url("../public/invoice_banner_appoinment.png");
   background-size:cover;
   background-repeat: no-repeat;
   background-position:0 0;
+  z-index: 999;
 }
 
 .footer {
@@ -781,8 +782,9 @@ p {
   z-index: 99;
   position: relative;
   width: 100%;
-  min-height: 1035px;
-  overflow: auto;
+  height: 100%;
+  min-height: 1270px;
+  /* overflow: auto; */
 }
 
 .salary-slip .net-salary {
