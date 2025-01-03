@@ -34,18 +34,22 @@ const ExperienceLetter = () => {
     return (
         <div>
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
-            <div className="invoice" id="PDF_Download" ref={targetRef}>
+            <div className="invoice" id="PDF_Download" ref={targetRef} style={{paddingTop:'2rem'}}>
                 {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
                 {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
-                <div className="appoinment_logo">
-                    <img src="/logo-b2b.png" alt="Company Logo" style={{ width: 'unset' }} />
-                </div>
+                 
                 <div className='appoint_section_new-rs'>
-                    <div className="form-head">
-                        <span>Ref No. {data.refNo}</span>
-                        <b>Experience letter</b>
-                        <span>Date:- {data.experienceDate ? formatDate(data.experienceDate) : ''}</span>
+                    <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between'}}>
+
+                    <div className="form-heads">
+                        <h1 style={{fontSize:'36px', fontWeight:'600', color:'#ef7e50'}}>Experience letter</h1>
+                        <p>Ref No. <b>{data.refNo}</b></p>
+                        <p>Date:  <b>{data.experienceDate ? formatDate(data.experienceDate) : ''}</b></p>
                     </div>
+                    <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} />
+
+                    </div>
+
                     <p dangerouslySetInnerHTML={{ __html: data.experienceData }} />
                 </div>
                 <div className="main-footer-rs">

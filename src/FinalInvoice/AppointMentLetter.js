@@ -41,7 +41,7 @@ const AppointMentLetter = () => {
                 <img className='logo_invoice_overlap' src='/b2b-icon.png' />
                 {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
                 <div className="appoinment_logo">
-                    <img src="/logo-b2b.png" alt="Company Logo" style={{ width: 'unset' }} />
+                    <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} />
                 </div>
                 <div className='appoint_section_new'>
                     <div className="form-head">
