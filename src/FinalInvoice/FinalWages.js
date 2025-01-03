@@ -72,7 +72,7 @@ const FinalWages = () => {
                     <h3>Salary Slip</h3>
                 </div>
                 <div className="p-5 w-full">
-                    {/* <img className='logo_invoice_overlap width_add' src='/b2b-icon.png' /> */}
+                    <img className='logo_invoice_overlap width_add' src={`https://invoice-backend.base2brand.com${formData.companylogo}`} />
 
 
                     <div className="salary-slip">
