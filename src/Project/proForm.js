@@ -95,7 +95,7 @@ const ProForm = () => {
         for (const task in amounts) {
             const values = amounts[task];
             for (const key in values) {
-                const value = parseInt(values[key], 10);
+                const value = parseFloat(values[key]);
                 if (!isNaN(value)) {
                     total += value;
                 }
