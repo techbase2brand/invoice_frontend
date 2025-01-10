@@ -324,14 +324,15 @@ const ProForm = () => {
       const deduct = basicCut - (allTax || 0); // Deduct all taxes from basic cut
       if (grossSalaryDeduction) {
         const total = deduct - grossSalaryDeduction;
-        setnetSalary(total.toFixed(2)); // Update net salary
+        setnetSalary(Math.floor(total)); // Use Math.floor to remove decimals
       } else {
-        setnetSalary(deduct.toFixed(2)); // No gross salary deduction
+        setnetSalary(Math.floor(deduct)); // No gross salary deduction
       }
     } else {
       setnetSalary(0); // Reset if no basicCut
     }
   }, [basicCut, allTax, grossSalaryDeduction]);
+  
   // const handleImageUpload = async (e) => {
   //   setImg(true);
   //   const file = e.target.files[0];
