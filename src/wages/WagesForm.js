@@ -24,8 +24,8 @@ const ProForm = () => {
   const [wages, setWages] = useState(null);
   const [grosssalary, setgrosssalary] = useState("");
   const [netsalary, setnetSalary] = useState("");
-  console.log("netsalary", netsalary);
-
+  console.log("netsalary",netsalary);
+  
   const [basic, setBasic] = useState("");
   const [med, setMed] = useState("");
   const [children, setChildren] = useState("");
@@ -51,11 +51,9 @@ const ProForm = () => {
   const [companyLogos, setCompanyLogos] = useState([]);
   const [selectedLogo, setSelectedLogo] = useState("");
   const [basicCut, setBasicCut] = useState(0);
-  console.log("basicCut", basicCut);
-
   const [grossSalaryDeduction, setGrossSalaryDeduction] = useState(0);
-  console.log("grossSalaryDeduction", grossSalaryDeduction);
-
+  console.log("grossSalaryDeduction",grossSalaryDeduction);
+  
   const [allTax, setAllTax] = useState(0);
 
   useEffect(() => {
@@ -312,7 +310,7 @@ const ProForm = () => {
     const TotalDays = parseInt(daysMonth || "0");
 
     if (TotalDays && TotalLeave) {
-      const newGrossSalaryDeduction = (basicCut / TotalDays) * TotalLeave;
+      const newGrossSalaryDeduction = Math.floor(basicCut / TotalDays) * TotalLeave;
       setGrossSalaryDeduction(newGrossSalaryDeduction);
     } else {
       setGrossSalaryDeduction(0); // Ensure it's reset if inputs are invalid
@@ -781,11 +779,18 @@ const ProForm = () => {
                   )} */}
 
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Amount"
                     name="netSalary"
                     value={netsalary}
                     className={defaultInputSmStyle}
+                    onChange={(e) => {
+                      // Allow only numbers
+                      const value = e.target.value;
+                      if (/^\d*$/.test(value)) {
+                        setnetSalary(value); // Update state if the input is valid
+                      }
+                    }}
                     // disabled={netSalary || !netSalary}
                   />
                 </div>
