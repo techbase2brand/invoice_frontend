@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { defaultInputSmStyle } from '../constants/defaultStyles';
+import { defaultInputSmBlack, defaultInputSmStyle } from '../constants/defaultStyles';
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import axios from 'axios'; // Import Axios
@@ -8,11 +8,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 const ExperienceLetterForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [selectedLogo, setSelectedLogo] = useState('');
+    const [invoicelist, setInvoiceList] = useState(null);
+    const [companyLogos, setCompanyLogos] = useState([]);
     const [formData, setFormData] = useState({
         userName: '',
         refNo: '',
         experienceDate: '',
-        experienceData: ''
+        experienceData: '',
+        companylogo:''
     });
 
     const handleChange = (e) => {
@@ -28,6 +32,45 @@ const ExperienceLetterForm = () => {
         const formattedRefNo = `B2B/${currentYear}-${nextYear.toString().slice(-2)}/${Math.floor(1000 + Math.random() * 9000)}`;
         return formattedRefNo;
     };
+    useEffect(() => {
+        const fetchInvoiceDetail = async (id) => {
+            try {
+                const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+                const headers = {
+                    'Authorization': `Bearer ${token}`,  // Use the token from localStorage
+                    'Content-Type': 'application/json',  // Add any other headers if needed
+                };
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/invoice-get/${id}`, { headers });
+                const bankDetailData = response.data.data;
+                console.log("bankDetailData", bankDetailData);
+
+                setInvoiceList(bankDetailData);
+            } catch (error) {
+                console.error('Error fetching bank detail:', error);
+            }
+        };
+        fetchInvoiceDetail();
+    }, [])
+
+    useEffect(() => {
+        if (invoicelist) {
+            setSelectedLogo(invoicelist.companylogo)
+        }
+    }, [invoicelist]);
+
+
+        useEffect(() => {
+            fetch(`${process.env.REACT_APP_API_BASE_URL}/api/get-companyLogo`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        setCompanyLogos(data.data);
+                    } else {
+                        console.error('Failed to fetch company logos:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error fetching company logos:', error));
+        }, []);
 
     const fetchCreditDetail = async (id) => {
         const token = localStorage.getItem('token'); // Retrieve the token from localStorage
@@ -44,7 +87,7 @@ const ExperienceLetterForm = () => {
                     userName: userName || '',
                     refNo: refNo || generateRefNo(),
                     experienceDate: experienceDate || '',
-                    experienceData: experienceData || ''
+                    experienceData: experienceData || '',
                 });
             }
         } catch (error) {
@@ -88,6 +131,7 @@ const ExperienceLetterForm = () => {
             'Content-Type': 'application/json',  // Add any other headers if needed
         };
         try {
+            
             if (id) {
                 await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/experience-update/${id}`, formData, { headers });
             } else {
@@ -98,7 +142,8 @@ const ExperienceLetterForm = () => {
                 userName: '',
                 refNo: generateRefNo(),
                 experienceDate: '',
-                experienceData: ''
+                experienceData: '',
+                companylogo:''
             });
             navigate('/experience-letter');
         } catch (error) {
@@ -106,6 +151,14 @@ const ExperienceLetterForm = () => {
         }
     };
 
+    const handleSelectChange = (event) => {
+        setSelectedLogo(event.target.value);
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            companylogo: event.target.value // Update formData with selected logo
+        }));
+    };
+    
     return (
         <div>
             <div className="flex-1">
@@ -145,6 +198,21 @@ const ExperienceLetterForm = () => {
                                 className={defaultInputSmStyle}
                             />
                         </div>
+
+                        <div className="text-sm mb-4">
+                            <select
+                                className={defaultInputSmBlack}
+                                value={selectedLogo}
+                                onChange={handleSelectChange}
+                            >
+                                <option value="">Select Company Logo</option>
+                                {companyLogos.map(logo => (
+                                    <option key={logo._id} value={logo.companylogo}>{logo.name}</option>
+                                ))}
+
+                            </select>
+                        </div>
+
                         <div className="">
                             <label className="block text-sm font-medium text-gray-700">Experience Letter</label>
                             <CKEditor

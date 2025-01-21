@@ -39,14 +39,14 @@ const ExperienceLetter = () => {
                 {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
                  
                 <div className='appoint_section_new-rs'>
-                    <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between'}}>
+                    <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
 
                     <div className="form-heads">
                         <h1 style={{fontSize:'36px', fontWeight:'600', color:'#ef7e50'}}>Experience letter</h1>
                         <p>Ref No. <b>{data.refNo}</b></p>
                         <p>Date:  <b>{data.experienceDate ? formatDate(data.experienceDate) : ''}</b></p>
                     </div>
-                    <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} />
+                    <img src={`https://invoice-backend.base2brand.com${data.companylogo}`} alt="Company Logo" style={{ width: 'auto',height:'170px' }} />
 
                     </div>
 
