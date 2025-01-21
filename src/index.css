@@ -31,7 +31,7 @@
 }
 
 .appoint_section_new {
-  margin-top: 25px;
+  margin-top: 10px;
 }
 
 .appoint_section_new-rs {
@@ -39,7 +39,7 @@
 }
 
 .appoint_section_new p {
-  font-size: 20px !important;
+  font-size: 16px !important;
 }
 
 .appoint_section_new-rs p {
@@ -165,7 +165,7 @@ input#chatbutton {
 
 .appoinment_banner {
   height: 78px;
-  margin-top: 10rem;
+  margin-top: 5rem;
 }
 
 .primary-self-text {
@@ -922,6 +922,7 @@ tbody.table-body {
 
 .appoint_section_new p {
   font-size: 14px;
+  line-height: 22px;
 }
 
 .appoint_section_new-rs p {
