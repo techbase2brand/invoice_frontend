@@ -53,8 +53,8 @@ const ExperienceLetter = () => {
                     <p dangerouslySetInnerHTML={{ __html: data.experienceData }} />
                 </div>
                 <div className="main-footer-rs">
-                    <div className="footer">
-                        <div className="middle">
+                    <div className="footer" style={{justifyContent:'unset',gap:'4rem'}}>
+                        {/* <div className="middle">
                             <div className="icon-text">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -69,7 +69,7 @@ const ExperienceLetter = () => {
                                 </div>
                             </div>
 
-                        </div>
+                        </div> */}
                         <div className="middle">
                             <div className="icon-text">
                                 <span>
