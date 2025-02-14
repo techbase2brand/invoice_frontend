@@ -54,7 +54,7 @@ const ExperienceLetter = () => {
                 </div>
                 <div className="main-footer-rs">
                     <div className="footer" style={{justifyContent:'unset',gap:'4rem'}}>
-                        {/* <div className="middle">
+                        <div className="middle">
                             <div className="icon-text">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -64,13 +64,13 @@ const ExperienceLetter = () => {
                                     </svg>
                                 </span>
                                 <div>
-                                    <p>+919872084850</p>
-                                    <p className="bottom-margin">+918360116967</p>
+                                    <p>+91 8360116967</p>
+                                    <p className="bottom-margin">+91 9872084850</p>
                                 </div>
                             </div>
 
-                        </div> */}
-                        <div className="middle">
+                        </div>
+                        {/* <div className="middle">
                             <div className="icon-text">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -85,7 +85,7 @@ const ExperienceLetter = () => {
                                 </div>
                             </div>
 
-                        </div>
+                        </div> */}
                         <div className="address">
                             <div className="icon-text-2">
                                 <span>
