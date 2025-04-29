@@ -1,59 +1,125 @@
-import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 import generatePDF from "react-to-pdf";
 const ExperienceLetter = () => {
-    const { id } = useParams();
-    const targetRef = useRef();
-    const [data, setData] = useState({});
-    useEffect(() => {
-        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-        const headers = {
-            'Authorization': `Bearer ${token}`,  // Use the token from localStorage
-            'Content-Type': 'application/json',  // Add any other headers if needed
-        }
-        if (id) {
-            const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/experience-get/${id}`;
-            axios.get(apiUrl, { headers })
-                .then((response) => {
-                    const invoiceData = response.data.data;
-                    setData(invoiceData);
-                })
-                .catch((error) => {
-                    console.error('Error fetching Wages details:', error);
-                });
-        }
-    }, [id]);
-
-    const formatDate = (dateString) => {
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-US', options).format(date);
+  const { id } = useParams();
+  const targetRef = useRef();
+  const [data, setData] = useState({});
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+    const headers = {
+      Authorization: `Bearer ${token}`, // Use the token from localStorage
+      "Content-Type": "application/json", // Add any other headers if needed
     };
+    if (id) {
+      const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/experience-get/${id}`;
+      axios
+        .get(apiUrl, { headers })
+        .then((response) => {
+          const invoiceData = response.data.data;
+          setData(invoiceData);
+        })
+        .catch((error) => {
+          console.error("Error fetching Wages details:", error);
+        });
+    }
+  }, [id]);
 
-    return (
-        <div>
-            <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
-            <div className="invoice" id="PDF_Download" ref={targetRef} style={{paddingTop:'2rem'}}>
-                {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
-                {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
-                 
-                <div className='appoint_section_new-rs'>
-                    <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
+  const companyLogo = data?.companylogo;
+  return (
+    <div>
+      <button
+        type="button"
+        class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+        onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
+      >
+        Pdf Download
+      </button>
+      <div
+        className="invoice"
+        id="PDF_Download"
+        ref={targetRef}
+        style={{ paddingTop: "2rem" }}
+      >
+        {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
+        {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
+        <img
+          src={`https://invoice-backend.base2brand.com${data?.companylogo}`}
+          className="logo_invoice_overlap"
+          alt="Company Logo"
+        />
+        <div className="appoint_section_new-rs">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <div className="form-heads">
+              <h1
+                style={{
+                  fontSize: "36px",
+                  fontWeight: "600",
+                  color: `${
+                    companyLogo ===
+                    "/uploads/SAI LOGO copy [Recovered]-01 2.png"
+                      ? "#ef7e50"
+                      : companyLogo === "/uploads/ks-01.png"
+                      ? "#1F8C97"
+                      : companyLogo ===
+                        "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
+                      ? "#154880"
+                      : "#042DA0"
+                  }`,
+                }}
+              >
+                Experience letter
+              </h1>
 
-                    <div className="form-heads">
-                        <h1 style={{fontSize:'36px', fontWeight:'600', color:'#ef7e50'}}>Experience letter</h1>
-                        <p>Ref No. <b>{data.refNo}</b></p>
-                        <p>Date:  <b>{data.experienceDate ? formatDate(data.experienceDate) : ''}</b></p>
-                    </div>
-                    <img src={`https://invoice-backend.base2brand.com${data.companylogo}`} alt="Company Logo" style={{ width: 'auto',height:'170px' }} />
+              <p>
+                Ref No. <b>{data.refNo}</b>
+              </p>
+              <p>
+                Date:{" "}
+                <b>
+                  {data.experienceDate ? formatDate(data.experienceDate) : ""}
+                </b>
+              </p>
+            </div>
+            <img
+              src={`https://invoice-backend.base2brand.com${data.companylogo}`}
+              alt="Company Logo"
+              style={{ width: "auto", height: "80px" }}
+            />
+          </div>
 
-                    </div>
-
-                    <p dangerouslySetInnerHTML={{ __html: data.experienceData }} />
-                </div>
-                <div className="main-footer-rs">
-                    <div className="footer" style={{justifyContent:'unset',gap:'4rem'}}>
+          <p dangerouslySetInnerHTML={{ __html: data.experienceData }} />
+        </div>
+        <div
+          style={{
+            width: "100%",
+            background: `${
+              companyLogo === "/uploads/SAI LOGO copy [Recovered]-01 2.png"
+                ? "#ef7e50"
+                : companyLogo === "/uploads/ks-01.png"
+                ? "#1F8C97"
+                : companyLogo ===
+                  "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
+                ? "#154880"
+                : "#042DA0"
+            }`,
+          }}
+          //  background: `${companyLogo == "/uploads/ks-01.png"?"#1F8C97"? companyLogo=="/uploads/Campus-logo-design-Trademark-1024x334 1.png" ? "#154880" :"#ef7e50"}`}}
+          className="main-footer-rs"
+        >
+        <div className="footer">
                         <div className="middle">
                             <div className="icon-text">
                                 <span>
@@ -64,13 +130,13 @@ const ExperienceLetter = () => {
                                     </svg>
                                 </span>
                                 <div>
-                                    <p>+91 8360116967</p>
-                                    <p className="bottom-margin">+91 9872084850</p>
+                                    <p>+919872084850</p>
+                                    <p className="bottom-margin">+918360116967</p>
                                 </div>
                             </div>
 
                         </div>
-                        {/* <div className="middle">
+                        <div className="middle">
                             <div className="icon-text">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -85,7 +151,7 @@ const ExperienceLetter = () => {
                                 </div>
                             </div>
 
-                        </div> */}
+                        </div>
                         <div className="address">
                             <div className="icon-text-2">
                                 <span>
@@ -101,11 +167,11 @@ const ExperienceLetter = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                {/* <img src='/invoice_banner_appoinment.png' className='w-full ph_none_banner appoinment_banner' /> */}
-            </div>
         </div>
-    )
-}
+        {/* <img src='/invoice_banner_appoinment.png' className='w-full ph_none_banner appoinment_banner' /> */}
+      </div>
+    </div>
+  );
+};
 
-export default ExperienceLetter
+export default ExperienceLetter;

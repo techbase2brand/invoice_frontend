@@ -132,7 +132,7 @@ const Invoice = () => {
   if (formData.cgst) {
     finalTotalAmount += parseFloat(formData.cgst) || 0;
   }
-
+  const companyLogo = formData?.companylogo;
   return (
     <div>
       <button
@@ -148,8 +148,9 @@ const Invoice = () => {
           className="logo_invoice_overlap"
           src={`https://invoice-backend.base2brand.com${formData.companylogo}`}
         />
-        <img src="/header_invoice.png" className="w-full header_invoice" />
-        <div className="logo text_invoice">
+        {/* <div style={{marginTop:"200px" }} className="w-full header_invoice"></div> */}
+        {/* <img src="/header_invoice.png" className="w-full header_invoice" /> */}
+        <div className="appoinment_logo">
           {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
           <img
             src={`https://invoice-backend.base2brand.com${formData.companylogo}`}
@@ -158,6 +159,7 @@ const Invoice = () => {
           {/* <p className="form-num">{formData.invoice}</p> */}
           {/* <h2 className="tax-in">TAX INVOICE</h2> */}
         </div>
+
         <div className="invoice_section_new">
           <div className="form-head">
             <span className="bill-head">Bill To</span>
@@ -454,7 +456,23 @@ const Invoice = () => {
             </div>
           </div>
         </div>
-        <div className="main-footer">
+        <div
+          style={{
+            width: "100%",
+            // marginTop: "20px",
+            background: `${
+              companyLogo === "/uploads/SAI LOGO copy [Recovered]-01 2.png"
+                ? "#ef7e50"
+                : companyLogo === "/uploads/ks-01.png"
+                ? "#1F8C97"
+                : companyLogo ===
+                  "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
+                ? "#154880"
+                : "#042DA0"
+            }`,
+          }}
+          // className="main-footer"
+        >
           <div className="footer">
             <div className="middle">
               <div className="icon-text">
@@ -523,7 +541,7 @@ const Invoice = () => {
             </div>
           </div>
         </div>
-        <img src="/invoice_banner.png" className="w-full ph_none_banner" />
+        {/* <img src="/invoice_banner.png" className="w-full ph_none_banner" /> */}
       </div>
     </div>
   );
