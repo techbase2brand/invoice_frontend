@@ -37,7 +37,7 @@ const ExperienceLetter = () => {
             <div className="invoice" id="PDF_Download" ref={targetRef} style={{paddingTop:'2rem'}}>
                 {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
                 {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
-                 
+                <img src={`https://invoice-backend.base2brand.com${data?.companylogo}`} className='logo_invoice_overlap' alt="Company Logo" />
                 <div className='appoint_section_new-rs'>
                     <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
 
@@ -46,7 +46,7 @@ const ExperienceLetter = () => {
                         <p>Ref No. <b>{data.refNo}</b></p>
                         <p>Date:  <b>{data.experienceDate ? formatDate(data.experienceDate) : ''}</b></p>
                     </div>
-                    <img src={`https://invoice-backend.base2brand.com${data.companylogo}`} alt="Company Logo" style={{ width: 'auto',height:'170px' }} />
+                    <img src={`https://invoice-backend.base2brand.com${data.companylogo}`} alt="Company Logo" style={{ width: 'auto',height:'80px' }} />
 
                     </div>
 

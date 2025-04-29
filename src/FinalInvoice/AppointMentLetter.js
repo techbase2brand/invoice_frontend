@@ -38,10 +38,12 @@ const AppointMentLetter = () => {
         <div>
             <button type="button" class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={() => generatePDF(targetRef, { filename: 'page.pdf' })}>Pdf Download</button>
             <div className="invoice" id="PDF_Download" ref={targetRef}>
-                <img className='logo_invoice_overlap' src='/b2b-icon.png' />
+            <img src={`https://invoice-backend.base2brand.com${data?.companyLogo}`} className='logo_invoice_overlap' alt="Company Logo" />
+                {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
                 {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
                 <div className="appoinment_logo">
-                    <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} />
+                <img src={`https://invoice-backend.base2brand.com${data?.companyLogo}`} className='com_logo' alt="Company Logo" />
+                    {/* <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} /> */}
                 </div>
                 <div className='appoint_section_new'>
                     <div className="form-head">
