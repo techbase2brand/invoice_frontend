@@ -90,7 +90,7 @@ const AppointMentLetter = () => {
         <div
           style={{
             width: "100%",
-            marginTop:"50px",
+            marginTop: "50px",
             background: `${
               companyLogo === "/uploads/SAI LOGO copy [Recovered]-01 2.png"
                 ? "#ef7e50"
@@ -102,7 +102,7 @@ const AppointMentLetter = () => {
                 : "#042DA0"
             }`,
           }}
-        //   className="main-footer"
+          //   className="main-footer"
         >
           <div className="footer">
             <div className="middle">
@@ -143,8 +143,29 @@ const AppointMentLetter = () => {
                   </svg>
                 </span>
                 <div>
-                  <p>www.base2brand.com</p>
-                  <p>hello@base2brand.com</p>
+                  {/* <p>www.base2brand.com</p> */}
+                  <p>
+                    {companyLogo ===
+                    "/uploads/SAI LOGO copy [Recovered]-01 2.png"
+                      ? "www.sailegalassociates.com"
+                      : companyLogo === "/uploads/ks-01.png"
+                      ? "www.ksnetworkingsolutions.com"
+                      : companyLogo ===
+                        "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
+                      ? "www.b2bcampus.com"
+                      : "www.Aashuenterprises.com"}
+                  </p>
+                  <p>
+                    {companyLogo ===
+                    "/uploads/SAI LOGO copy [Recovered]-01 2.png"
+                      ? "hello@sailegalassociates.com"
+                      : companyLogo === "/uploads/ks-01.png"
+                      ? "hello@ksnetworkingsolutions.com"
+                      : companyLogo ===
+                        "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
+                      ? "hello@base2brand.com"
+                      : "hello@Aashuenterprises.com"}
+                  </p>
                 </div>
               </div>
             </div>
