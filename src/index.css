@@ -62,8 +62,8 @@
 }
 
 .appoinment_logo img {
-  width: 100%;
-  max-width: 200px;
+  height: 100px;
+  width: 200px;
 }
 
 .border_total_amount.text-right.ph_view {
@@ -931,7 +931,7 @@ tbody.table-body {
 
 .appoinment_logo img {
   display: block;
-  margin: auto;
+  /* margin: auto; */
   /* padding-top: 15px; */
   /* padding-bottom: 17px; */
 }
@@ -942,10 +942,13 @@ tbody.table-body {
 }
 
 .appoinment_logo {
+  background:"red";
   border-bottom: 1px solid #4c4c4c;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   box-shadow: 1px 3px 4px #ccc;
-  padding: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
 }
 
 .appoint_section_new h3 {
