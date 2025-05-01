@@ -58,6 +58,7 @@ const AppointMentLetter = () => {
             src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
             className="com_logo"
             alt="Company Logo"
+            style={{width:"250px", height:'140px', display:"flex",justifyContent:"center", alignItems:"center", marginLeft:"auto", marginRight:"auto",}}
           />
           {/* <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} /> */}
         </div>
@@ -90,7 +91,7 @@ const AppointMentLetter = () => {
         <div
           style={{
             width: "100%",
-            marginTop: "50px",
+            marginTop: "10px",
             background: `${
               companyLogo === "/uploads/SAI LOGO copy [Recovered]-01 2.png"
                 ? "#ef7e50"
