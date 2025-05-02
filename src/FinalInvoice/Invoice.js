@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import generatePDF from "react-to-pdf";
 import numberToWords from "number-to-words";
 const Invoice = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   // const totalAmount = parseInt(formData.amount || "0") + parseInt(formData.AdvanceAmount || "0");
   const calculateTotalAmount = () => {
@@ -133,8 +134,13 @@ const Invoice = () => {
     finalTotalAmount += parseFloat(formData.cgst) || 0;
   }
   const companyLogo = formData?.companylogo;
+
+  const goBack = () => {
+    navigate(-1); 
+  };
   return (
     <div>
+       <button style={{fontSize:"40px" ,marginRight:"20px"}} onClick={goBack}>←</button>
       <button
         type="button"
         class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"

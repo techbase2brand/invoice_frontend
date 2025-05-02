@@ -348,8 +348,14 @@ const ProForm = () => {
   //     console.error('Error uploading image:', error);
   //   }
   // };
+  const goBack = () => {
+    navigate(-1);
+  };
   return (
     <div>
+      <button style={{ fontSize: "40px" }} onClick={goBack}>
+        ←
+      </button>
       <div className={"flex flex-row pt-2 px-8"}>
         <div className="flex-1">
           <div className="flexer">
