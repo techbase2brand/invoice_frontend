@@ -7,8 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { defaultInputSmBlack } from '../constants/defaultStyles';
 const WagesList = () => {
   const [data, setData] = useState([]);
-
-  const [itemsPerPage] = useState(50);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDays, setSelectedDays] = useState('');
@@ -74,7 +73,10 @@ const WagesList = () => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1); // reset to page 1 when items per page changes
+  };
   const handleSelectChange = (e) => {
     setSelectedDays(e.target.value);
   };
@@ -289,6 +291,23 @@ const WagesList = () => {
           >
             Next
           </button>
+          <div className="mb-4 ml-20">
+            <label htmlFor="itemsPerPage" className="mr-2 font-medium">
+              Items per page:
+            </label>
+            <select
+              id="itemsPerPage"
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="border rounded px-2 py-1"
+            >
+              {[10, 20, 30, 40, 50, 80, 100].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </div>

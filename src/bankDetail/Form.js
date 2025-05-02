@@ -104,9 +104,12 @@ const Form = () => {
             }
         }
     };
-
+    const goBack = () => {
+        navigate(-1); 
+      };
     return (
         <div>
+            <button style={{fontSize:"40px"}} onClick={goBack}>←</button>
             <div className="flex-1">
                 <div className="font-title font-bold text-sm my-3">Bank Form</div>
                 <form onSubmit={handleSubmit}>

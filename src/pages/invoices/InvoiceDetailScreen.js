@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { defaultInputSmStyle, validError } from '../../constants/defaultStyles';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { defaultInputSmStyle, validError } from "../../constants/defaultStyles";
 
 const FormCli = () => {
   const [formData, setFormData] = useState({
-    trade: '',
-    companyAddress: '',
-    ifsc: '',
-    panNo: '',
-    gstNo: '',
-    signature: '',
-    companylogo: '',
+    trade: "",
+    companyAddress: "",
+    ifsc: "",
+    panNo: "",
+    gstNo: "",
+    signature: "",
+    companylogo: "",
   });
   const [logo, setLogo] = useState({
-    name: '',
-    companylogo: '',
+    name: "",
+    companylogo: "",
   });
   const navigate = useNavigate();
   const [error, setError] = useState(false);
@@ -31,17 +31,20 @@ const FormCli = () => {
   }, [id]);
 
   const fetchCompanyDetail = async (id) => {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
     const headers = {
-      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
-      'Content-Type': 'application/json',  // Add any other headers if needed
+      Authorization: `Bearer ${token}`, // Use the token from localStorage
+      "Content-Type": "application/json", // Add any other headers if needed
     };
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/get-company/${id}`, { headers });
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/get-company/${id}`,
+        { headers }
+      );
       const bankDetailData = response.data.data;
       setFormData(bankDetailData);
     } catch (error) {
-      console.error('Error fetching bank detail:', error);
+      console.error("Error fetching bank detail:", error);
     }
   };
 
@@ -72,27 +75,34 @@ const FormCli = () => {
     setImg(true);
     const file = e.target.files[0];
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", file);
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/upload-companylogo`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/upload-companylogo`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       const imageUrl = response.data.imageUrl;
       // setLogo(prevFormData => ({ ...prevFormData,name : 'Arti',signature: imageUrl }));
-      setLogo(prevFormData => ({ ...prevFormData, name: 'Base2Brand-logo', companylogo: imageUrl }));
+      setLogo((prevFormData) => ({
+        ...prevFormData,
+        name: "Base2Brand-logo",
+        companylogo: imageUrl,
+      }));
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error("Error uploading image:", error);
     }
   };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError((prevErrors) => ({ ...prevErrors, [e.target.name]: '' }));
+    setError((prevErrors) => ({ ...prevErrors, [e.target.name]: "" }));
   };
-
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
@@ -125,10 +135,10 @@ const FormCli = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
     const headers = {
-      'Authorization': `Bearer ${token}`,  // Use the token from localStorage
-      'Content-Type': 'application/json',  // Add any other headers if needed
+      Authorization: `Bearer ${token}`, // Use the token from localStorage
+      "Content-Type": "application/json", // Add any other headers if needed
     };
     const formErrors = {};
     const fieldsToValidate = ["trade"];
@@ -145,71 +155,92 @@ const FormCli = () => {
       try {
         let response;
         if (id) {
-          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`, formData, { headers });
+          response = await axios.put(
+            `${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`,
+            formData,
+            { headers }
+          );
         } else {
-          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-companyLogo`, logo, { headers });
+          response = await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL}/api/add-companyLogo`,
+            logo,
+            { headers }
+          );
         }
         if (response.status === 201 || response.status === 200) {
           navigate("/listing");
         }
       } catch (error) {
-        console.error('Error in Axios request:', error);
+        console.error("Error in Axios request:", error);
       }
     }
   };
 
+  const goBack = () => {
+    navigate(-1); 
+  };
 
   return (
     <div>
+      <button style={{fontSize:"40px"}} onClick={goBack}>←</button>
       <div className="flex-1">
-        <div className="font-title font-bold text-sm my-3">Add Company Detail</div>
+        <div className="font-title font-bold text-sm my-3">
+          Add Company Detail
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="client-form-wrapper sm:w-1/2">
-            <div
-              className="text-sm mb-4"
-            >
-              <label className="block text-sm font-medium text-gray-700">Trade Name</label>
+            <div className="text-sm mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Trade Name
+              </label>
               <input
-                type='text'
+                type="text"
                 placeholder="Trade Name"
-                name='trade'
+                name="trade"
                 value={formData.trade}
-                className={`${defaultInputSmStyle} ${error.trade && validError}`}
+                className={`${defaultInputSmStyle} ${
+                  error.trade && validError
+                }`}
                 onChange={handleChange}
               />
             </div>
-            <div
-              className="text-sm mb-4"
-            >
-              <label className="block text-sm font-medium text-gray-700">Company Address</label>
+            <div className="text-sm mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Company Address
+              </label>
               <input
-                type='text'
+                type="text"
                 placeholder="Company Address"
-                name='companyAddress'
+                name="companyAddress"
                 value={formData.companyAddress}
-                className={`${defaultInputSmStyle} ${error.companyAddress && validError}`}
+                className={`${defaultInputSmStyle} ${
+                  error.companyAddress && validError
+                }`}
                 onChange={handleChange}
               />
             </div>
 
             <div className="text-sm mb-4">
-              <label className="block text-sm font-medium text-gray-700">IFSC</label>
+              <label className="block text-sm font-medium text-gray-700">
+                IFSC
+              </label>
               <input
-                type='text'
+                type="text"
                 placeholder="ifsc Name"
-                name='ifsc'
+                name="ifsc"
                 value={formData.ifsc}
                 className={defaultInputSmStyle}
                 onChange={handleChange}
               />
-
             </div>
             <div className="text-sm mb-4">
-              <label className="block text-sm font-medium text-gray-700">Pan No</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Pan No
+              </label>
               <input
                 type="panNo"
                 placeholder="panNo"
-                name='panNo'
+                name="panNo"
                 value={formData.panNo}
                 className={defaultInputSmStyle}
                 onChange={handleChange}
@@ -231,46 +262,56 @@ const FormCli = () => {
               />
             </div> */}
             <div className="client-form-wrapper sm:w-1/2">
-              <label className="block text-sm font-medium text-gray-700">ADD GST</label>
-              <input type='checkbox' onChange={handleCheckboxChange} />
+              <label className="block text-sm font-medium text-gray-700">
+                ADD GST
+              </label>
+              <input type="checkbox" onChange={handleCheckboxChange} />
             </div>
-            {enableGST &&
-              <div className="text-sm mb-4"
-              >
-                <label className="block text-sm font-medium text-gray-700">GST</label>
+            {enableGST && (
+              <div className="text-sm mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  GST
+                </label>
                 <input
-                  type='text'
+                  type="text"
                   placeholder="GST No"
-                  name='gstNo'
+                  name="gstNo"
                   value={formData.gstNo}
                   className={defaultInputSmStyle}
                   onChange={handleChange}
                 />
               </div>
-            }
+            )}
             <div className="text-sm mb-4">
-              <label className="block text-sm font-medium text-gray-700">Company logo</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Company logo
+              </label>
               {formData && formData.companylogo && (
                 <div className="mb-2">
-                  {!img &&
-                    <img src={`http://localhost:8000${formData.companylogo}`} alt="Current Signature" style={{ maxWidth: '100px', maxHeight: '100px' }} />
-                  }
+                  {!img && (
+                    <img
+                      src={`http://localhost:8000${formData.companylogo}`}
+                      alt="Current Signature"
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
                 </div>
               )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleLogoUpload}
-              />
+              <input type="file" accept="image/*" onChange={handleLogoUpload} />
             </div>
             <div className="mt-3">
-              <button type="submit" class="primary-background-color w-full text-white   hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >{id ? "Update" : "Sumbit"}</button>
+              <button
+                type="submit"
+                class="primary-background-color w-full text-white   hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                {id ? "Update" : "Sumbit"}
+              </button>
             </div>
           </div>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default FormCli;

@@ -7,8 +7,7 @@ import { Link } from 'react-router-dom';
 
 const ExperienceLetterList = () => {
   const [data, setData] = useState([]);
-  console.log("data", data)
-  const [itemsPerPage] = useState(50);
+  const [itemsPerPage, setItemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(data.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -37,6 +36,10 @@ const ExperienceLetterList = () => {
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1); // reset to page 1 when items per page changes
   };
   const handleDelete = async (id) => {
     const token = localStorage.getItem('token'); // Retrieve the token from localStorage
@@ -128,6 +131,23 @@ const ExperienceLetterList = () => {
           >
             Next
           </button>
+          <div className="mb-4 ml-20">
+            <label htmlFor="itemsPerPage" className="mr-2 font-medium">
+              Items per page:
+            </label>
+            <select
+              id="itemsPerPage"
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="border rounded px-2 py-1"
+            >
+              {[10, 20, 30, 40, 50, 80, 100].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </div>
