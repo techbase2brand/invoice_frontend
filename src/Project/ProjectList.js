@@ -7,9 +7,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import Pagination from "../Pagination/Pagination";
 function ProjectList() {
   const [invoices, setInvoices] = useState([]);
-  const [selectedDays, setSelectedDays] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [paymentStatus, setPaymentStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState(() => {
+    return sessionStorage.getItem("searchTerm") || "";
+  });
+  const [selectedDays, setSelectedDays] = useState(() => sessionStorage.getItem("selectedDays") || "");
+const [paymentStatus, setPaymentStatus] = useState(() => sessionStorage.getItem("paymentStatus") || "");
+const [duplicateFilter, setDuplicateFilter] = useState(() => sessionStorage.getItem("duplicateFilter") || "");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [itemsPerPage, setItemsPerPage] = useState(50);
@@ -20,7 +23,7 @@ function ProjectList() {
   const currentItems = invoices.slice(indexOfFirstItem, indexOfLastItem);
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortColumn, setSortColumn] = useState("");
-  const [duplicateFilter, setDuplicateFilter] = useState("");
+ 
   const [openItemId, setOpenItemId] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
   const dropdownRef = useRef(null);
@@ -94,6 +97,7 @@ function ProjectList() {
     sessionStorage.setItem("endDate", date?.toISOString() || "");
   };
 
+
   useEffect(() => {
     const savedStartDate = sessionStorage.getItem("startDate");
     const savedEndDate = sessionStorage.getItem("endDate");
@@ -107,7 +111,8 @@ function ProjectList() {
     } else {
       fetchInvoices(); // fallback if no filter
     }
-  }, []);
+  }, [searchTerm,selectedDays,duplicateFilter,paymentStatus]);
+
 
   const fetchInvoicesWithDates = (start, end) => {
     const token = localStorage.getItem("token");
@@ -195,8 +200,16 @@ function ProjectList() {
   const handleResetFilters = () => {
     setStartDate(null);
     setEndDate(null);
+    setSearchTerm('')
+    setSelectedDays('')
+    setDuplicateFilter('')
+    setPaymentStatus('')
     sessionStorage.removeItem("startDate");
     sessionStorage.removeItem("endDate");
+    sessionStorage.removeItem("searchTerm");
+    sessionStorage.removeItem("selectedDays");
+    sessionStorage.removeItem("paymentStatus");
+    sessionStorage.removeItem("duplicateFilter");
     fetchInvoicesWithDates();
   };
   // const handleDuplicate = (duplicateId) => {
@@ -213,7 +226,11 @@ function ProjectList() {
   //             });
   //     }
   // };
-
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    sessionStorage.setItem("searchTerm", value);
+  };
   const handleDuplicate = (duplicateId) => {
     const token = localStorage.getItem("token"); // Retrieve the token from localStorage
     const headers = {
@@ -358,20 +375,36 @@ function ProjectList() {
     setInvoices(invoices.filter((item) => item._id !== deleteId));
   };
 
-  const handleDuplicateFilterChange = (e) => {
-    setDuplicateFilter(e.target.value);
-  };
+  // const handleDuplicateFilterChange = (e) => {
+  //   setDuplicateFilter(e.target.value);
+  // };
 
+  // const handleSelectChange = (e) => {
+  //   setSelectedDays(e.target.value);
+  // };
   const handleSelectChange = (e) => {
-    setSelectedDays(e.target.value);
+    const value = e.target.value;
+    setSelectedDays(value);
+    sessionStorage.setItem("selectedDays", value);
   };
-
+  
+  const handlePaymentStatusChange = (e) => {
+    const value = e.target.value;
+    setPaymentStatus(value);
+    sessionStorage.setItem("paymentStatus", value);
+  };
+  
+  const handleDuplicateFilterChange = (e) => {
+    const value = e.target.value;
+    setDuplicateFilter(value);
+    sessionStorage.setItem("duplicateFilter", value);
+  };
   const handleSearch = () => {
     fetchInvoices();
   };
-  const handlePaymentStatusChange = (e) => {
-    setPaymentStatus(e.target.value);
-  };
+  // const handlePaymentStatusChange = (e) => {
+  //   setPaymentStatus(e.target.value);
+  // };
   const paidInvoicesLength = invoices.filter(
     (item) => item.paymentStatus === "paid"
   ).length;
@@ -475,7 +508,8 @@ function ProjectList() {
             placeholder="Search"
             className="inputStyle"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
+            // onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <div>
