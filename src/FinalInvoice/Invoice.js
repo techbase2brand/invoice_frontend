@@ -527,6 +527,8 @@ const Invoice = () => {
                       : companyLogo ===
                         "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
                       ? "www.b2bcampus.com"
+                      : companyLogo== "/uploads/31-31.png"
+                      ? "https://base2brand.com"
                       : "www.Aashuenterprises.com"}
                   </p>
                   <p>
@@ -537,6 +539,8 @@ const Invoice = () => {
                       ? "hello@ksnetworkingsolutions.com"
                       : companyLogo ===
                         "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
+                      ? "hello@base2brand.com"
+                      : companyLogo== "/uploads/31-31.png"
                       ? "hello@base2brand.com"
                       : "hello@Aashuenterprises.com"}
                   </p>
