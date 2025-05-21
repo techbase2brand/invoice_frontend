@@ -174,7 +174,7 @@ const ExperienceLetter = () => {
                         "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
                       ? "www.b2bcampus.com"
                       : companyLogo== "/uploads/31-31.png"
-                      ? "https://base2brand.com"
+                      ? "https://www.base2brand.com"
                       : "www.Aashuenterprises.com"}
                   </p>
                   <p>
