@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import Pagination from '../Pagination/Pagination';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { defaultInputSmBlack } from '../constants/defaultStyles';
-const WagesList = () => {
+const WagesList = ({ refreshKey, onSelectionChange  }) => {
   const [data, setData] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,8 +16,13 @@ const WagesList = () => {
   const totalPages = Math.ceil(data.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [localCsvData, setLocalCsvData] = useState([]);
+  const [apiData, setApiData] = useState([]);
+   const prevSelectedEmployeesRef = useRef([]);
   // const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-
+  const combinedData = [...localCsvData, ...apiData];
 
   const currentItems = data
     .filter(item => {
@@ -73,6 +78,23 @@ const WagesList = () => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  useEffect(() => {
+    if (onSelectionChange) {
+      const selectedEmployees = data.filter((item) =>
+        selectedItems.includes(item._id)
+      );
+      // Prevent infinite loop by comparing prev and current selection
+      const prev = prevSelectedEmployeesRef.current;
+      const changed =
+        JSON.stringify(prev) !== JSON.stringify(selectedEmployees);
+      if (changed) {
+        onSelectionChange(selectedEmployees);
+        prevSelectedEmployeesRef.current = selectedEmployees;
+      }
+    }
+  }, [selectedItems, data, onSelectionChange]);
+
   const handleItemsPerPageChange = (e) => {
     setItemsPerPage(parseInt(e.target.value));
     setCurrentPage(1); // reset to page 1 when items per page changes
@@ -88,6 +110,12 @@ const WagesList = () => {
   const handleEndDateChange = (date) => {
     setEndDate(date);
   };
+function safeFormatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return "";  // invalid date
+  return d.toISOString().split('T')[0];
+}
 
   useEffect(() => {
     const token = localStorage.getItem('token'); // Retrieve the token from localStorage
@@ -101,34 +129,67 @@ const WagesList = () => {
       .then((response) => {
 
         const wagesData = response?.data?.data.map((item) => {
-          // Date formatting
-          let formattedChooseDate = "Invalid Date";
-          let formattedJoinDate = "Invalid Date";
+          // Date formatting 
+          const formattedChooseDate = safeFormatDate(item?.chooseDate);
+ 
+              
 
-          if (item?.chooseDate && item?.chooseDate !== "Invalid date") {
-            formattedChooseDate = new Date(item?.chooseDate).toISOString().split('T')[0];
-          }
-
-          if (item?.joinDate && item?.joinDate !== "Invalid date") {
-            formattedJoinDate = new Date(item?.joinDate).toISOString().split('T')[0];
-          }
-
+             const formattedJoinDate = safeFormatDate(item?.joinDate);
           // Constructing full URL for companylogo
           const companyLogoUrl = item?.companylogo ? `${process.env.REACT_APP_API_BASE_URL}${item?.companylogo}` : "";
 
           return {
             ...item,
             chooseDate: formattedChooseDate,
-            joinDate: formattedJoinDate,
+            joinDate: formattedJoinDate, 
             companylogo: companyLogoUrl
           };
         });
-        setData(wagesData.reverse()); // Reverse if needed
+        setApiData(wagesData.reverse()); // Reverse if needed
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
   }, []);
+
+
+   // Load CSV data from localStorage on mount and when refreshKey changes
+  useEffect(() => {
+    const storedCsv = localStorage.getItem("csvData");
+    if (storedCsv) {
+      try {
+        const parsedCsv = JSON.parse(storedCsv);
+        const csvWithIds = parsedCsv.map((item, index) => ({
+          _id: `csv-${index}`, // unique IDs for React keys
+          // map CSV keys to your table keys if different:
+          chooseDate: item["Choose Date"] || "",  // adapt to your CSV headers
+          employeeName: item["Employee Name"] || "",
+          empCode: item["Employee Code"] || "",
+          familyMember: item["F/H Name"] || "",
+          department: item["Department"] || "",
+          designation: item["Designation"] || "",
+          companyName: item["Company Name"] || "",
+          netsalary: item["Net salary"] || "",
+          // add other keys if needed
+          ...item,
+        }));
+        setLocalCsvData(csvWithIds);
+      } catch (error) {
+        console.error("Error parsing CSV from localStorage", error);
+        setLocalCsvData([]);
+      }
+    } else {
+      setLocalCsvData([]);
+    }
+  }, [refreshKey]);
+
+  // Combine local CSV data and API data (show CSV data on top)
+  useEffect(() => {
+    setData([...localCsvData, ...apiData]);
+    setCurrentPage(1); // reset page on data change
+  }, [localCsvData, apiData]);
+
+  
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem('token'); // Retrieve the token from localStorage
@@ -143,6 +204,54 @@ const WagesList = () => {
       console.error('Error deleting bank detail:', error);
     }
   };
+
+  const handleSelectAll = () => {
+  setSelectAll(!selectAll);
+  if (!selectAll) {
+    setSelectedItems(currentItems.map((item) => item._id));
+  } else {
+    setSelectedItems([]);
+  }
+};
+
+const handleSelectOne = (id) => {
+  if (selectedItems.includes(id)) {
+    setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
+  } else {
+    setSelectedItems([...selectedItems, id]);
+  }
+};
+ 
+function parseDateString(dateStr) {
+  if (!dateStr) return null;
+
+  const cleanStr = dateStr.trim();
+
+  // ISO format YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(cleanStr)) {
+    const d = new Date(cleanStr);
+    if (!isNaN(d)) return d;
+  }
+
+  // DD-MM-YYYY format
+  if (/^\d{2}-\d{2}-\d{4}$/.test(cleanStr)) {
+    const [dd, mm, yyyy] = cleanStr.split("-");
+    const d = new Date(yyyy, mm - 1, dd);
+    if (!isNaN(d)) return d;
+  }
+
+  // fallback
+  const parsed = Date.parse(cleanStr);
+  if (!isNaN(parsed)) return new Date(parsed);
+
+  return null;
+}
+
+
+
+
+
+
   // const calculateSum = (item) => {
   //   const fields = ['basic', 'med', 'children', 'house', 'conveyance', 'earning', 'arrear', 'reimbursement', 'health', 'epf', 'tds'];
   //   return fields.reduce((sum, field) => sum + parseFloat(item[field] || 0), 0);
@@ -193,6 +302,14 @@ const WagesList = () => {
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
+               <th className="px-6 py-3">
+                <input
+                  type="checkbox"
+                  className='w-5 h-5'
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                />
+              </th>
               <th scope="col" class="px-6 py-3">
                 Date
               </th>
@@ -226,11 +343,52 @@ const WagesList = () => {
           <tbody>
             {currentItems?.map((item) => (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={item._id}>
+                   <td className="px-6 py-4">
+                    <input
+                      type="checkbox"
+                      className='w-5 h-5'
+                      checked={selectedItems.includes(item._id)}
+                      onChange={() => handleSelectOne(item._id)}
+                    />
+                  </td>
+             <td className="px-6 py-4">
+  {(() => {
+    // Get raw date strings
+    const chooseDateRaw = item?.chooseDate?.trim();
+    const joinDateRaw = item?.joinDate?.trim();
+
+    // Helper function to check if date string is valid after parsing
+    const isValidDateStr = (dateStr) => {
+      if (!dateStr || dateStr.toLowerCase() === "invalid date") return false;
+      const parsed = parseDateString(dateStr);
+      return parsed && !isNaN(parsed);
+    };
+
+    let dateStrToUse = "";
+
+    if (isValidDateStr(chooseDateRaw)) {
+      dateStrToUse = chooseDateRaw;
+    } else if (isValidDateStr(joinDateRaw)) {
+      dateStrToUse = joinDateRaw;
+    } else {
+      return "N/A";
+    }
+
+    const parsedDate = parseDateString(dateStrToUse);
+    if (!parsedDate) return "N/A";
+
+    return parsedDate.toISOString().split("T")[0];
+  })()}
+</td>
+
+
+
+
+
+
+
                 <td className="px-6 py-4">
-                  {item?.chooseDate?.split("T")[0] || "N/A"}
-                </td>
-                <td className="px-6 py-4">
-                  {item.employeeName || "N/A"}
+                    {item.employeeName || item.empName || "N/A"}
                 </td>
                 <td className="px-6 py-4">
                   {item.familyMember || "N/A"}

@@ -40,6 +40,7 @@ import ExperienceDetail from "./Experience/ExperienceDetail";
 import ExperienceLetterForm from "./Experience/ExperienceLetterForm";
 import ExperienceLetter from "./FinalInvoice/ExperienceLetter";
 import LetterDetail from "./LetterHead/LetterDetail";
+import Importlist from "./importcsv/importlist";
 import LetterForm from "./LetterHead/LetterForm";
 import LetterPdf from "./FinalInvoice/LetterPdf";
 
@@ -108,6 +109,7 @@ const App = () => {
           <Route path="/experience-form" element={<ProtectedRoute><ExperienceLetterForm /></ProtectedRoute>} />
           {/* Letter head title */}
           <Route path="/letterHead-title" element={<ProtectedRoute><LetterDetail /></ProtectedRoute>} />
+          <Route path="/import-csv" element={<ProtectedRoute><Importlist /></ProtectedRoute>} />
           <Route path="/letterHead-form" element={<ProtectedRoute><LetterForm /></ProtectedRoute>} />
           <Route path="/letterHead-form/:id" element={<ProtectedRoute><LetterForm /></ProtectedRoute>} />
           <Route path="/letterHead-pdf/:id" element={<ProtectedRoute><LetterPdf /></ProtectedRoute>} />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../Pagination/Pagination";
-const ClientList = () => {
+const ClientList = ({ searchQuery }) => {
   const [data, setData] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,22 +21,53 @@ const ClientList = () => {
     setCurrentPage(1); // reset to page 1 when items per page changes
   };
   const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-    const headers = {
-      Authorization: `Bearer ${token}`, // Use the token from localStorage
-      "Content-Type": "application/json", // Add any other headers if needed
+
+useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      // Choose URL based on searchQuery presence
+      let apiUrl;
+      if (searchQuery && searchQuery.trim() !== "") {
+        apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/search/client`;
+      } else {
+        apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-clients`;
+      } 
+
+      try {
+        const response = await axios.get(apiUrl, {
+          headers,
+          params: searchQuery && searchQuery.trim() !== "" ? { keyword: searchQuery } : {},
+        });
+        let empData = [];
+
+          if (searchQuery && searchQuery.trim() !== "") {
+            // search API returns inside results
+            empData = response.data.results || [];
+          } else {
+            // get-empData API returns inside data
+            empData = response.data.data || [];
+          }
+         setData(empData.reverse());
+        setCurrentPage(1); // reset to page 1 on data reload
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
     };
-    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-clients`;
-    axios
-      .get(apiUrl, { headers })
-      .then((response) => {
-        setData(response.data.data.reverse());
-      })
-      .catch((error) => {
-        console.error("Error fetching invoices:", error);
-      });
-  }, []);
+
+    // Optional debounce to avoid too many calls while typing
+    const debounceTimeout = setTimeout(() => {
+      fetchData();
+    }, 300);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [searchQuery]);
+
+
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token"); // Retrieve the token from localStorage

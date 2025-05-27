@@ -69,6 +69,11 @@ const NAV_DATA = [
     title: "miscellaneous",
     link: "letterHead-title",
     Icon: ClientPlusIcon,
+  },
+  {
+    title: "Upload Excel",
+    link: "import-csv",
+    Icon: ClientPlusIcon,
   }
 ];
 
