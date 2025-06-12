@@ -39,7 +39,7 @@
 }
 
 .appoint_section_new p {
-  font-size: 16px !important;
+  font-size: 12px !important;
 }
 
 .appoint_section_new-rs p {
@@ -47,12 +47,12 @@
   line-height: 2;
 }
 
-.appoint_section_new .form-head {
+.appoint_section_new  {
   font-size: 20px;
-  margin-bottom: 25px;
+  /* margin-bottom: 25px; */
 }
 
-.appoint_section_new-rs .form-head {
+.appoint_section_new-rs{
   font-size: 20px;
   margin-bottom: 25px;
 }
@@ -921,7 +921,7 @@ tbody.table-body {
 }
 
 .appoint_section_new p {
-  font-size: 14px;
+  font-size: 12px;
   line-height: 22px;
 }
 
