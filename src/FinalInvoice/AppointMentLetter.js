@@ -58,7 +58,7 @@ const AppointMentLetter = () => {
         className="invoice"
         id="PDF_Download"
         ref={targetRef}
-        style={{ height: "1290px" }}
+        style={{ height: "1380px" }}
       >
         <img
           src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
@@ -67,15 +67,16 @@ const AppointMentLetter = () => {
         />
         {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
         {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
-        <div style={{ height: "60px" }}>
+        <div style={{ height: "80px" }}>
           <img
             src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
             // className="com_logo"
             alt="Company Logo"
             style={{
-              width: "100px",
-              height: "90px",
+              width: "180px",
+              height: "100px",
               display: "flex",
+              marginBottom:"20px",
               justifyContent: "center",
               alignItems: "center",
               marginLeft: "auto",
@@ -84,7 +85,7 @@ const AppointMentLetter = () => {
           />
           {/* <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} /> */}
         </div>
-        <div className="appoint_section_new">
+        <div className="appoint_section_new" style={{ height: "1200px" }}>
           <div
             style={{
               fontWeight: "bold",
