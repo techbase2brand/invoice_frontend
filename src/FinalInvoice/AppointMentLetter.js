@@ -37,11 +37,16 @@ const AppointMentLetter = () => {
   };
   const companyLogo = data?.companyLogo;
   const goBack = () => {
-    navigate(-1); 
+    navigate(-1);
   };
   return (
     <div>
-      <button style={{fontSize:"40px",marginRight:"20px"}} onClick={goBack}>←</button>
+      <button
+        style={{ fontSize: "40px", marginRight: "20px" }}
+        onClick={goBack}
+      >
+        ←
+      </button>
       <button
         type="button"
         class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
@@ -49,7 +54,12 @@ const AppointMentLetter = () => {
       >
         Pdf Download
       </button>
-      <div className="invoice" id="PDF_Download" ref={targetRef}>
+      <div
+        className="invoice"
+        id="PDF_Download"
+        ref={targetRef}
+        style={{ height: "1290px" }}
+      >
         <img
           src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
           className="logo_invoice_overlap"
@@ -57,17 +67,33 @@ const AppointMentLetter = () => {
         />
         {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
         {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
-        <div className="appoinment_logo">
+        <div style={{ height: "60px" }}>
           <img
             src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
-            className="com_logo"
+            // className="com_logo"
             alt="Company Logo"
-            style={{width:"250px", height:'140px', display:"flex",justifyContent:"center", alignItems:"center", marginLeft:"auto", marginRight:"auto",}}
+            style={{
+              width: "100px",
+              height: "90px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
           />
           {/* <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} /> */}
         </div>
         <div className="appoint_section_new">
-          <div className="form-head">
+          <div
+            style={{
+              fontWeight: "bold",
+              display: "flex",
+              fontSize: "16px",
+              marginBottom: "5px",
+              justifyContent: "space-between",
+            }}
+          >
             <span>Ref No. {data.refNo}</span>
             <b
               style={{
@@ -90,7 +116,10 @@ const AppointMentLetter = () => {
               {data.appointmentDate ? formatDate(data.appointmentDate) : ""}
             </span>
           </div>
-          <p dangerouslySetInnerHTML={{ __html: data.appointMentData }} />
+          <p
+            style={{ fontSize: "12px" }}
+            dangerouslySetInnerHTML={{ __html: data.appointMentData }}
+          />
         </div>
         <div
           style={{
@@ -158,7 +187,7 @@ const AppointMentLetter = () => {
                       : companyLogo ===
                         "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
                       ? "www.b2bcampus.com"
-                       : companyLogo== "/uploads/31-31.png"
+                      : companyLogo == "/uploads/31-31.png"
                       ? "https://www.base2brand.com"
                       : "www.Aashuenterprises.com"}
                   </p>
@@ -171,7 +200,7 @@ const AppointMentLetter = () => {
                       : companyLogo ===
                         "/uploads/Campus-logo-design-Trademark-1024x334 1.png"
                       ? "hello@base2brand.com"
-                        : companyLogo== "/uploads/31-31.png"
+                      : companyLogo == "/uploads/31-31.png"
                       ? "hello@base2brand.com"
                       : "hello@Aashuenterprises.com"}
                   </p>
