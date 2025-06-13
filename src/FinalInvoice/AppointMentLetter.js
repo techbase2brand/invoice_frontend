@@ -58,7 +58,7 @@ const AppointMentLetter = () => {
         className="invoice"
         id="PDF_Download"
         ref={targetRef}
-        style={{ height: "1380px" }}
+        style={{ height: "1360px" }}
       >
         <img
           src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
@@ -85,7 +85,7 @@ const AppointMentLetter = () => {
           />
           {/* <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} /> */}
         </div>
-        <div className="appoint_section_new" style={{ height: "1200px" }}>
+        <div className="appoint_section_new" style={{ height: "1190px" }}>
           <div
             style={{
               fontWeight: "bold",
