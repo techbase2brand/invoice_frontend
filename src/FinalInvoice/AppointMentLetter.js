@@ -76,7 +76,7 @@ const AppointMentLetter = () => {
               width: "180px",
               height: "100px",
               display: "flex",
-              marginBottom:"20px",
+              marginBottom: "20px",
               justifyContent: "center",
               alignItems: "center",
               marginLeft: "auto",
