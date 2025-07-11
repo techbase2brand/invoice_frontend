@@ -34,9 +34,9 @@
   margin-top: 10px;
 }
 
-.appoint_section_new-rs {
+/* .appoint_section_new-rs {
   margin-top: 25px;
-}
+} */
 
 .appoint_section_new p {
   font-size: 12px !important;
@@ -54,7 +54,7 @@
 
 .appoint_section_new-rs{
   font-size: 20px;
-  margin-bottom: 25px;
+  /* margin-bottom: 25px; */
 }
 
 .sgst_per p {
@@ -587,8 +587,8 @@ td {
 }
 
 .main-footer-rs {
-  position: absolute;
-  bottom: 0;
+  /* position: absolute;
+  bottom: 0; */
   /* top: 0px; */
   width: 100%;
   /* background: #042da0; */
@@ -611,7 +611,7 @@ td {
 
 .middle {
   padding: 17px 12px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .address {
@@ -627,7 +627,7 @@ td {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 p {
@@ -786,7 +786,7 @@ p {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 1164px;
+  min-height: 1220px;
   /* overflow: auto; */
 }
 

@@ -51,7 +51,7 @@ const ExperienceLetter = () => {
         className="invoice"
         id="PDF_Download"
         ref={targetRef}
-        style={{ paddingTop: "2rem",height: '1172px' }}
+        style={{ paddingTop: "2rem",  }}
       >
         {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
         {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
