@@ -61,7 +61,7 @@ const AppointMentLetter = () => {
         style={{ height: "1360px" }}
       >
         <img
-          src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
+          src={`https://invoicebackend.base2brand.com${data?.companyLogo}`}
           className="logo_invoice_overlap"
           alt="Company Logo"
         />
@@ -69,7 +69,7 @@ const AppointMentLetter = () => {
         {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
         <div style={{ height: "80px" }}>
           <img
-            src={`https://invoice-backend.base2brand.com${data?.companyLogo}`}
+            src={`https://invoicebackend.base2brand.com${data?.companyLogo}`}
             // className="com_logo"
             alt="Company Logo"
             style={{

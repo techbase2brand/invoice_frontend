@@ -77,7 +77,7 @@ const LetterPdf = () => {
                 {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
                 {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
                 <div className="appoinment_logo">
-                    <img src={`https://invoice-backend.base2brand.com${selectedLogo}`} alt="Company Logo" />
+                    <img src={`https://invoicebackend.base2brand.com${selectedLogo}`} alt="Company Logo" />
                 </div>
                 <div className='appoint_section_new'>
                     <div className="form-head">

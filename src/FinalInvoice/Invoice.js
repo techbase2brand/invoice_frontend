@@ -152,14 +152,14 @@ const Invoice = () => {
       <div className="invoice" id="PDF_Download" ref={targetRef}>
         <img
           className="logo_invoice_overlap"
-          src={`https://invoice-backend.base2brand.com${formData.companylogo}`}
+          src={`https://invoicebackend.base2brand.com${formData.companylogo}`}
         />
         {/* <div style={{marginTop:"200px" }} className="w-full header_invoice"></div> */}
         {/* <img src="/header_invoice.png" className="w-full header_invoice" /> */}
         <div className="appoinment_logo">
           {/* <img src="/logo-svg-01.png" alt="Company Logo" /> */}
           <img
-            src={`https://invoice-backend.base2brand.com${formData.companylogo}`}
+            src={`https://invoicebackend.base2brand.com${formData.companylogo}`}
             alt="Company Logo"
           />
           {/* <p className="form-num">{formData.invoice}</p> */}
@@ -443,7 +443,7 @@ const Invoice = () => {
                   <span>
                     <img
                       className="sign_mam"
-                      src={`https://invoice-backend.base2brand.com${formData.signature}`}
+                      src={`https://invoicebackend.base2brand.com${formData.signature}`}
                       alt="signature"
                       style={{
                         width: "80px",

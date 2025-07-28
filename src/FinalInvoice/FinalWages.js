@@ -91,7 +91,7 @@ const FinalWages = () => {
       <div className="invoice" id="PDF_Download" ref={targetRef}>
         <div className="wages_header">
           <img
-            src={`https://invoice-backend.base2brand.com${formData.companylogo}`}
+            src={`https://invoicebackend.base2brand.com${formData.companylogo}`}
             className="com_logo"
             alt="Company Logo"
           />
@@ -117,7 +117,7 @@ const FinalWages = () => {
         <div className="p-5 w-full">
           <img
             className="logo_invoice_overlap width_add"
-            src={`https://invoice-backend.base2brand.com${formData.companylogo}`}
+            src={`https://invoicebackend.base2brand.com${formData.companylogo}`}
           />
 
           <div className="salary-slip">

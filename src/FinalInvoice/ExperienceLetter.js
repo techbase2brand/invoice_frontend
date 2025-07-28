@@ -56,7 +56,7 @@ const ExperienceLetter = () => {
         {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
         {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
         <img
-          src={`https://invoice-backend.base2brand.com${data?.companylogo}`}
+          src={`https://invoicebackend.base2brand.com${data?.companylogo}`}
           className="logo_invoice_overlap"
           alt="Company Logo"
         />
@@ -100,7 +100,7 @@ const ExperienceLetter = () => {
               </p>
             </div>
             <img
-              src={`https://invoice-backend.base2brand.com${data.companylogo}`}
+              src={`https://invoicebackend.base2brand.com${data.companylogo}`}
               alt="Company Logo"
               style={{ width: "auto", height: "80px" }}
             />
