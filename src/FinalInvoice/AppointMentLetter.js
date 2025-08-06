@@ -61,20 +61,23 @@ const AppointMentLetter = () => {
         style={{ height: "1360px" }}
       >
         <img
-          src={`https://invoicebackend.base2brand.com${data?.companyLogo}`}
+          // src={`https://invoicebackend.base2brand.com${data?.companyLogo}`}
+          src="/images.png"
           className="logo_invoice_overlap"
           alt="Company Logo"
+          style={{width:"100%"}}
         />
         {/* <img className='logo_invoice_overlap' src='/b2b-icon.png' /> */}
         {/* <img src='/header_invoice.png' className='w-full header_invoice' /> */}
         <div style={{ height: "80px" }}>
           <img
-            src={`https://invoicebackend.base2brand.com${data?.companyLogo}`}
+            // src={`https://invoicebackend.base2brand.com${data?.companyLogo}`}
+            src="/images.png"
             // className="com_logo"
             alt="Company Logo"
             style={{
-              width: "180px",
-              height: "100px",
+              width: "280px",
+              height: "120px",
               display: "flex",
               marginBottom: "20px",
               justifyContent: "center",
@@ -125,7 +128,7 @@ const AppointMentLetter = () => {
         <div
           style={{
             width: "100%",
-            marginTop: "10px",
+            // marginTop: "10px",
             background: `${
               companyLogo === "/uploads/SAI LOGO copy [Recovered]-01 2.png"
                 ? "#ef7e50"
