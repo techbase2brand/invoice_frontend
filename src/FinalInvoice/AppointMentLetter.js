@@ -79,7 +79,7 @@ const AppointMentLetter = () => {
               width: "280px",
               height: "120px",
               display: "flex",
-              marginBottom: "20px",
+              // marginBottom: "20px",
               justifyContent: "center",
               alignItems: "center",
               marginLeft: "auto",
@@ -88,7 +88,7 @@ const AppointMentLetter = () => {
           />
           {/* <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} /> */}
         </div>
-        <div className="appoint_section_new" style={{ height: "1190px" }}>
+        <div className="appoint_section_new" style={{ height: "1186px" }}>
           <div
             style={{
               fontWeight: "bold",
