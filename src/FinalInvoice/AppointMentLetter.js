@@ -39,6 +39,19 @@ const AppointMentLetter = () => {
   const goBack = () => {
     navigate(-1);
   };
+
+  const handleDownloadPDF = () => {
+    // Generate the canvas for the content
+    html2canvas(targetRef.current, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF();
+
+      // Ensure the content fits on one page
+      pdf.addImage(imgData, "PNG", 0, 0, 210, 297); // A4 page size: 210mm x 297mm
+      pdf.save("page.pdf");
+    });
+  };
+  
   return (
     <div>
       <button
@@ -50,7 +63,8 @@ const AppointMentLetter = () => {
       <button
         type="button"
         class="center_btn_ph mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-        onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
+        // onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}
+        onClick={handleDownloadPDF}
       >
         Pdf Download
       </button>
