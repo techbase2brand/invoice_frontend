@@ -88,7 +88,7 @@ const AppointMentLetter = () => {
           />
           {/* <img src="/logo-b2b.png" alt="Company Logo" style={{ width: '300px' }} /> */}
         </div>
-        <div className="appoint_section_new" style={{ height: "1186px" }}>
+        <div className="appoint_section_new" style={{ height: "1180px" }}>
           <div
             style={{
               fontWeight: "bold",
