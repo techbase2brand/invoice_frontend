@@ -1,33 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
+@import url("https://fonts.googleapis.com/css?family=Josefin+Sans");
 
 /* vietnamese */
 @font-face {
-  font-family: 'Josefin Sans';
+  font-family: "Josefin Sans";
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMlhLzTs.woff2) format('woff2');
-  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+  src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMlhLzTs.woff2)
+    format("woff2");
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1,
+    U+01AF-01B0, U+1EA0-1EF9, U+20AB;
 }
 
 /* latin-ext */
 @font-face {
-  font-family: 'Josefin Sans';
+  font-family: "Josefin Sans";
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMhhLzTs.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMhhLzTs.woff2)
+    format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* latin */
 @font-face {
-  font-family: 'Josefin Sans';
+  font-family: "Josefin Sans";
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhLw.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url(https://fonts.gstatic.com/s/josefinsans/v24/Qw3PZQNVED7rKGKxtqIqX5E-AVSJrOCfjY46_DjQbMZhLw.woff2)
+    format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
 }
 
 .appoint_section_new {
@@ -39,7 +46,8 @@
 } */
 
 .appoint_section_new p {
-  font-size: 16px !important;
+  font-size: 17px !important;
+  font-style: italic;
 }
 
 .appoint_section_new-rs p {
@@ -47,12 +55,12 @@
   line-height: 2;
 }
 
-.appoint_section_new  {
+.appoint_section_new {
   font-size: 20px;
   /* margin-bottom: 25px; */
 }
 
-.appoint_section_new-rs{
+.appoint_section_new-rs {
   font-size: 20px;
   /* margin-bottom: 25px; */
 }
@@ -111,9 +119,6 @@ span.toRange {
   padding: 10px;
   gap: 10px;
 }
-
-
-
 
 .logo.text_invoice img,
 .com_logo {
@@ -205,7 +210,6 @@ img.w-full.header_invoice {
 
 .desc_data.PDF_Desc p {
   width: 100% !important;
-
 }
 
 .task_desc p {
@@ -487,7 +491,7 @@ b.space_desc {
 h3.word_amount {
   font-size: 20px;
   margin-bottom: 2.5rem;
-  margin-top: 1rem;  
+  margin-top: 1rem;
   font-weight: 700;
 }
 
@@ -526,7 +530,6 @@ input {
   border: none;
   height: 22px;
 }
-
 
 .table-in {
   border-collapse: collapse;
@@ -593,9 +596,9 @@ td {
   width: 100%;
   /* background: #042da0; */
   background-image: url("../public/invoice_banner_appoinment.png");
-  background-size:cover;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position:0 0;
+  background-position: 0 0;
   z-index: 999;
 }
 
@@ -647,11 +650,11 @@ p {
 }
 
 .paid-row {
-  background-color: #C6F6D5;
+  background-color: #c6f6d5;
 }
 
 .unpaid-row {
-  background-color: #FECDD3;
+  background-color: #fecdd3;
 }
 
 .invoice-details_data div {
@@ -686,7 +689,6 @@ p {
 
 .invoice-details_data div label {
   font-size: 16px;
-
 }
 
 .invoice-detail p {
@@ -763,7 +765,7 @@ p {
   border-bottom: 2px solid;
 }
 
-.hide-checkbox:checked+b {
+.hide-checkbox:checked + b {
   display: none;
 }
 
@@ -801,7 +803,6 @@ p {
   min-height: 300px;
 }
 
-
 .date-range-picker {
   display: flex;
 }
@@ -836,7 +837,6 @@ p {
 
 .bold_data {
   font-weight: 700 !important;
-
 }
 
 .company-head {
@@ -861,7 +861,6 @@ p {
   border-bottom: 3px solid;
   height: 25px;
   border-right: unset !important;
-
 }
 
 .bot-border {
@@ -942,13 +941,12 @@ tbody.table-body {
 }
 
 .appoinment_logo {
-  background:"red";
+  background: "red";
   border-bottom: 1px solid #4c4c4c;
   /* margin-bottom: 15px; */
   box-shadow: 1px 3px 4px #ccc;
   padding-left: 20px;
   padding-right: 20px;
-
 }
 
 .appoint_section_new h3 {
