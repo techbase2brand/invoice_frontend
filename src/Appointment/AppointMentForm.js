@@ -168,7 +168,7 @@ const AppointMentForm = () => {
                 value={selectedLogo}
                 onChange={handleSelectChange}
               >
-                <option value="">Select Company Logo</option>
+                <option value="">Select Company</option>
                 {companyLogos.map((logo) => (
                   <option key={logo._id} value={logo.companylogo}>
                     {logo.name}
