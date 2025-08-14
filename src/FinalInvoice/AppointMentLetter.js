@@ -121,7 +121,7 @@ const AppointmentLetter = () => {
       <div className="max-w-4xl mx-auto">
         <div
           ref={targetRef}
-          className="bg-white shadow-2xl relative overflow-hidden"
+          className="bg-white shadow-2xl relative overflow-hidden appoint-letter"
           style={{ minHeight: "1200px" }}
         >
           {/* Decorative Border Elements */}
@@ -189,7 +189,7 @@ const AppointmentLetter = () => {
           {/* Main Content */}
           <div className="px-4 md:px-12 pb-2">
             <div
-              className="text-gray-700 font-normal"
+              className="text-gray-700 font-normal relative z-50"
               style={{ fontSize: "17px", lineHeight: "22px" }}
               dangerouslySetInnerHTML={{ __html: data.appointMentData }}
             />

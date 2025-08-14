@@ -1222,3 +1222,22 @@ tbody.table-body {
     width: auto !important;
   }
 }
+
+.appoint-letter {
+  position: relative;
+  min-height: 1200px;
+}
+
+.appoint-letter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('../public/images.png'); /* Path to your transparent image */
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.2; /* Adjust the opacity as needed */
+}
