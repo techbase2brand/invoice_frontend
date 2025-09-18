@@ -73,6 +73,7 @@ const ProForm = () => {
   const [companyLogos, setCompanyLogos] = useState([]);
   const [selectedLogo, setSelectedLogo] = useState("");
   const [signatures, setSignatures] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const signaturePayload = signatures.map((signature) => signature.signature);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -415,6 +416,11 @@ const ProForm = () => {
     }
   };
   const handleSubmit = () => {
+    // Prevent multiple submissions
+    if (isSubmitting) {
+      return;
+    }
+
     if (!selectedClient) {
       toast.error("Please select a client.", {
         position: "bottom-center",
@@ -451,6 +457,9 @@ const ProForm = () => {
       });
       return;
     }
+
+    // Set submitting state to true
+    setIsSubmitting(true);
     const cleanedAmounts = {};
     Object.keys(amounts).forEach((key) => {
       const isNonEmpty = Object.values(amounts[key]).some(
@@ -540,10 +549,16 @@ const ProForm = () => {
           { headers }
         )
         .then((response) => {
+          setIsSubmitting(false);
           navigate("/project-Detail");
         })
         .catch((error) => {
           console.error("Error updating form data:", error);
+          setIsSubmitting(false);
+          toast.error("Error updating form data", {
+            position: "bottom-center",
+            autoClose: 2000,
+          });
         });
     } else {
       axios
@@ -553,10 +568,12 @@ const ProForm = () => {
           { headers }
         )
         .then((response) => {
+          setIsSubmitting(false);
           navigate("/project-Detail");
         })
         .catch((error) => {
           console.error("Error submitting form data:", error);
+          setIsSubmitting(false);
           toast.error("Error submitting form data", {
             position: "bottom-center",
             autoClose: 2000,
@@ -1511,10 +1528,9 @@ const ProForm = () => {
                 </select>
               </div>
               <div className="mt-3 px-10">
-                <Button block={1} onClick={handleSubmit}>
+                <Button block={1} onClick={handleSubmit} disabled={isSubmitting}>
                   <span className="inline-block ml-2">
-                    {" "}
-                    {id ? "Update" : "Submit"}{" "}
+                    {isSubmitting ? "Processing..." : (id ? "Update" : "Submit")}
                   </span>
                 </Button>
               </div>

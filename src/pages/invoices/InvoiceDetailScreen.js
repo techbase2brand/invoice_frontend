@@ -104,47 +104,17 @@ const FormCli = () => {
     setError((prevErrors) => ({ ...prevErrors, [e.target.name]: "" }));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const formErrors = {};
-  //   const fieldsToValidate = ["trade"];
-  //   fieldsToValidate.forEach((field) => {
-  //     if (!formData[field].trim()) {
-  //       formErrors[field] = `Please add ${field}`;
-  //     }
-  //   });
-
-  //   if (Object.keys(formErrors).length > 0) {
-  //     setError(formErrors);
-  //   } else {
-  //     try {
-  //       let response;
-  //       if (id) {
-  //         response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`, formData);
-  //       } else {
-  //         response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-companyData`, formData);
-  //       }
-  //       if (response.status === 201 || response.status === 200) {
-  //         navigate("/listing")
-  //       }
-  //     } catch (error) {
-  //       console.error('Error in Axios request:', error);
-  //     }
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-    const headers = {
+    const token = localStorage.getItem("token");
+        const headers = {
       Authorization: `Bearer ${token}`, // Use the token from localStorage
       "Content-Type": "application/json", // Add any other headers if needed
     };
     const formErrors = {};
     const fieldsToValidate = ["trade"];
     fieldsToValidate.forEach((field) => {
-      // Check if formData[field] is defined before calling trim()
-      if (formData[field] && !formData[field].trim()) {
+      if (!formData[field].trim()) {
         formErrors[field] = `Please add ${field}`;
       }
     });
@@ -155,26 +125,61 @@ const FormCli = () => {
       try {
         let response;
         if (id) {
-          response = await axios.put(
-            `${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`,
-            formData,
-            { headers }
-          );
+          response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`, formData,{ headers });
         } else {
-          response = await axios.post(
-            `${process.env.REACT_APP_API_BASE_URL}/api/add-companyLogo`,
-            logo,
-            { headers }
-          );
+          response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-companyData`, formData,{ headers });
         }
         if (response.status === 201 || response.status === 200) {
-          navigate("/listing");
+          navigate("/listing")
         }
       } catch (error) {
-        console.error("Error in Axios request:", error);
+        console.error('Error in Axios request:', error);
       }
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+  //   const headers = {
+  //     Authorization: `Bearer ${token}`, // Use the token from localStorage
+  //     "Content-Type": "application/json", // Add any other headers if needed
+  //   };
+  //   const formErrors = {};
+  //   const fieldsToValidate = ["trade"];
+  //   fieldsToValidate.forEach((field) => {
+  //     // Check if formData[field] is defined before calling trim()
+  //     if (formData[field] && !formData[field].trim()) {
+  //       formErrors[field] = `Please add ${field}`;
+  //     }
+  //   });
+
+  //   if (Object.keys(formErrors).length > 0) {
+  //     setError(formErrors);
+  //   } else {
+  //     try {
+  //       let response;
+  //       if (id) {
+  //         response = await axios.put(
+  //           `${process.env.REACT_APP_API_BASE_URL}/api/update-comp-data/${id}`,
+  //           formData,
+  //           { headers }
+  //         );
+  //       } else {
+  //         response = await axios.post(
+  //           `${process.env.REACT_APP_API_BASE_URL}/api/add-companyLogo`,
+  //           logo,
+  //           { headers }
+  //         );
+  //       }
+  //       if (response.status === 201 || response.status === 200) {
+  //         navigate("/listing");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error in Axios request:", error);
+  //     }
+  //   }
+  // };
 
   const goBack = () => {
     navigate(-1); 
