@@ -36,6 +36,11 @@ const NAV_DATA = [
     Icon: ClientPlusIcon,
   },
   {
+    title: "Project Cost",
+    link: "project-cost",
+    Icon: ClientPlusIcon,
+  },
+  {
     title: "Add Employee",
     link: "emp-data",
     Icon: ClientPlusIcon,
