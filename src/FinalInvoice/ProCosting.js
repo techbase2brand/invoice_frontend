@@ -457,7 +457,7 @@ console.log("advanceINRWords",advanceINRWords);
                   {subtotalINRWords}
                 </p>
                 {/* CGST */}
-                <div className="flex justify-between items-center gap-2">
+                {/* <div className="flex justify-between items-center gap-2">
                   <span className="text-slate-600 text-xs sm:text-sm">
                     CGST ({billingData.cgstper}%)
                   </span>
@@ -465,10 +465,10 @@ console.log("advanceINRWords",advanceINRWords);
                     {billingData.currency}
                     {calculations.cgst.toLocaleString()}
                   </span>
-                </div>
+                </div> */}
 
                 {/* SGST */}
-                <div className="flex justify-between items-center pb-3 sm:pb-4 border-b border-slate-200 gap-2">
+                {/* <div className="flex justify-between items-center pb-3 sm:pb-4 border-b border-slate-200 gap-2">
                   <span className="text-slate-600 text-xs sm:text-sm">
                     SGST ({billingData.sgstper}%)
                   </span>
@@ -476,10 +476,10 @@ console.log("advanceINRWords",advanceINRWords);
                     {billingData.currency}
                     {calculations.sgst.toLocaleString()}
                   </span>
-                </div>
+                </div> */}
 
                 {/* Total */}
-                <div className="flex justify-between items-center pt-2 sm:pt-3 bg-gradient-to-r from-emerald-50 to-emerald-100 p-3 sm:p-4 rounded-lg gap-2">
+                {/* <div className="flex justify-between items-center pt-2 sm:pt-3 bg-gradient-to-r from-emerald-50 to-emerald-100 p-3 sm:p-4 rounded-lg gap-2">
                   <span className="font-bold text-slate-900 text-sm sm:text-base">
                     Advance
                   </span>
@@ -490,7 +490,7 @@ console.log("advanceINRWords",advanceINRWords);
                 </div>
                 <p className="font-bold text-xs sm:text-sm text-red-600 mt-1 sm:mt-2 underline">
                   {advanceINRWords}.
-                </p>
+                </p> */}
 
                 {/* Payment Method */}
                 <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-200">

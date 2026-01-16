@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useRoutes } from "react-router-dom";
-import { defaultInputSmBlack } from "../constants/defaultStyles";
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Pagination from "../Pagination/Pagination";
+
 function Project_cost() {
-  const [invoices, setInvoices] = useState([]);
+  const [costings, setCostings] = useState([]);
   const [searchTerm, setSearchTerm] = useState(() => {
     return sessionStorage.getItem("searchTerm") || "";
   });
@@ -16,30 +16,37 @@ function Project_cost() {
   const [paymentStatus, setPaymentStatus] = useState(
     () => sessionStorage.getItem("paymentStatus") || ""
   );
+
+  // NOTE: Your new costing response doesn't have "duplicate"
+  // We keep the filter in UI (as you asked "baaki sare filter"), but it won't affect anything unless backend adds it.
   const [duplicateFilter, setDuplicateFilter] = useState(
     () => sessionStorage.getItem("duplicateFilter") || ""
   );
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+
+  const [startDate, setStartDate] = useState(() => {
+    const saved = sessionStorage.getItem("startDate");
+    return saved ? new Date(saved) : null;
+  });
+  const [endDate, setEndDate] = useState(() => {
+    const saved = sessionStorage.getItem("endDate");
+    return saved ? new Date(saved) : null;
+  });
+
   const [itemsPerPage, setItemsPerPage] = useState(50);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(invoices.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = invoices.slice(indexOfFirstItem, indexOfLastItem);
+
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortColumn, setSortColumn] = useState("");
-const Router  = useNavigate();
+
+  const Router = useNavigate();
+
+  // dropdown refs (kept as in your code)
   const [openItemId, setOpenItemId] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
   const dropdownRef = useRef(null);
 
   const handleToggleDropdown = (itemId) => {
-    if (openItemId === itemId) {
-      setOpenItemId(null);
-    } else {
-      setOpenItemId(itemId);
-    }
+    setOpenItemId(openItemId === itemId ? null : itemId);
   };
 
   useEffect(() => {
@@ -49,343 +56,88 @@ const Router  = useNavigate();
       }
     }
     document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const handleSort = (columnName) => {
-    if (sortColumn === columnName) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortColumn(columnName);
-      setSortOrder("asc");
-    }
-  };
-
-  const sortedItems = currentItems.sort((a, b) => {
-    if (sortColumn === "clientName") {
-      return sortOrder === "asc"
-        ? a.clientName.localeCompare(b.clientName)
-        : b.clientName.localeCompare(a.clientName);
-    } else if (sortColumn === "company") {
-      return sortOrder === "asc"
-        ? a.company.localeCompare(b.company)
-        : b.company.localeCompare(a.company);
-    }
-    return sortOrder === "asc"
-      ? a.clientName.localeCompare(b.clientName)
-      : b.clientName.localeCompare(a.clientName);
-  });
-
-  const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(parseInt(e.target.value));
-    setCurrentPage(1); // reset to page 1 when items per page changes
-  };
-  // const handleStartDateChange = (date) => {
-  //     setStartDate(date);
-  // };
-
-  // const handleEndDateChange = (date) => {
-  //     setEndDate(date);
-  // };
-
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
-    sessionStorage.setItem("startDate", date?.toISOString() || "");
-  };
-
-  const handleEndDateChange = (date) => {
-    setEndDate(date);
-    sessionStorage.setItem("endDate", date?.toISOString() || "");
-  };
-
-  useEffect(() => {
-    const savedStartDate = sessionStorage.getItem("startDate");
-    const savedEndDate = sessionStorage.getItem("endDate");
-
-    if (savedStartDate && savedEndDate) {
-      const start = new Date(savedStartDate);
-      const end = new Date(savedEndDate);
-      setStartDate(start);
-      setEndDate(end);
-      fetchInvoicesWithDates(start, end); // Call with actual values
-    } else {
-      fetchInvoices(); // fallback if no filter
-    }
-  }, [searchTerm, selectedDays, duplicateFilter, paymentStatus]);
-
-  const fetchInvoicesWithDates = (start, end) => {
+  // ---------- helpers ----------
+  const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
-    const headers = {
+    return {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
+  };
 
-    let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-invoices`;
-    let fromDate;
-
-    if (selectedDays) {
-      fromDate = new Date();
-      switch (selectedDays) {
-        case "7":
-          fromDate.setDate(fromDate.getDate() - 7);
-          break;
-        case "30":
-          fromDate.setMonth(fromDate.getMonth() - 1);
-          break;
-        case "90":
-          fromDate.setMonth(fromDate.getMonth() - 3);
-          break;
-        case "180":
-          fromDate.setMonth(fromDate.getMonth() - 6);
-          break;
-        case "365":
-          fromDate.setFullYear(fromDate.getFullYear() - 1);
-          break;
-      }
-      const formattedFromDate = `${fromDate
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${(fromDate.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${fromDate.getFullYear()}`;
-      apiUrl += `?fromDate=${formattedFromDate}`;
+  const computeFromDate = (days) => {
+    if (!days) return null;
+    const from = new Date();
+    switch (days) {
+      case "7":
+        from.setDate(from.getDate() - 7);
+        break;
+      case "30":
+        from.setMonth(from.getMonth() - 1);
+        break;
+      case "90":
+        from.setMonth(from.getMonth() - 3);
+        break;
+      case "180":
+        from.setMonth(from.getMonth() - 6);
+        break;
+      case "365":
+        from.setFullYear(from.getFullYear() - 1);
+        break;
+      default:
+        return null;
     }
+    return from;
+  };
 
-    if (paymentStatus) {
-      apiUrl += apiUrl.includes("?")
-        ? `&paymentStatus=${paymentStatus}`
-        : `?paymentStatus=${paymentStatus}`;
-    }
+  const normalize = (v) => (v ?? "").toString().toLowerCase();
 
-    if (start && end) {
-      const formattedStartDate = start.toISOString();
-      const formattedEndDate = end.toISOString();
-      apiUrl += apiUrl.includes("?")
-        ? `&startDate=${formattedStartDate}&endDate=${formattedEndDate}`
-        : `?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
-    }
+  // Your costing has:
+  // timestamp, clientName, companyName, email, mobileNo, currency, paymentStatus, projects[]
+  const matchSearch = (item, term) => {
+    if (!term) return true;
+    const t = term.toLowerCase();
 
-    axios
-      .get(apiUrl, { headers })
-      .then((response) => {
-        const filteredData = response?.data?.data?.filter((item) => {
-          const invoiceDate = new Date(item.selectDate);
-          const selectDate = new Date(item.selectDate);
+    const baseFields =
+      normalize(item.clientName).includes(t) ||
+      normalize(item.companyName).includes(t) ||
+      normalize(item.email).includes(t) ||
+      normalize(item.mobileNo).includes(t) ||
+      normalize(item.currency).includes(t) ||
+      normalize(item.paymentStatus).includes(t);
+
+    const projectFields = (item.projects || []).some((p) => {
+      return (
+        normalize(p.name).includes(t) ||
+        normalize(p.cost).includes(t) ||
+        normalize(p.advance).includes(t) ||
+        normalize(p.totalPending).includes(t) ||
+        normalize(p.startDate).includes(t) ||
+        normalize(p.endDate).includes(t) ||
+        (p.payments || []).some((pay) => {
           return (
-            (!searchTerm ||
-              item.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.accNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.bankNamed.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.accName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.mobileNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.tradeName
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase())) &&
-            (!selectedDays || invoiceDate >= fromDate) &&
-            (!start || invoiceDate >= start) &&
-            (!end || selectDate <= end) &&
-            (!duplicateFilter || item.duplicate === duplicateFilter)
+            normalize(pay.date).includes(t) ||
+            normalize(pay.paid).includes(t) ||
+            normalize(pay.pending).includes(t) ||
+            normalize(pay.receivedAmount).includes(t)
           );
-        });
-        setInvoices(filteredData.reverse());
-      })
-      .catch((error) => {
-        console.error("Error fetching invoices:", error);
-      });
+        })
+      );
+    });
+
+    return baseFields || projectFields;
   };
 
-  const handleResetFilters = () => {
-    setStartDate(null);
-    setEndDate(null);
-    setSearchTerm("");
-    setSelectedDays("");
-    setDuplicateFilter("");
-    setPaymentStatus("");
-    sessionStorage.removeItem("startDate");
-    sessionStorage.removeItem("endDate");
-    sessionStorage.removeItem("searchTerm");
-    sessionStorage.removeItem("selectedDays");
-    sessionStorage.removeItem("paymentStatus");
-    sessionStorage.removeItem("duplicateFilter");
-    fetchInvoicesWithDates();
-  };
-  // const handleDuplicate = (duplicateId) => {
-  //     const invoiceToDuplicate = invoices.find((item) => item._id === duplicateId);
-  //     if (invoiceToDuplicate) {
-  //         const duplicatedInvoice = { ...invoiceToDuplicate };
-  //         duplicatedInvoice.selectDate = new Date().toISOString();
-  //         axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`, duplicatedInvoice)
-  //             .then(response => {
-  //                 fetchInvoices();
-  //             })
-  //             .catch(error => {
-  //                 console.error('Error duplicating invoice:', error);
-  //             });
-  //     }
-  // };
+  // ---------- filters persistence ----------
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
     sessionStorage.setItem("searchTerm", value);
   };
-  const handleDuplicate = (duplicateId) => {
-    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-    const headers = {
-      Authorization: `Bearer ${token}`, // Use the token from localStorage
-      "Content-Type": "application/json", // Add any other headers if needed
-    };
-    const invoiceToDuplicate = invoices.find(
-      (item) => item._id === duplicateId
-    );
-    if (invoiceToDuplicate) {
-      const duplicatedInvoice = { ...invoiceToDuplicate };
-      delete duplicatedInvoice._id;
-      duplicatedInvoice.selectDate = new Date().toISOString();
-      duplicatedInvoice.duplicate = "Duplicated";
-      axios
-        .post(
-          `${process.env.REACT_APP_API_BASE_URL}/api/add-clientBank`,
-          duplicatedInvoice,
-          { headers }
-        )
-        .then((response) => {
-          fetchInvoices();
-        })
-        .catch((error) => {
-          console.error("Error duplicating invoice:", error);
-        });
-    }
-  };
 
-  const fetchInvoices = () => {
-    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-    const headers = {
-      Authorization: `Bearer ${token}`, // Use the token from localStorage
-      "Content-Type": "application/json", // Add any other headers if needed
-    };
-    let apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-invoices`;
-    let fromDate;
-    if (selectedDays) {
-      fromDate = new Date();
-      switch (selectedDays) {
-        case "7":
-          fromDate.setDate(fromDate.getDate() - 7);
-          break;
-        case "30":
-          fromDate.setMonth(fromDate.getMonth() - 1);
-          break;
-        case "90":
-          fromDate.setMonth(fromDate.getMonth() - 3);
-          break;
-        case "180":
-          fromDate.setMonth(fromDate.getMonth() - 6);
-          break;
-        case "365":
-          fromDate.setFullYear(fromDate.getFullYear() - 1);
-          break;
-        default:
-          break;
-      }
-      const formattedFromDate = `${fromDate
-        .getDate()
-        .toString()
-        .padStart(2, "0")}/${(fromDate.getMonth() + 1)
-        .toString()
-        .padStart(2, "0")}/${fromDate.getFullYear()}`;
-      apiUrl += `?fromDate=${formattedFromDate}`;
-    }
-    if (paymentStatus) {
-      apiUrl += apiUrl.includes("?")
-        ? `&paymentStatus=${paymentStatus}`
-        : `?paymentStatus=${paymentStatus}`;
-    }
-
-    // if (startDate && endDate) {
-    //     const formattedStartDate = startDate.toISOString();
-    //     const formattedEndDate = endDate.toISOString();
-    //     apiUrl += `?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
-    // }
-    // if (startDate && endDate) {
-    //     const formattedStartDate = startDate.toISOString();
-    //     const formattedEndDate = endDate.toISOString();
-    //     apiUrl += apiUrl.includes('?') ? `&startDate=${formattedStartDate}&endDate=${formattedEndDate}` : `?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
-    // }
-    // axios.get(apiUrl)
-    //     .then((response) => {
-    //         const filteredData = response?.data?.data?.filter(item => {
-    //             const invoiceDateParts = item.InvoiceDate.split('/');
-    //             const invoiceDate = new Date(`${invoiceDateParts[1]}/${invoiceDateParts[0]}/${invoiceDateParts[2]}`);
-    //             return (!searchTerm || item.clientName.toLowerCase().includes(searchTerm.toLowerCase()) || item.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //                 item.accNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //                 item.bankName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    //                 item.project.toLowerCase().includes(searchTerm.toLowerCase())) && (!selectedDays || invoiceDate >= fromDate);
-    //         });
-    //         setInvoices(filteredData.reverse());
-    //     })
-    if (startDate && endDate) {
-      const formattedStartDate = startDate.toISOString();
-      const formattedEndDate = endDate.toISOString();
-      apiUrl += apiUrl.includes("?")
-        ? `&startDate=${formattedStartDate}&endDate=${formattedEndDate}`
-        : `?startDate=${formattedStartDate}&endDate=${formattedEndDate}`;
-    }
-
-    axios
-      .get(apiUrl, { headers })
-      .then((response) => {
-        const filteredData = response?.data?.data?.filter((item) => {
-          const invoiceDate = new Date(item.selectDate);
-          const selectDate = new Date(item.selectDate);
-          return (
-            (!searchTerm ||
-              item.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.accNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.bankNamed.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.accName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.mobileNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              item.tradeName
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase())) &&
-            (!selectedDays || invoiceDate >= fromDate) &&
-            (!startDate || invoiceDate >= startDate) &&
-            (!endDate || selectDate <= endDate) &&
-            (!duplicateFilter || item.duplicate === duplicateFilter)
-          );
-        });
-        setInvoices(filteredData.reverse());
-      })
-      .catch((error) => {
-        console.error("Error fetching invoices:", error);
-      });
-  };
-
-  const handleDelete = (deleteId) => {
-    const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-    const headers = {
-      Authorization: `Bearer ${token}`, // Use the token from localStorage
-      "Content-Type": "application/json", // Add any other headers if needed
-    };
-    const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/delete-invoice/${deleteId}`;
-    axios.delete(apiUrl, { headers });
-    setInvoices(invoices.filter((item) => item._id !== deleteId));
-  };
-
-  // const handleDuplicateFilterChange = (e) => {
-  //   setDuplicateFilter(e.target.value);
-  // };
-
-  // const handleSelectChange = (e) => {
-  //   setSelectedDays(e.target.value);
-  // };
   const handleSelectChange = (e) => {
     const value = e.target.value;
     setSelectedDays(value);
@@ -403,67 +155,182 @@ const Router  = useNavigate();
     setDuplicateFilter(value);
     sessionStorage.setItem("duplicateFilter", value);
   };
-  const handleSearch = () => {
-    fetchInvoices();
+
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+    sessionStorage.setItem("startDate", date?.toISOString() || "");
   };
-  // const handlePaymentStatusChange = (e) => {
-  //   setPaymentStatus(e.target.value);
-  // };
-  const paidInvoicesLength = invoices.filter(
-    (item) => item.paymentStatus === "paid"
-  ).length;
-  const unpaidInvoicesLength = invoices.filter(
-    (item) => item.paymentStatus === "unpaid"
-  ).length;
-  const draftInvoicesLength = invoices.filter(
-    (item) => item.paymentStatus === "draft"
-  ).length;
-  const totalAUD = invoices.filter((item) => item.currency === "AUD").length;
-  const totalCAD = invoices.filter((item) => item.currency === "CAD").length;
-  const totalINR = invoices.filter((item) => item.currency === "INR").length;
-  const totalUSD = invoices.filter((item) => item.currency === "USD").length;
-  const DuplicateData = invoices.filter(
-    (item) => item.duplicate === "Duplicated" && item.paymentStatus === "paid"
-  ).length;
 
-  const totalAUDCr = invoices
-    .filter(
-      (item) =>
-        item.currency === "AUD" &&
-        item.amount !== "" &&
-        item.paymentStatus === "paid"
-    )
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
+    sessionStorage.setItem("endDate", date?.toISOString() || "");
+  };
 
-  const totalCADCr = invoices
-    .filter(
-      (item) =>
-        item.currency === "CAD" &&
-        item.amount !== "" &&
-        item.paymentStatus === "paid"
-    )
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+  // ---------- API: GET /api/get-costings ----------
+  const fetchCostings = async () => {
+    try {
+      const headers = getAuthHeaders();
 
-  const totalINRCr = invoices
-    .filter(
-      (item) =>
-        item.currency === "INR" &&
-        item.amount !== "" &&
-        item.paymentStatus === "paid"
-    )
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+      // IMPORTANT:
+      // Since you said "go ke upr filter", we apply filtering on frontend after fetching.
+      // If backend later supports query params, we can pass them too.
+      const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/get-costings`;
+      const res = await axios.get(apiUrl, { headers });
 
-  const totalUSDCr = invoices
-    .filter(
-      (item) =>
-        item.currency === "USD" &&
-        item.amount !== "" &&
-        item.paymentStatus === "paid"
-    )
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+      const rows = Array.isArray(res?.data?.data) ? res.data.data : [];
 
-  const getStatusColor = (paymentStatus) => {
-    switch (paymentStatus) {
+      // Apply filters in UI (on Go)
+      const fromDate = computeFromDate(selectedDays);
+
+      const filtered = rows.filter((item) => {
+        const ts = item.timestamp ? new Date(item.timestamp) : null;
+
+        const inSelectedDays = !fromDate || (ts && ts >= fromDate);
+        const inStart = !startDate || (ts && ts >= startDate);
+        const inEnd = !endDate || (ts && ts <= endDate);
+
+        const statusOk = !paymentStatus || item.paymentStatus === paymentStatus;
+
+        // duplicate filter not applicable here unless your costing model has duplicate field
+        const duplicateOk =
+          !duplicateFilter ||
+          (item.duplicate && item.duplicate === duplicateFilter);
+
+        const searchOk = matchSearch(item, searchTerm);
+
+        return inSelectedDays && inStart && inEnd && statusOk && duplicateOk && searchOk;
+      });
+
+      // latest first
+      filtered.sort((a, b) => {
+        const da = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+        const db = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+        return db - da;
+      });
+
+      setCostings(filtered);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Error fetching costings:", error);
+    }
+  };
+
+  // run once on mount to load initial data with saved filters
+  useEffect(() => {
+    fetchCostings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSearch = () => {
+    fetchCostings();
+  };
+
+  const handleResetFilters = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setSearchTerm("");
+    setSelectedDays("");
+    setDuplicateFilter("");
+    setPaymentStatus("");
+
+    sessionStorage.removeItem("startDate");
+    sessionStorage.removeItem("endDate");
+    sessionStorage.removeItem("searchTerm");
+    sessionStorage.removeItem("selectedDays");
+    sessionStorage.removeItem("paymentStatus");
+    sessionStorage.removeItem("duplicateFilter");
+
+    fetchCostings();
+  };
+
+  // ---------- DELETE /delete-costing/:id ----------
+  const handleDelete = async (deleteId) => {
+    try {
+      const headers = getAuthHeaders();
+      const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/delete-costing/${deleteId}`;
+      await axios.delete(apiUrl, { headers });
+
+      setCostings((prev) => prev.filter((x) => x._id !== deleteId));
+    } catch (error) {
+      console.error("Error deleting costing:", error);
+      alert("Delete failed");
+    }
+  };
+
+  // ---------- sort + pagination ----------
+  const handleSort = (columnName) => {
+    if (sortColumn === columnName) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(columnName);
+      setSortOrder("asc");
+    }
+  };
+
+  const totalPages = Math.ceil(costings.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentItems = costings.slice(indexOfFirstItem, indexOfLastItem);
+
+  const sortedItems = [...currentItems].sort((a, b) => {
+    const aClient = a.clientName || "";
+    const bClient = b.clientName || "";
+    const aCompany = a.companyName || "";
+    const bCompany = b.companyName || "";
+
+    if (sortColumn === "clientName") {
+      return sortOrder === "asc"
+        ? aClient.localeCompare(bClient)
+        : bClient.localeCompare(aClient);
+    }
+    if (sortColumn === "companyName") {
+      return sortOrder === "asc"
+        ? aCompany.localeCompare(bCompany)
+        : bCompany.localeCompare(aCompany);
+    }
+    if (sortColumn === "timestamp") {
+      const da = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+      const db = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+      return sortOrder === "asc" ? da - db : db - da;
+    }
+    // default
+    return sortOrder === "asc"
+      ? aClient.localeCompare(bClient)
+      : bClient.localeCompare(aClient);
+  });
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(parseInt(e.target.value, 10));
+    setCurrentPage(1);
+  };
+
+  // ---------- totals (based on response) ----------
+  const paidLength = costings.filter((x) => x.paymentStatus === "paid").length;
+  const unpaidLength = costings.filter((x) => x.paymentStatus === "unpaid").length;
+  const draftLength = costings.filter((x) => x.paymentStatus === "draft").length;
+
+  const sumPaidByCurrency = (cur) =>
+    costings
+      .filter((x) => x.currency === cur && x.paymentStatus === "paid")
+      .reduce((total, x) => {
+        // If you want sum of "projects cost", sum projects[].cost
+        const projectsTotal = (x.projects || []).reduce(
+          (t, p) => t + (parseFloat(p.cost) || 0),
+          0
+        );
+        return total + projectsTotal;
+      }, 0);
+
+  const totalAUDCr = sumPaidByCurrency("AUD");
+  const totalCADCr = sumPaidByCurrency("CAD");
+  const totalINRCr = sumPaidByCurrency("INR");
+  const totalUSDCr = sumPaidByCurrency("USD");
+
+  const getStatusColor = (status) => {
+    switch (status) {
       case "paid":
         return "paid-row";
       case "unpaid":
@@ -472,37 +339,47 @@ const Router  = useNavigate();
         return "";
     }
   };
+
+  // ---------- action buttons ----------
+  const onEdit = (id) => {
+    // you can change route as per your app
+    Router(`/project-cost-form/${id}`);
+  };
+
   return (
     <div>
       <div style={{ display: "flex", gap: "14px" }}>
         <p>
-          <span className="font-black"> Paid:</span> {paidInvoicesLength}
+          <span className="font-black">Paid:</span> {paidLength}
+        </p>
+        <p>
+          <span className="font-black">Unpaid:</span> {unpaidLength}
+        </p>
+        <p>
+          <span className="font-black">Draft:</span> {draftLength}
         </p>
       </div>
-      <div style={{ display: "flex", gap: "14px" }}>
+
+      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
         <p>
-          <span className="font-black">All Project Cost</span>
+          <span className="font-black">All Project Cost (Paid)</span>
         </p>
         <p>
-          {" "}
           <span className="font-black">AUD:</span> {totalAUDCr}
         </p>
         <p>
-          <span className="font-black"> CAD:</span> {totalCADCr}
+          <span className="font-black">CAD:</span> {totalCADCr}
         </p>
         <p>
-          {" "}
           <span className="font-black">INR:</span> {totalINRCr}
         </p>
         <p>
-          <span className="font-black"> USD:</span> {totalUSDCr}
+          <span className="font-black">USD:</span> {totalUSDCr}
         </p>
       </div>
-      <h1>
-        <span className="font-black">Duplicated:</span>
-        {DuplicateData}
-      </h1>
-      <div style={{ display: "flex", gap: "3px" }}>
+
+      {/* Filters */}
+      <div style={{ display: "flex", gap: "3px", flexWrap: "wrap" }}>
         <div className="client-form-wrapper">
           <input
             type="text"
@@ -510,10 +387,10 @@ const Router  = useNavigate();
             className="inputStyle"
             value={searchTerm}
             onChange={handleSearchChange}
-            // onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div>
+
+        {/* <div>
           <select
             className="inputStyle"
             value={selectedDays === "" ? "" : `${selectedDays}`}
@@ -527,6 +404,7 @@ const Router  = useNavigate();
             <option value="365">Last 1 year</option>
           </select>
         </div>
+
         <div>
           <select
             className="inputStyle"
@@ -539,6 +417,7 @@ const Router  = useNavigate();
             <option value="draft">Draft</option>
           </select>
         </div>
+
         <div>
           <select
             value={duplicateFilter}
@@ -550,6 +429,7 @@ const Router  = useNavigate();
             <option value="">Not Duplicated</option>
           </select>
         </div>
+
         <div className="date-range-picker" style={{ display: "flex" }}>
           <DatePicker
             className="inputStyle"
@@ -565,6 +445,7 @@ const Router  = useNavigate();
             placeholderText="Select end date"
           />
         </div>
+
         <button
           type="button"
           onClick={handleSearch}
@@ -572,14 +453,17 @@ const Router  = useNavigate();
         >
           Go
         </button>
+
         <button
           type="button"
           onClick={handleResetFilters}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
           Reset
-        </button>
+        </button> */}
       </div>
+
+      {/* Table */}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -588,69 +472,108 @@ const Router  = useNavigate();
                 scope="col"
                 className="px-6 py-3"
                 onClick={() => handleSort("clientName")}
+                style={{ cursor: "pointer" }}
               >
-                Client Name
-                <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                Client Name <span>{sortColumn === "clientName" ? (sortOrder === "asc" ? "▲" : "▼") : ""}</span>
               </th>
+
               <th
                 scope="col"
                 className="px-6 py-3"
-                onClick={() => handleSort("company")}
+                onClick={() => handleSort("companyName")}
+                style={{ cursor: "pointer" }}
               >
-                Company
-                <span>{sortOrder === "asc" ? "▲" : "▼"}</span>
+                Company <span>{sortColumn === "companyName" ? (sortOrder === "asc" ? "▲" : "▼") : ""}</span>
               </th>
+
               <th scope="col" className="px-6 py-3">
                 Status
               </th>
+
               <th scope="col" className="px-6 py-3">
-                Bank Name
+                Currency
               </th>
-              <th scope="col" className="px-6 py-3">
-                Acc. No
+
+              <th
+                scope="col"
+                className="px-6 py-3"
+                onClick={() => handleSort("timestamp")}
+                style={{ cursor: "pointer" }}
+              >
+                Date <span>{sortColumn === "timestamp" ? (sortOrder === "asc" ? "▲" : "▼") : ""}</span>
               </th>
-              <th>Original</th>
-              {/* <th scope="col" className="px-6 py-3">
-                                Advance Amount
-                            </th> */}
+
               <th scope="col" className="px-6 py-3">
-                Date
+                Action
               </th>
             </tr>
           </thead>
+
           <tbody>
             {sortedItems
-              .filter((item) => item.paymentStatus === "paid")
+              // .filter((item) => item.paymentStatus === "paid")
               .map((item) => (
-                // <Link to={`/proCosting/${item._id}`}>
-                  <tr
-                    className={`bg-white cursor-pointer dark:bg-gray-800 dark:border-gray-700 border-black border-b ${getStatusColor(
-                      item?.paymentStatus
-                    )}`}
-                    key={item._id}
-                    onClick={()=>Router(`/proCosting/${item._id}`)}
+                <tr
+                  className={`bg-white dark:bg-gray-800 dark:border-gray-700 border-black border-b cursor-pointer ${getStatusColor(
+                    item?.paymentStatus
+                  )}`}
+                  key={item._id}
+                  onClick={()=>Router(`/CostDetailPage/${item._id}`)}
+                >
+                  <td
+                    className="px-6 py-4 cursor-pointer"
+                    // onClick={() => Router(`/proCosting/${item._id}`)}
                   >
-                    <td className="px-6 py-4">{item.client || "N/A"}</td>
-                    <td className="px-6 py-4">{item.company || "N/A"}</td>
-                    <td className="px-6 py-4">{item.paymentStatus || "N/A"}</td>
-                    <td className="px-6 py-4">{item.bankNamed || "N/A"}</td>
-                    <td className="px-6 py-4">{item.accNo || "N/A"}</td>
-                    <td>
-                      {item.duplicate && (
-                        <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
-                          {item.duplicate}
-                        </span>
-                      )}
-                    </td>
-                    {/* <td className="px-6 py-4">{item.currency} {item.amount}</td> */}
-                    <td className="px-6 py-4">
-                      {item.selectDate ? item.selectDate.split("T")[0] : "N/A"}
-                    </td>
-                  </tr>
-                // </Link>
+                    {item.clientName || "N/A"}
+                  </td>
+
+                  <td
+                    className="px-6 py-4 cursor-pointer"
+                    // onClick={() => Router(`/proCosting/${item._id}`)}
+                  >
+                    {item.companyName || "N/A"}
+                  </td>
+
+                  <td className="px-6 py-4">{item.paymentStatus || "N/A"}</td>
+                  <td className="px-6 py-4">{item.currency || "N/A"}</td>
+
+                  <td className="px-6 py-4">
+                    {item.timestamp ? item.timestamp.split("T")[0] : "N/A"}
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEdit(item._id);
+                        }}
+                        className="px-3 py-1 rounded bg-green-600 text-white text-xs hover:bg-green-700"
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm("Are you sure you want to delete?")) {
+                            handleDelete(item._id);
+                          }
+                        }}
+                        className="px-3 py-1 rounded bg-red-600 text-white text-xs hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ))}
           </tbody>
         </table>
+
+        {/* Pagination */}
         <div className="flex justify-center mt-4">
           <button
             className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
@@ -659,21 +582,21 @@ const Router  = useNavigate();
           >
             Previous
           </button>
+
           <div className="flex items-center justify-center mx-4">
-            {currentPage} of {totalPages}
+            {currentPage} of {totalPages || 1}
           </div>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            paginate={paginate}
-          />
+
+          <Pagination currentPage={currentPage} totalPages={totalPages || 1} paginate={paginate} />
+
           <button
             className="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ml-2"
             onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={currentPage === totalPages || totalPages === 0}
           >
             Next
           </button>
+
           <div className="mb-4 ml-20">
             <label htmlFor="itemsPerPage" className="mr-2 font-medium">
               Items per page:
