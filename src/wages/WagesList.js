@@ -22,7 +22,7 @@ const WagesList = ({ refreshKey, onSelectionChange  }) => {
   const [apiData, setApiData] = useState([]);
    const prevSelectedEmployeesRef = useRef([]);
   // const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-  const combinedData = [...localCsvData, ...apiData];
+  // const combinedData = [...localCsvData, ...apiData];
 
   const currentItems = data
     .filter(item => {
