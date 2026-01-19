@@ -45,6 +45,9 @@ import LetterForm from "./LetterHead/LetterForm";
 import LetterPdf from "./FinalInvoice/LetterPdf";
 import Project_cost from "./Project_cost/Project_cost";
 import ProCosting from "./FinalInvoice/ProCosting";
+import Project_CostForm from "./Project_cost/Project_CostForm";
+import CostForm from "./Project_cost/CostForm";
+import CostDetailPage from "./Project_cost/CostDetailPage";
 
 const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
@@ -78,7 +81,10 @@ const App = () => {
           <Route path="/bank-Detail" element={<ProtectedRoute><BankForm /></ProtectedRoute>} />
           <Route path="/client-Detail" element={<ProtectedRoute><ClientForm /></ProtectedRoute>} />
           <Route path="/project-Detail" element={<ProtectedRoute><ProjectForm /></ProtectedRoute>} />
-          <Route path="/project-cost" element={<ProtectedRoute><Project_cost /></ProtectedRoute>} />
+          <Route path="/project-cost" element={<ProtectedRoute><Project_CostForm /></ProtectedRoute>} />
+          <Route path="/project-cost-form" element={<ProtectedRoute><CostForm /></ProtectedRoute>} />
+          <Route path="/project-cost-form/:id" element={<ProtectedRoute><CostForm /></ProtectedRoute>} />
+          <Route path="/CostDetailPage/:id" element={<ProtectedRoute><CostDetailPage /></ProtectedRoute>} />
           <Route path="/emp-data" element={<ProtectedRoute><EmpCreate /></ProtectedRoute>} />
           <Route path="/emp-create" element={<ProtectedRoute><EmpForm /></ProtectedRoute>} />
           <Route path="/wages-detail" element={<ProtectedRoute><CreateWages /></ProtectedRoute>} />
