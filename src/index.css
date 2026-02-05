@@ -92,6 +92,20 @@
   color: #a5a5a5;
 }
 
+/* -------- PRINT STYLES FOR COST DETAIL DOWNLOAD -------- */
+@media print {
+  /* hide whole app shell when downloading CostDetailPage */
+  body.download-cost-detail .app-wraper,
+  body.download-cost-detail #root > div {
+    display: none !important;
+  }
+
+  /* show only the printable cost detail container */
+  #cost-detail-print-root {
+    display: block !important;
+  }
+}
+
 span.toRange {
   padding: 8px;
   font-weight: 500;

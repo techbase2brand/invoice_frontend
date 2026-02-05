@@ -67,17 +67,32 @@ const CostForm = () => {
   };
 
   /* ================= HELPERS ================= */
+  const getCurrencySymbol = (curr) => {
+    const symbols = {
+      USD: "$",
+      EUR: "€",
+      GBP: "£",
+      INR: "₹",
+      AUD: "A$",
+      CAD: "C$",
+    };
+    return symbols[curr] || curr || "$";
+  };
+
+  // Remaining amount if we add one more empty payment row
+  // Here we treat ONLY payments as reductions (advance is just a label)
   const computeRemainingPending = (projectData) => {
     const cost = Number(projectData?.cost) || 0;
-    const advance = Number(projectData?.advance) || 0;
     const totalPaid = (projectData?.payments || []).reduce(
       (sum, p) => sum + (Number(p.paid) || 0),
       0
     );
-    return Math.max(cost - advance - totalPaid, 0);
+    return Math.max(cost - totalPaid, 0);
   };
 
-  const updateOnlyLastPending = (projectData) => {
+  // Calculate pending balance for each payment row individually
+  // Each row shows the remaining balance AFTER that row's payment is applied
+  const updateAllPendingBalances = (projectData) => {
     const payments = Array.isArray(projectData?.payments)
       ? [...projectData.payments]
       : [];
@@ -89,14 +104,21 @@ const CostForm = () => {
       };
     }
 
-    const lastIndex = payments.length - 1;
-    const remaining = computeRemainingPending({
-      ...projectData,
-      payments,
+    const cost = Number(projectData?.cost) || 0;
+
+    // Calculate pending for each row: cost - sum of all payments UP TO this row
+    let cumulativePaid = 0;
+    payments.forEach((payment, index) => {
+      cumulativePaid += Number(payment.paid) || 0;
+      const pending = Math.max(cost - cumulativePaid, 0);
+      payments[index] = { ...payment, pending };
     });
 
-    payments[lastIndex] = { ...payments[lastIndex], pending: remaining };
     return { ...projectData, payments };
+  };
+
+  const updateOnlyLastPending = (projectData) => {
+    return updateAllPendingBalances(projectData);
   };
 
   /* ================= FETCH CLIENTS ================= */
@@ -314,7 +336,31 @@ const CostForm = () => {
     setAmounts((prev) => {
       const projectData = prev[project];
       if (!projectData) return prev;
-      return { ...prev, [project]: updateOnlyLastPending({ ...projectData, advance: value }) };
+      
+      const advanceValue = value || "";
+      const payments = Array.isArray(projectData.payments) ? [...projectData.payments] : [];
+      
+      // Ensure at least one payment entry exists
+      if (payments.length === 0) {
+        payments.push({ paid: "", pending: 0, date: "", receivedAmount: "" });
+      }
+      
+      // Auto-populate first payment's paid amount with advance
+      // If advance is cleared, clear the first payment's paid amount too
+      if (payments.length > 0) {
+        payments[0] = { 
+          ...payments[0], 
+          paid: advanceValue // Auto-populate with advance (or empty if cleared)
+        };
+      }
+      
+      const updated = updateAllPendingBalances({
+        ...projectData,
+        advance: advanceValue,
+        payments,
+      });
+      
+      return { ...prev, [project]: updated };
     });
   };
 
@@ -326,7 +372,14 @@ const CostForm = () => {
       const payments = [...(projectData.payments || [])];
       payments[index] = { ...payments[index], [field]: value };
 
-      return { ...prev, [project]: updateOnlyLastPending({ ...projectData, payments }) };
+      // If first payment's paid amount is manually changed and advance exists, sync advance
+      if (index === 0 && field === "paid" && projectData.advance) {
+        // Don't allow manual change if advance is set - it should be synced
+        // But if user clears it, we should allow
+        return { ...prev, [project]: updateAllPendingBalances({ ...projectData, payments }) };
+      }
+
+      return { ...prev, [project]: updateAllPendingBalances({ ...projectData, payments }) };
     });
   };
 
@@ -334,11 +387,21 @@ const CostForm = () => {
   const validateForm = () => {
     if (!selectedClient) {
       toast.error("Please select a client");
+      const selectEl = document.querySelector('select[data-field="client"]');
+      if (selectEl) {
+        selectEl.focus();
+        selectEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return false;
     }
 
     if (!payStatus) {
       toast.error("Please select payment status");
+      const payStatusSelect = document.querySelector('select[data-field="paymentStatus"]');
+      if (payStatusSelect) {
+        payStatusSelect.focus();
+        payStatusSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       return false;
     }
 
@@ -353,6 +416,11 @@ const CostForm = () => {
 
       if (!projectData.cost || Number(projectData.cost) <= 0) {
         toast.error(`Project "${project}": Total cost is required`);
+        const costInput = document.querySelector(`input[data-project="${project}"][data-field="cost"]`);
+        if (costInput) {
+          costInput.focus();
+          costInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return false;
       }
 
@@ -361,6 +429,11 @@ const CostForm = () => {
         Number(projectData.advance) > Number(projectData.cost)
       ) {
         toast.error(`Project "${project}": Advance cannot exceed total cost`);
+        const advanceInput = document.querySelector(`input[data-project="${project}"][data-field="advance"]`);
+        if (advanceInput) {
+          advanceInput.focus();
+          advanceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return false;
       }
 
@@ -369,11 +442,21 @@ const CostForm = () => {
 
         if (!payment.paid || Number(payment.paid) <= 0) {
           toast.error(`Project "${project}": Payment ${i + 1} amount is required`);
+          const paidInput = document.querySelector(`input[data-project="${project}"][data-payment-index="${i}"][data-field="paid"]`);
+          if (paidInput) {
+            paidInput.focus();
+            paidInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
           return false;
         }
 
         if (!payment.date) {
           toast.error(`Project "${project}": Payment ${i + 1} date is required`);
+          const dateInput = document.querySelector(`input[data-project="${project}"][data-payment-index="${i}"][data-field="date"]`);
+          if (dateInput) {
+            dateInput.focus();
+            dateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
           return false;
         }
 
@@ -381,6 +464,11 @@ const CostForm = () => {
           toast.error(
             `Project "${project}": Payment ${i + 1} receiver amount (INR) is required`
           );
+          const receivedInput = document.querySelector(`input[data-project="${project}"][data-payment-index="${i}"][data-field="receivedAmount"]`);
+          if (receivedInput) {
+            receivedInput.focus();
+            receivedInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
           return false;
         }
       }
@@ -510,13 +598,35 @@ const CostForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 p-4 md:p-8 lg:p-12 font-sans text-slate-900">
       <div className="max-w-7xl mx-auto">
-        {/* HEADER */}
-        <div className="mb-8 md:mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-3">
-            <span className="bg-gradient-to-r from-slate-900 via-indigo-700 to-emerald-700 bg-clip-text text-transparent">
-              {id ? "Edit Project Costing" : "Project Costing"}
-            </span>
-          </h1>
+        {/* HEADER + BACK BUTTON */}
+        <div className="mb-8 md:mb-12 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/project-cost")}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-slate-300 text-slate-700 text-sm font-medium bg-white hover:bg-slate-50 hover:border-slate-400 shadow-sm transition-all duration-200"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              <span>Back to Project Costs</span>
+            </button>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+              <span className="bg-gradient-to-r from-slate-900 via-indigo-700 to-emerald-700 bg-clip-text text-transparent">
+                {id ? "Edit Project Costing" : "Project Costing"}
+              </span>
+            </h1>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -556,6 +666,7 @@ const CostForm = () => {
                   <select
                     className={inputBaseStyle}
                     value={selectedClient}
+                    data-field="client"
                     onChange={handleClientChange}
                     disabled={!!id} // optional: lock client in edit mode
                   >
@@ -637,10 +748,12 @@ const CostForm = () => {
                     value={currency}
                     onChange={(e) => setCurrency(e.target.value)}
                   >
+                    <option value="AUD">AUD - Australian Dollar</option>
                     <option value="USD">USD - US Dollar</option>
-                    <option value="EUR">EUR - Euro</option>
-                    <option value="GBP">GBP - British Pound</option>
                     <option value="INR">INR - Indian Rupee</option>
+                    <option value="CAD">CAD - Canadian Dollar</option>
+                    <option value="GBP">GBP - British Pound</option>
+                    <option value="EUR">EUR - Euro</option>
                   </select>
                 </div>
 
@@ -649,6 +762,7 @@ const CostForm = () => {
                   <select
                     className={inputBaseStyle}
                     value={payStatus}
+                    data-field="paymentStatus"
                     onChange={(e) => setPayStatus(e.target.value)}
                   >
                     <option value="">Select Status</option>
@@ -795,6 +909,8 @@ const CostForm = () => {
                                       className={`${inputBaseStyle} pl-12`}
                                       placeholder="0.00"
                                       value={amounts[project]?.cost || ""}
+                                      data-project={project}
+                                      data-field="cost"
                                       onChange={(e) =>
                                         handleCostChange(project, e.target.value)
                                       }
@@ -813,6 +929,8 @@ const CostForm = () => {
                                       className={`${inputBaseStyle} pl-12`}
                                       placeholder="0.00"
                                       value={amounts[project]?.advance || ""}
+                                      data-project={project}
+                                      data-field="advance"
                                       onChange={(e) =>
                                         handleAdvanceChange(project, e.target.value)
                                       }
@@ -902,9 +1020,13 @@ const CostForm = () => {
                                         </span>
                                         <input
                                           type="number"
-                                          className={`${inputBaseStyle} pl-12`}
+                                          className={`${inputBaseStyle} pl-12 ${idx === 0 && amounts[project]?.advance ? 'bg-slate-100 cursor-not-allowed' : ''}`}
                                           placeholder="0.00"
                                           value={payment.paid}
+                                          data-project={project}
+                                          data-payment-index={idx}
+                                          data-field="paid"
+                                          disabled={idx === 0 && amounts[project]?.advance && Number(amounts[project]?.advance) > 0 ? true : false}
                                           onChange={(e) =>
                                             handlePaymentChange(
                                               project,
@@ -946,6 +1068,9 @@ const CostForm = () => {
                                           className={`${inputBaseStyle} pl-12 bg-emerald-50 border-emerald-300 text-emerald-900 focus:bg-emerald-100`}
                                           placeholder="0.00"
                                           value={payment.receivedAmount}
+                                          data-project={project}
+                                          data-payment-index={idx}
+                                          data-field="receivedAmount"
                                           onChange={(e) =>
                                             handlePaymentChange(
                                               project,
@@ -964,6 +1089,9 @@ const CostForm = () => {
                                         type="date"
                                         className={inputBaseStyle}
                                         value={payment.date}
+                                        data-project={project}
+                                        data-payment-index={idx}
+                                        data-field="date"
                                         onChange={(e) =>
                                           handlePaymentChange(project, idx, "date", e.target.value)
                                         }
