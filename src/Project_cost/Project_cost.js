@@ -101,34 +101,11 @@ function Project_cost() {
     if (!term) return true;
     const t = term.toLowerCase();
 
-    const baseFields =
+    // Search only by client name (and company as helper)
+    return (
       normalize(item.clientName).includes(t) ||
-      normalize(item.companyName).includes(t) ||
-      normalize(item.email).includes(t) ||
-      normalize(item.mobileNo).includes(t) ||
-      normalize(item.currency).includes(t) ||
-      normalize(item.paymentStatus).includes(t);
-
-    const projectFields = (item.projects || []).some((p) => {
-      return (
-        normalize(p.name).includes(t) ||
-        normalize(p.cost).includes(t) ||
-        normalize(p.advance).includes(t) ||
-        normalize(p.totalPending).includes(t) ||
-        normalize(p.startDate).includes(t) ||
-        normalize(p.endDate).includes(t) ||
-        (p.payments || []).some((pay) => {
-          return (
-            normalize(pay.date).includes(t) ||
-            normalize(pay.paid).includes(t) ||
-            normalize(pay.pending).includes(t) ||
-            normalize(pay.receivedAmount).includes(t)
-          );
-        })
-      );
-    });
-
-    return baseFields || projectFields;
+      normalize(item.companyName).includes(t)
+    );
   };
 
   // ---------- filters persistence ----------
@@ -167,7 +144,8 @@ function Project_cost() {
   };
 
   // ---------- API: GET /api/get-costings ----------
-  const fetchCostings = async () => {
+  // accepts optional overrides so reset ke time fresh filters se call kar saken
+  const fetchCostings = async (overrides = {}) => {
     try {
       const headers = getAuthHeaders();
 
@@ -179,24 +157,55 @@ function Project_cost() {
 
       const rows = Array.isArray(res?.data?.data) ? res.data.data : [];
 
+      // Effective filters: state se, ya overrides se
+      const effSelectedDays =
+        overrides.selectedDays !== undefined ? overrides.selectedDays : selectedDays;
+      const effStartDate =
+        overrides.startDate !== undefined ? overrides.startDate : startDate;
+      const effEndDate =
+        overrides.endDate !== undefined ? overrides.endDate : endDate;
+      const effPaymentStatus =
+        overrides.paymentStatus !== undefined ? overrides.paymentStatus : paymentStatus;
+      const effDuplicateFilter =
+        overrides.duplicateFilter !== undefined ? overrides.duplicateFilter : duplicateFilter;
+      const effSearchTerm =
+        overrides.searchTerm !== undefined ? overrides.searchTerm : searchTerm;
+
+      // Helper: date-only string "YYYY-MM-DD" WITHOUT timezone shift
+      const toDateOnly = (d) => {
+        if (!d) return null;
+        const dt = new Date(d);
+        const year = dt.getFullYear();
+        const month = String(dt.getMonth() + 1).padStart(2, "0");
+        const day = String(dt.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
       // Apply filters in UI (on Go)
-      const fromDate = computeFromDate(selectedDays);
+      const fromDate = computeFromDate(effSelectedDays);
+      const fromDateStr = fromDate ? toDateOnly(fromDate) : null;
+      const startStr = effStartDate ? toDateOnly(effStartDate) : null;
+      const endStr = effEndDate ? toDateOnly(effEndDate) : null;
 
       const filtered = rows.filter((item) => {
-        const ts = item.timestamp ? new Date(item.timestamp) : null;
+        const tsStr = item.timestamp
+          ? item.timestamp.split("T")[0]
+          : null;
 
-        const inSelectedDays = !fromDate || (ts && ts >= fromDate);
-        const inStart = !startDate || (ts && ts >= startDate);
-        const inEnd = !endDate || (ts && ts <= endDate);
+        const inSelectedDays =
+          !fromDateStr || (tsStr && tsStr >= fromDateStr);
+        const inStart = !startStr || (tsStr && tsStr >= startStr);
+        const inEnd = !endStr || (tsStr && tsStr <= endStr);
 
-        const statusOk = !paymentStatus || item.paymentStatus === paymentStatus;
+        const statusOk =
+          !effPaymentStatus || item.paymentStatus === effPaymentStatus;
 
         // duplicate filter not applicable here unless your costing model has duplicate field
         const duplicateOk =
-          !duplicateFilter ||
-          (item.duplicate && item.duplicate === duplicateFilter);
+          !effDuplicateFilter ||
+          (item.duplicate && item.duplicate === effDuplicateFilter);
 
-        const searchOk = matchSearch(item, searchTerm);
+        const searchOk = matchSearch(item, effSearchTerm);
 
         return inSelectedDays && inStart && inEnd && statusOk && duplicateOk && searchOk;
       });
@@ -240,7 +249,15 @@ function Project_cost() {
     sessionStorage.removeItem("paymentStatus");
     sessionStorage.removeItem("duplicateFilter");
 
-    fetchCostings();
+    // fresh filters (all cleared) se data laao
+    fetchCostings({
+      startDate: null,
+      endDate: null,
+      searchTerm: "",
+      selectedDays: "",
+      paymentStatus: "",
+      duplicateFilter: "",
+    });
   };
 
   // ---------- DELETE /delete-costing/:id ----------
@@ -307,7 +324,36 @@ function Project_cost() {
     setCurrentPage(1);
   };
 
-  // ---------- totals (based on response) ----------
+  // ---------- row + grand totals (based on filtered response) ----------
+  const getRowTotals = (item) => {
+    let totalCost = 0;
+    let totalPaid = 0;
+    let totalReceived = 0;
+
+    (item.projects || []).forEach((p) => {
+      totalCost += parseFloat(p.cost) || 0;
+
+      (p.payments || []).forEach((pay) => {
+        totalPaid += parseFloat(pay.paid) || 0;
+        totalReceived += parseFloat(pay.receivedAmount) || 0;
+      });
+    });
+
+    return { totalCost, totalPaid, totalReceived };
+  };
+
+  const grandTotals = costings.reduce(
+    (acc, item) => {
+      const { totalCost, totalPaid, totalReceived } = getRowTotals(item);
+      acc.totalCost += totalCost;
+      acc.totalPaid += totalPaid;
+      acc.totalReceived += totalReceived;
+      return acc;
+    },
+    { totalCost: 0, totalPaid: 0, totalReceived: 0 }
+  );
+
+  // ---------- header badges ----------
   const paidLength = costings.filter((x) => x.paymentStatus === "paid").length;
   const unpaidLength = costings.filter((x) => x.paymentStatus === "unpaid").length;
   const draftLength = costings.filter((x) => x.paymentStatus === "draft").length;
@@ -340,6 +386,95 @@ function Project_cost() {
     }
   };
 
+  // ---------- download single costing as CSV ----------
+  const downloadCostingAsCSV = (item) => {
+    if (!item) return;
+
+    const rows = [];
+
+    // summary block
+    rows.push(["Client Name", item.clientName || ""]);
+    rows.push(["Company", item.companyName || ""]);
+    rows.push(["Email", item.email || ""]);
+    rows.push(["Phone", item.mobileNo || ""]);
+    rows.push(["Currency", item.currency || ""]);
+    rows.push(["Payment Status", item.paymentStatus || ""]);
+    rows.push([
+      "Date",
+      item.timestamp ? item.timestamp.split("T")[0] : "",
+    ]);
+    rows.push([]);
+
+    // header for project + payments
+    rows.push([
+      "Project Name",
+      "Start Date",
+      "End Date",
+      "Total Cost",
+      "Advance",
+      "Payment Date",
+      `Paid Amount (${item.currency || ""})`,
+      `Pending (${item.currency || ""})`,
+      "Received Amount (INR)",
+    ]);
+
+    (item.projects || []).forEach((project) => {
+      const payments =
+        project.payments && project.payments.length
+          ? project.payments
+          : [
+              {
+                date: "",
+                paid: "",
+                pending: "",
+                receivedAmount: "",
+              },
+            ];
+
+      payments.forEach((payment) => {
+        rows.push([
+          project.name || "",
+          project.startDate || "",
+          project.endDate || "",
+          project.cost || "",
+          project.advance || "",
+          payment.date || "",
+          payment.paid || "",
+          payment.pending || "",
+          payment.receivedAmount || "",
+        ]);
+      });
+    });
+
+    const csvContent = rows
+      .map((cols) =>
+        cols
+          .map((v) =>
+            `"${(v ?? "")
+              .toString()
+              .replace(/"/g, '""')}"`
+          )
+          .join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob([csvContent], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const fileName = `project-cost-${
+      (item.clientName || "client").replace(/\s+/g, "-")
+    }-${item.timestamp ? item.timestamp.split("T")[0] : ""}.csv`;
+
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // ---------- action buttons ----------
   const onEdit = (id) => {
     // you can change route as per your app
@@ -348,7 +483,7 @@ function Project_cost() {
 
   return (
     <div>
-      <div style={{ display: "flex", gap: "14px" }}>
+      <div style={{ display: "flex", gap: "14px", alignItems: "center", flexWrap: "wrap" }}>
         <p>
           <span className="font-black">Paid:</span> {paidLength}
         </p>
@@ -360,7 +495,7 @@ function Project_cost() {
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", marginTop: "8px" }}>
         <p>
           <span className="font-black">All Project Cost (Paid)</span>
         </p>
@@ -376,10 +511,19 @@ function Project_cost() {
         <p>
           <span className="font-black">USD:</span> {totalUSDCr}
         </p>
+        <p>
+          <span className="font-black">Total Cost:</span> {grandTotals.totalCost}
+        </p>
+        <p>
+          <span className="font-black">Paid Amount:</span> {grandTotals.totalPaid}
+        </p>
+        <p>
+          <span className="font-black">Received INR:</span> {grandTotals.totalReceived}
+        </p>
       </div>
 
       {/* Filters */}
-      <div style={{ display: "flex", gap: "3px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", alignItems: "center", marginTop: "10px" }}>
         <div className="client-form-wrapper">
           <input
             type="text"
@@ -390,66 +534,30 @@ function Project_cost() {
           />
         </div>
 
-        {/* <div>
-          <select
-            className="inputStyle"
-            value={selectedDays === "" ? "" : `${selectedDays}`}
-            onChange={handleSelectChange}
-          >
-            <option value="">Select date range</option>
-            <option value="7">Last 1 week</option>
-            <option value="30">Last 1 month</option>
-            <option value="90">Last 3 months</option>
-            <option value="180">Last 6 months</option>
-            <option value="365">Last 1 year</option>
-          </select>
-        </div>
-
-        <div>
-          <select
-            className="inputStyle"
-            value={paymentStatus}
-            onChange={handlePaymentStatusChange}
-          >
-            <option value="">Payment status</option>
-            <option value="paid">Paid</option>
-            <option value="unpaid">Unpaid</option>
-            <option value="draft">Draft</option>
-          </select>
-        </div>
-
-        <div>
-          <select
-            value={duplicateFilter}
-            onChange={handleDuplicateFilterChange}
-            className="inputStyle"
-          >
-            <option value="">Filter by Duplicate Status</option>
-            <option value="Duplicated">Duplicated</option>
-            <option value="">Not Duplicated</option>
-          </select>
-        </div>
-
-        <div className="date-range-picker" style={{ display: "flex" }}>
+        <div className="date-range-picker" style={{ display: "flex", alignItems: "center" }}>
           <DatePicker
             className="inputStyle"
             selected={startDate}
             onChange={handleStartDateChange}
-            placeholderText="Select start date"
+            placeholderText="Start date"
+            style={{ color: "#000", fontWeight: 500 }}
           />
-          <span className="toRange">to</span>
+          <span className="toRange" style={{ marginInline: "4px" }}>
+            to
+          </span>
           <DatePicker
             className="inputStyle"
             selected={endDate}
             onChange={handleEndDateChange}
-            placeholderText="Select end date"
+            placeholderText="End date"
+            style={{ color: "#000", fontWeight: 500 }}
           />
         </div>
 
         <button
           type="button"
           onClick={handleSearch}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
           Go
         </button>
@@ -457,10 +565,10 @@ function Project_cost() {
         <button
           type="button"
           onClick={handleResetFilters}
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+          className="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
         >
           Reset
-        </button> */}
+        </button>
       </div>
 
       {/* Table */}
@@ -492,6 +600,18 @@ function Project_cost() {
 
               <th scope="col" className="px-6 py-3">
                 Currency
+              </th>
+
+              <th scope="col" className="px-6 py-3">
+                Total Cost
+              </th>
+
+              <th scope="col" className="px-6 py-3">
+                Paid Amount
+              </th>
+
+              <th scope="col" className="px-6 py-3">
+                Received (INR)
               </th>
 
               <th
@@ -537,6 +657,17 @@ function Project_cost() {
                   <td className="px-6 py-4">{item.paymentStatus || "N/A"}</td>
                   <td className="px-6 py-4">{item.currency || "N/A"}</td>
 
+                  {(() => {
+                    const { totalCost, totalPaid, totalReceived } = getRowTotals(item);
+                    return (
+                      <>
+                        <td className="px-6 py-4">{totalCost}</td>
+                        <td className="px-6 py-4">{totalPaid}</td>
+                        <td className="px-6 py-4">{totalReceived}</td>
+                      </>
+                    );
+                  })()}
+
                   <td className="px-6 py-4">
                     {item.timestamp ? item.timestamp.split("T")[0] : "N/A"}
                   </td>
@@ -565,6 +696,17 @@ function Project_cost() {
                         className="px-3 py-1 rounded bg-red-600 text-white text-xs hover:bg-red-700"
                       >
                         Delete
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          downloadCostingAsCSV(item);
+                        }}
+                        className="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-700"
+                      >
+                        Download
                       </button>
                     </div>
                   </td>
