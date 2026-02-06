@@ -414,28 +414,28 @@ const CostForm = () => {
       const projectData = amounts[project];
       if (!projectData) continue;
 
-      if (!projectData.cost || Number(projectData.cost) <= 0) {
-        toast.error(`Project "${project}": Total cost is required`);
-        const costInput = document.querySelector(`input[data-project="${project}"][data-field="cost"]`);
-        if (costInput) {
-          costInput.focus();
-          costInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return false;
-      }
+      // if (!projectData.cost || Number(projectData.cost) <= 0) {
+      //   toast.error(`Project "${project}": Total cost is required`);
+      //   const costInput = document.querySelector(`input[data-project="${project}"][data-field="cost"]`);
+      //   if (costInput) {
+      //     costInput.focus();
+      //     costInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      //   }
+      //   return false;
+      // }
 
-      if (
-        projectData.advance &&
-        Number(projectData.advance) > Number(projectData.cost)
-      ) {
-        toast.error(`Project "${project}": Advance cannot exceed total cost`);
-        const advanceInput = document.querySelector(`input[data-project="${project}"][data-field="advance"]`);
-        if (advanceInput) {
-          advanceInput.focus();
-          advanceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return false;
-      }
+      // if (
+      //   projectData.advance &&
+      //   Number(projectData.advance) > Number(projectData.cost)
+      // ) {
+      //   toast.error(`Project "${project}": Advance cannot exceed total cost`);
+      //   const advanceInput = document.querySelector(`input[data-project="${project}"][data-field="advance"]`);
+      //   if (advanceInput) {
+      //     advanceInput.focus();
+      //     advanceInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      //   }
+      //   return false;
+      // }
 
       for (let i = 0; i < (projectData.payments || []).length; i++) {
         const payment = projectData.payments[i];
